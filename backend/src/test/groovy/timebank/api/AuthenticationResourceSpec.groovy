@@ -33,7 +33,7 @@ class AuthenticationResourceSpec extends AbstractMvcSpec {
 
     then:
     res.status == HttpStatus.OK
-    res.json.userName == 'user'
+    res.json.username == 'user'
     token != null
   }
 
@@ -43,7 +43,7 @@ class AuthenticationResourceSpec extends AbstractMvcSpec {
 
     then:
     res.status == HttpStatus.OK
-    res.json.userName == 'user'
+    res.json.username == 'user'
   }
 
   def "delete session"() {
