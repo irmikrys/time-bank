@@ -1,8 +1,8 @@
-import RegisterForm from '../component/RegisterForm';
+import RegisterForm from '../component/forms/RegisterForm';
 import {connect} from 'react-redux';
 import {register} from '../../reducers/register';
 
 export default connect(
-  state => ({errorMessage: state.errorMessage}),
+  state => ({errorMessage: state.register.errorMessage}),
   {register}
 )(RegisterForm);

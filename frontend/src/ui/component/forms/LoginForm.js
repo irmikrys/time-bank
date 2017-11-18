@@ -1,19 +1,6 @@
-import React, { Component } from 'react';
-
-const LabeledInput = (props) => (
-  <div className="pure-control-group">
-    <label>
-      {props.label}
-    </label>
-    <input {...props}/>
-  </div>
-);
-
-const ErrorPanel = ({messageKey}) => (
-  <p className="error-panel">
-    {messageKey}
-  </p>
-);
+import React, { Component } from "react";
+import {ErrorPanel} from "./ErrorPanel";
+import {LabeledInput} from "./LabeledInput";
 
 export default class LoginForm extends Component {
 
@@ -22,9 +9,9 @@ export default class LoginForm extends Component {
     password: ""
   };
 
-  handleInputChange = (e) => {
-    let value = e.target.value;
-    let inputName = e.target.name;
+  handleInputChange = event => {
+    let value = event.target.value;
+    let inputName = event.target.name;
     this.setState({[inputName]: value});
   };
 
@@ -36,20 +23,19 @@ export default class LoginForm extends Component {
 
         {errorPanel}
 
-        <form onSubmit={this.handleSubmit} className="pure-form pure-form-aligned">
+        <form onSubmit={this.handleSubmit}>
           <LabeledInput onChange={this.handleInputChange} label="Login" name="username"/>
           <LabeledInput onChange={this.handleInputChange} label="Password" name="password" type="password"/>
-
-          <div className="pure-controls">
-            <button type="submit" className="pure-button pure-button-primary">Login</button>
+          <div>
+            <button type="submit">Login</button>
           </div>
         </form>
       </div>
     );
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
+  handleSubmit = event => {
+    event.preventDefault();
     const { username, password } = this.state;
     const { login } = this.props;
     login(username, password);

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import timebank.model.Credentials;
-import timebank.model.User;
+import timebank.model.UserSession;
 
 import javax.servlet.http.HttpSession;
 
@@ -22,18 +22,18 @@ public class AuthenticationResource {
   AuthenticationManager authenticationManager;
 
   @RequestMapping(method = RequestMethod.POST)
-  public User login(@RequestBody Credentials credentials, HttpSession httpSession) {
+  public UserSession login(@RequestBody Credentials credentials, HttpSession httpSession) {
     Authentication authentication = new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword());
     SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(authentication));
 
-    User user = new User(credentials.getUsername(), httpSession.getId(), true);
-    httpSession.setAttribute("user", user);
-    return user;
+    UserSession userSession = new UserSession(credentials.getUsername(), httpSession.getId(), true);
+    httpSession.setAttribute("user", userSession);
+    return userSession;
   }
 
   @RequestMapping(method = RequestMethod.GET)
-  public User session(HttpSession session) {
-    return (User) session.getAttribute("user");
+  public UserSession session(HttpSession session) {
+    return (UserSession) session.getAttribute("user");
   }
 
   @RequestMapping(method = RequestMethod.DELETE)

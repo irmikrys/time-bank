@@ -1,26 +1,24 @@
 package timebank.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.io.Serializable;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 
-@Entity
-@Table(name="user")
-public class UserInfo implements Serializable {
+public class UserCreateRequest {
 
-  @Id
+  @NotBlank
   private String username;
 
+  @NotBlank
   private String password;
 
+  @NotBlank
   private String firstName;
 
+  @NotBlank
   private String lastName;
 
+  @Email
   private String email;
-
-  private String role;
 
   public String getUsername() {
     return username;
@@ -50,11 +48,14 @@ public class UserInfo implements Serializable {
 
   public void setEmail(String email) { this.email = email; }
 
-  public String getRole() {
-    return role;
-  }
-
-  public void setRole(String role) {
-    this.role = role;
+  public UserInfo toUserInfo(String password, String role) {
+    UserInfo userInfo = new UserInfo();
+    userInfo.setUsername(getUsername());
+    userInfo.setFirstName(getFirstName());
+    userInfo.setLastName(getLastName());
+    userInfo.setEmail(getEmail());
+    userInfo.setPassword(password);
+    userInfo.setRole(role);
+    return userInfo;
   }
 }

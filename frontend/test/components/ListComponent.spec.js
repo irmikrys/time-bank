@@ -4,9 +4,9 @@ import  expect, { createSpy } from 'expect';
 import React from 'react';
 import ListComponent from '../../src/ui/component/ListComponent';
 
-const fetchSimple = createSpy();
+const fetchUsers = createSpy();
 const items = ['one', 'two', 'three'];
-let props = {fetchSimple, items};
+let props = {fetchUsers, items};
 
 describe('components', () => {
 
@@ -20,7 +20,7 @@ describe('components', () => {
     it('should fetch items on click', () => {
       const component = shallow(<ListComponent {...props} />);
       component.find('button').simulate('click');
-      expect(fetchSimple).toHaveBeenCalled();
+      expect(fetchUsers).toHaveBeenCalled();
     })
   });
 });

@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router';
-import { connect } from 'react-redux';
-import { getSession } from 'reducers/authentication';
-
-import 'stylus/main.styl';
+import React, { Component } from "react";
+import { Link } from "react-router";
+import { connect } from "react-redux";
+import { getSession } from "../../reducers/authentication";
+import "stylus/main.styl";
+import {MENU_FOR_GUEST, MENU_FOR_USER} from "../constants/constants";
 
 
 const TopMenu = (props) => {
   const items = props.items.map((item, key) => (
-    <li key={key} className="pure-menu-item">
-      <Link to={item.link} className="pure-menu-link">{item.label}</Link>
+    <li key={key}>
+      <Link to={item.link}>{item.label}</Link>
     </li>
   ));
   return (
-    <div className="pure-menu pure-menu-horizontal">
-      <ul className="pure-menu-list">
+    <div>
+      <ul>
         {items}
       </ul>
     </div>
@@ -28,12 +28,8 @@ export class App extends Component {
   }
 
   render() {
-    const menuItems = [
-      {label: 'Home', link: '/'},
-      {label: 'Register', link: '/register'},
-      this.props.isAuthenticated ? {label: 'Logout', link: '/logout'} : {label: 'Login', link: '/login'},
-      {label: 'Profile', link: '/profile'}
-    ];
+    const {isAuthenticated} = this.props;
+    const menuItems = isAuthenticated ? MENU_FOR_USER : MENU_FOR_GUEST;
 
     return (
       <div id="application">

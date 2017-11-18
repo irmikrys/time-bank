@@ -1,20 +1,24 @@
 package timebank.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import timebank.model.Credentials;
+import timebank.model.ErrorMessage;
+import timebank.model.UserCreateRequest;
 import timebank.repository.UserRepository;
 import timebank.model.UserInfo;
 
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
-@Controller
+
+@RestController
 public class UserController {
 
   @Autowired
@@ -24,13 +28,22 @@ public class UserController {
   private BCryptPasswordEncoder bCryptPasswordEncoder;
 
   @RequestMapping(method=POST, path="/api/register")
-  public @ResponseBody String createUser(@RequestBody Credentials credentials) {
-    UserInfo user = new UserInfo();
-    user.setUsername(credentials.getUsername());
-    user.setPassword(bCryptPasswordEncoder.encode(credentials.getPassword()));
-    user.setRole("USER");
+  public @ResponseBody ResponseEntity<Object> createUser(@Valid @RequestBody UserCreateRequest userCreateRequest) {
+    if (userRepository.findByUsername(userCreateRequest.getUsername()) != null) {
+      return
+        ResponseEntity
+          .status(HttpStatus.BAD_REQUEST)
+          .body(new ErrorMessage("register.error.usernameExists"));
+    }
+    if (userRepository.findByEmail(userCreateRequest.getEmail()) != null) {
+      return
+        ResponseEntity
+          .status(HttpStatus.BAD_REQUEST)
+          .body(new ErrorMessage("register.error.emailExists"));
+    }
+    UserInfo user = userCreateRequest.toUserInfo(bCryptPasswordEncoder.encode(userCreateRequest.getPassword()),"USER");
     userRepository.save(user);
-    return "Saved";
+    return ResponseEntity.ok(user);
   }
 
   @RequestMapping(path="/api/users")

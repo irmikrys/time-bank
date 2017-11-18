@@ -1,6 +1,6 @@
 package timebank.model;
 
-public class User {
+public class UserSession {
 
   private String username;
 
@@ -8,9 +8,9 @@ public class User {
 
   private boolean authenticated;
 
-  public User() {}
+  public UserSession() {}
 
-  public User(String username, String token, boolean authenticated) {
+  public UserSession(String username, String token, boolean authenticated) {
     this.username = username;
     this.token = token;
     this.authenticated = authenticated;

@@ -12,10 +12,10 @@ const initialState = {
 
 export default function registerReducer(state = initialState, action) {
   switch (action.type) {
-    case REGISTER_SUCCESS:
+    case REGISTER_FAIL:
       return {
         ...state,
-        errorMessage: action.result.data
+        errorMessage: action.error.data.messageKey
       };
     default:
       return state;
@@ -24,12 +24,12 @@ export default function registerReducer(state = initialState, action) {
 
 // Actions
 
-export function register(username, password) {
+export function register(userInfo) {
   return  {
     types: [REGISTER, REGISTER_SUCCESS, REGISTER_FAIL],
-    promise: (client) => client.post('/api/register', {username, password}),
+    promise: (client) => client.post('/api/register', userInfo),
     afterSuccess: () => {
-      browserHistory.push('');
+      browserHistory.push('/login');
     }
   };
 }

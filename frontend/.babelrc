@@ -14,8 +14,6 @@
     ]]
   ],
   "env": {
-    "development": {
-      "presets": ["react-hmre"]
-    }
+    "development": {}
   }
 }
