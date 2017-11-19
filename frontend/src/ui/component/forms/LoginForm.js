@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import {ErrorPanel} from "./ErrorPanel";
-import {LabeledInput} from "./LabeledInput";
+import {USERNAME, PASSWORD, getFormField} from "../../constants/constants";
+import {Link} from "react-router";
 
 export default class LoginForm extends Component {
 
   state = {
-    username: "",
-    password: ""
+    [USERNAME]: "",
+    [PASSWORD]: ""
   };
 
   handleInputChange = event => {
@@ -19,17 +20,27 @@ export default class LoginForm extends Component {
     const {errorMessage} = this.props;
     const errorPanel = errorMessage ? <ErrorPanel messageKey={errorMessage}/> : null;
     return (
-      <div>
-
-        {errorPanel}
-
-        <form onSubmit={this.handleSubmit}>
-          <LabeledInput onChange={this.handleInputChange} label="Login" name="username"/>
-          <LabeledInput onChange={this.handleInputChange} label="Password" name="password" type="password"/>
-          <div>
+      <div className="login-page">
+        <div className="form-container">
+          <form onSubmit={this.handleSubmit}>
+            {errorPanel}
+            {
+              [USERNAME, PASSWORD].map(fieldKey => {
+                const field = getFormField(fieldKey);
+                  return <input key={field.name}
+                                type={field.type}
+                                placeholder={field.placeholder}
+                                name={field.name}
+                                pattern={field.pattern}
+                                onChange={this.handleInputChange}
+                                required
+                  />
+              })
+            }
             <button type="submit">Login</button>
-          </div>
-        </form>
+            <p className="message">Not registered? <Link to="/register">Create an account</Link></p>
+          </form>
+        </div>
       </div>
     );
   }

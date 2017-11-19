@@ -13,11 +13,13 @@ const TopMenu = (props) => {
     </li>
   ));
   return (
-    <div>
-      <ul>
-        {items}
-      </ul>
-    </div>
+    <nav>
+      <div className="container-fluid">
+        <ul className="nav navbar-nav navbar-right">
+          {items}
+        </ul>
+      </div>
+    </nav>
   );
 };
 
