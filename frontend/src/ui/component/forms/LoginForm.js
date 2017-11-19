@@ -17,13 +17,15 @@ export default class LoginForm extends Component {
   };
 
   render() {
-    const {errorMessage} = this.props;
+    const {errorMessage, registerSuccess} = this.props;
     const errorPanel = errorMessage ? <ErrorPanel messageKey={errorMessage}/> : null;
+    const successPanel = registerSuccess ? <SuccessPanel/> : null;
     return (
       <div className="login-page">
         <div className="form-container">
           <form onSubmit={this.handleSubmit}>
             {errorPanel}
+            {successPanel}
             {
               [USERNAME, PASSWORD].map(fieldKey => {
                 const field = getFormField(fieldKey);
@@ -52,3 +54,7 @@ export default class LoginForm extends Component {
     login(username, password);
   }
 }
+
+const SuccessPanel = () => (
+  <p className="success-message">Your account has been successfully created!</p>
+);
