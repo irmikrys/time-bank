@@ -1,4 +1,4 @@
-package timebank.controller.exception_handler;
+package timebank.exception_handlers;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,6 +18,7 @@ public class AuthenticationExceptionHandler {
   @ResponseBody
   @ResponseStatus(HttpStatus.UNAUTHORIZED)
   public ErrorMessage handleAuthenticationException(AuthenticationException e) {
+    log.warn(e.getMessage());
     return new ErrorMessage("login.error.badLogin");
   }
 

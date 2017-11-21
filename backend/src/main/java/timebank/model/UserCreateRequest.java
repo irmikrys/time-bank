@@ -3,18 +3,24 @@ package timebank.model;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 public class UserCreateRequest {
 
-  @NotBlank
+  @Pattern(regexp = "^([a-zA-Z0-9]+[-_.]?)*[a-zA-Z0-9]+$")
+  @Size(min=3, max=30)
   private String username;
 
-  @NotBlank
+  @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).{6,30}")
   private String password;
 
-  @NotBlank
+  @Pattern(regexp = "^([a-zA-Z]+\\s?)*\\[a-zA-Z]+$")
+  @Size(min=3, max=30)
   private String firstName;
 
-  @NotBlank
+  @Pattern(regexp = "^([a-zA-Z]+\\s?)*\\[a-zA-Z]+$")
+  @Size(min=3, max=30)
   private String lastName;
 
   @Email
