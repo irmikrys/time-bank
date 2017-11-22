@@ -7,7 +7,7 @@ export default class ListComponent extends Component {
 
     return (
       <div>
-        <h2>Users:</h2>
+        <h2>USERS</h2>
         <ul>
           {list}
         </ul>

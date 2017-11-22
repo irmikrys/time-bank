@@ -9,7 +9,7 @@ import {
   getFormField
 } from "../../constants/constants";
 
-export default class LoginForm extends Component {
+export default class RegisterForm extends Component {
 
   state = {
     [FIRST_NAME]: "",

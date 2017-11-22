@@ -1,4 +1,4 @@
-package timebank.model;
+package timebank.dto.session;
 
 public class Credentials {
 

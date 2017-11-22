@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import timebank.model.Credentials;
-import timebank.model.UserSession;
+import timebank.dto.session.Credentials;
+import timebank.dto.session.UserSession;
 
 import javax.servlet.http.HttpSession;
 

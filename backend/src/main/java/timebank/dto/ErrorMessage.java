@@ -1,4 +1,4 @@
-package timebank.model;
+package timebank.dto;
 
 public class ErrorMessage {
 
