@@ -2,12 +2,12 @@ package timebank.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import timebank.model.UserInfo;
+import timebank.model.User;
 
-public interface UserRepository extends JpaRepository<UserInfo, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-  UserInfo findByUsername(String username);
+  User findByUsername(String username);
 
-  UserInfo findByEmail(String email);
+  User findByEmail(String email);
 
 }

@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name="user")
-public class UserInfo implements Serializable {
+public class User implements Serializable {
 
   @Id
   private String username;

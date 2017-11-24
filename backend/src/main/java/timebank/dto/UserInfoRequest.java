@@ -1,7 +1,7 @@
 package timebank.dto;
 
 import org.hibernate.validator.constraints.Email;
-import timebank.model.UserInfo;
+import timebank.model.User;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -54,15 +54,15 @@ public class UserInfoRequest {
 
   public void setEmail(String email) { this.email = email; }
 
-  public UserInfo toUserInfo(String password, String role) {
-    UserInfo userInfo = new UserInfo();
-    userInfo.setUsername(getUsername());
-    userInfo.setFirstName(getFirstName());
-    userInfo.setLastName(getLastName());
-    userInfo.setEmail(getEmail());
-    userInfo.setPassword(password);
-    userInfo.setRole(role);
-    return userInfo;
+  public User toUserInfo(String password, String role) {
+    User user = new User();
+    user.setUsername(getUsername());
+    user.setFirstName(getFirstName());
+    user.setLastName(getLastName());
+    user.setEmail(getEmail());
+    user.setPassword(password);
+    user.setRole(role);
+    return user;
   }
 
 }

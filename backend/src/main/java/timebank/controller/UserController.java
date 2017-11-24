@@ -12,7 +12,7 @@ import timebank.dto.session.UserSession;
 import timebank.exceptions.AccessingPrivateResourcesException;
 import timebank.exceptions.RegisterException;
 import timebank.dto.UserInfoRequest;
-import timebank.model.UserInfo;
+import timebank.model.User;
 import timebank.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -26,28 +26,28 @@ public class UserController {
   private UserService userService;
 
   @RequestMapping(method=POST, path="/api/register")
-  public @ResponseBody ResponseEntity<UserInfo> createUser(@Valid @RequestBody UserInfoRequest userInfoRequest) throws RegisterException {
+  public @ResponseBody ResponseEntity<User> createUser(@Valid @RequestBody UserInfoRequest userInfoRequest) throws RegisterException {
     if (userService.findByUsername(userInfoRequest.getUsername()) != null) {
       throw new RegisterException("register.error.usernameExists");
     }
     if (userService.findByEmail(userInfoRequest.getEmail()) != null) {
       throw new RegisterException("register.error.emailExists");
     }
-    UserInfo userInfo = userService.createUser(userInfoRequest);
-    return ResponseEntity.ok(userInfo);
+    User user = userService.createUser(userInfoRequest);
+    return ResponseEntity.ok(user);
   }
 
   @RequestMapping(method=PUT, path="/api/users")
-  public @ResponseBody ResponseEntity<UserInfo> updateUser(@Valid @RequestBody UserInfoRequest userInfoRequest, HttpSession session) throws AccessingPrivateResourcesException {
+  public @ResponseBody ResponseEntity<User> updateUser(@Valid @RequestBody UserInfoRequest userInfoRequest, HttpSession session) throws AccessingPrivateResourcesException {
     UserSession userSession = (UserSession) session.getAttribute("user");
     if (!userSession.getUsername().equals(userInfoRequest.getUsername()))
       throw new AccessingPrivateResourcesException("updateUser.error.accessDenied");
-    UserInfo updatedUser = userService.updateUser(userInfoRequest);
+    User updatedUser = userService.updateUser(userInfoRequest);
     return ResponseEntity.ok(updatedUser);
   }
 
   @RequestMapping(method=GET, path="/api/users")
-  public @ResponseBody Iterable<UserInfo> getAllUsers() {
+  public @ResponseBody Iterable<User> getAllUsers() {
     return userService.findAll();
   }
 }

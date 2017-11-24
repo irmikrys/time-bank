@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import timebank.dto.UserInfoRequest;
-import timebank.model.UserInfo;
+import timebank.model.User;
 import timebank.repository.UserRepository;
 
 @Service
@@ -18,29 +18,29 @@ public class UserServiceImpl implements UserService {
 
 
   @Override
-  public UserInfo findByUsername(String username) {
+  public User findByUsername(String username) {
     return userRepository.findByUsername(username);
   }
 
   @Override
-  public UserInfo findByEmail(String username) {
+  public User findByEmail(String username) {
     return userRepository.findByEmail(username);
   }
 
   @Override
-  public Iterable<UserInfo> findAll() {
+  public Iterable<User> findAll() {
     return userRepository.findAll();
   }
 
   @Override
-  public UserInfo createUser(UserInfoRequest userInfoRequest) {
-    UserInfo user = userInfoRequest.toUserInfo(bCryptPasswordEncoder.encode(userInfoRequest.getPassword()),"USER");
+  public User createUser(UserInfoRequest userInfoRequest) {
+    User user = userInfoRequest.toUserInfo(bCryptPasswordEncoder.encode(userInfoRequest.getPassword()),"USER");
     return userRepository.save(user);
   }
 
   @Override
-  public UserInfo updateUser(UserInfoRequest userInfoRequest) {
-    UserInfo updatedUser = userRepository.findByUsername(userInfoRequest.getUsername());
+  public User updateUser(UserInfoRequest userInfoRequest) {
+    User updatedUser = userRepository.findByUsername(userInfoRequest.getUsername());
     updatedUser.setFirstName(userInfoRequest.getFirstName());
     updatedUser.setLastName(userInfoRequest.getLastName());
     updatedUser.setEmail(userInfoRequest.getEmail());
