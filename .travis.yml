@@ -1,3 +1,12 @@
 language: groovy
+
 jdk:
   - oraclejdk8
+
+env:
+  - DB=mysql
+script:
+  - RAILS_ENV=test bundle exec rake db:migrate --trace
+before_script:
+  - mysql -e 'create database timebank'
+bundler_args: --binstubs=./bundler_stubs
