@@ -1,7 +1,6 @@
 package timebank.dto;
 
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 import timebank.model.UserInfo;
 
 import javax.validation.constraints.Pattern;
@@ -65,4 +64,5 @@ public class UserInfoRequest {
     userInfo.setRole(role);
     return userInfo;
   }
+
 }

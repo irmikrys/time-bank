@@ -12,6 +12,7 @@ import timebank.dto.ErrorMessage;
 
 @ControllerAdvice
 public class AuthenticationExceptionHandler {
+
   private final Log log = LogFactory.getLog(getClass());
 
   @ExceptionHandler(AuthenticationException.class)

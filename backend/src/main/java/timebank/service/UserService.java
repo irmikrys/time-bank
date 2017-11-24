@@ -15,5 +15,4 @@ public interface UserService {
 
   UserInfo updateUser(UserInfoRequest userInfoRequest);
 
-
 }
