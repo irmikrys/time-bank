@@ -17,9 +17,9 @@ CREATE TABLE users (
 
 DROP TABLE IF EXISTS accounts;
 CREATE TABLE accounts (
-  account_nr INT(30),
-  username VARCHAR(30),
-  amount INT(30),
+  account_nr INT(30) NOT NULL AUTO_INCREMENT,
+  username VARCHAR(30) NOT NULL,
+  amount INT(30) NOT NULL,
   PRIMARY KEY (account_nr)
 );
 
@@ -31,33 +31,33 @@ CREATE TABLE adverts (
   id_category INT(30) NOT NULL,
   title VARCHAR(80) NOT NULL,
   description VARCHAR(270) NOT NULL,
-  value INT(30),
+  value INT(30) NOT NULL,
   id_location INT(30) NOT NULL,
   create_date DATETIME NOT NULL,
   performer VARCHAR(30),
-  active BOOLEAN,
+  active BOOLEAN NOT NULL,
   PRIMARY KEY (id_advert)
 );
 
 DROP TABLE IF EXISTS interested;
 CREATE TABLE interested (
-  id_advert INT(30),
-  interested VARCHAR(30),
+  id_advert INT(30) NOT NULL,
+  interested VARCHAR(30) NOT NULL,
   PRIMARY KEY (id_advert, interested)
 );
 
 DROP TABLE IF EXISTS categories;
 CREATE TABLE categories (
-  id_category INT(30),
-  name VARCHAR(60),
+  id_category INT(30) NOT NULL AUTO_INCREMENT,
+  name VARCHAR(60) NOT NULL,
   PRIMARY KEY (id_category)
 );
 
 DROP TABLE IF EXISTS locations;
 CREATE TABLE  locations (
-  id_location INT(30),
-  description VARCHAR(60),
-  latitude NUMERIC(18,14),
-  longitude NUMERIC(18,14),
+  id_location INT(30) NOT NULL AUTO_INCREMENT,
+  description VARCHAR(60) NOT NULL,
+  latitude NUMERIC(18,14) NOT NULL,
+  longitude NUMERIC(18,14) NOT NULL,
   PRIMARY KEY (id_location)
 );
