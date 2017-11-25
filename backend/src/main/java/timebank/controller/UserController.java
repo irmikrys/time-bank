@@ -29,12 +29,10 @@ public class UserController {
 
   @RequestMapping(method=POST, path="/api/register")
   public @ResponseBody ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) throws RegisterException {
-    if (userService.findByUsername(userDTO.getUsername()) != null) {
-      throw new RegisterException("register.error.usernameExists");
-    }
-    if (userService.findByEmail(userDTO.getEmail()) != null) {
-      throw new RegisterException("register.error.emailExists");
-    }
+    userService.findByUsername(userDTO.getUsername()).ifPresent(
+      user -> { throw new RegisterException("register.error.usernameExists"); });
+    userService.findByEmail((userDTO.getEmail())).ifPresent(
+      user -> { throw new RegisterException("register.error.emailExists"); });
     User user = userService.createUser(userDTO);
     return ResponseEntity.ok(user);
   }

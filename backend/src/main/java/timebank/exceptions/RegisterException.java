@@ -1,6 +1,6 @@
 package timebank.exceptions;
 
-public class RegisterException extends Exception {
+public class RegisterException extends RuntimeException {
 
   public RegisterException() { super(); }
 

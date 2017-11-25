@@ -9,6 +9,8 @@ import timebank.dto.UserDTO;
 import timebank.model.User;
 import timebank.repository.UserRepository;
 
+import java.util.Optional;
+
 @Service("userService")
 public class UserServiceImpl implements UserService {
 
@@ -23,12 +25,12 @@ public class UserServiceImpl implements UserService {
   private JdbcTemplate jdbcTemplate;
 
   @Override
-  public User findByUsername(String username) {
+  public Optional<User> findByUsername(String username) {
     return userRepository.findByUsername(username);
   }
 
   @Override
-  public User findByEmail(String email) {
+  public Optional<User> findByEmail(String email) {
     return userRepository.findByEmail(email);
   }
 
@@ -45,11 +47,12 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User updateUser(UserDTO userDTO) {
-    User updatedUser = userRepository.findByUsername(userDTO.getUsername());
-    updatedUser.setFirstName(userDTO.getFirstName());
-    updatedUser.setLastName(userDTO.getLastName());
-    updatedUser.setEmail(userDTO.getEmail());
-    updatedUser.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
-    return userRepository.save(updatedUser);
+//    User updatedUser = userRepository.findByUsername(userDTO.getUsername());
+//    updatedUser.setFirstName(userDTO.getFirstName());
+//    updatedUser.setLastName(userDTO.getLastName());
+//    updatedUser.setEmail(userDTO.getEmail());
+//    updatedUser.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+//    return userRepository.save(updatedUser);
+    return new User();
   }
 }

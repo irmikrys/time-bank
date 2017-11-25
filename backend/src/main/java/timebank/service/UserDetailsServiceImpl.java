@@ -1,6 +1,7 @@
 package timebank.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,12 +19,14 @@ import java.util.Set;
 public class UserDetailsServiceImpl implements UserDetailsService{
 
   @Autowired
+  @Qualifier("userRepository")
   private UserRepository userRepository;
 
   @Override
   @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = userRepository.findByUsername(username);
+    User user = userRepository.findByUsername(username).orElseThrow(
+      () -> new UsernameNotFoundException("Username not found"));
 
     Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
     grantedAuthorities.add(new SimpleGrantedAuthority(user.getRole()));

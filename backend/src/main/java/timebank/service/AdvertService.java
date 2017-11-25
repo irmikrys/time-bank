@@ -3,6 +3,8 @@ package timebank.service;
 import timebank.dto.AdvertDTO;
 import timebank.model.Advert;
 
+import java.util.Optional;
+
 public interface AdvertService {
 
   Advert findByIdAdvert(Long idAdvert);
