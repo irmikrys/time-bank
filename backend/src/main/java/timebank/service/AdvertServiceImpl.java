@@ -1,15 +1,17 @@
 package timebank.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import timebank.dto.AdvertRequest;
+import timebank.dto.AdvertDTO;
 import timebank.model.Advert;
 import timebank.repository.AdvertRepository;
 
-@Service
+@Service("advertService")
 public class AdvertServiceImpl implements AdvertService {
 
   @Autowired
+  @Qualifier("advertRepository")
   private AdvertRepository advertRepository;
 
   @Override
@@ -28,15 +30,15 @@ public class AdvertServiceImpl implements AdvertService {
   }
 
   @Override
-  public Advert createAdvert(AdvertRequest advertRequest, String username) {
-    Advert advert = advertRequest.toAdvert((username));
+  public Advert createAdvert(AdvertDTO advertDTO, String username) {
+    Advert advert = advertDTO.toAdvert((username));
     return advertRepository.save(advert);
   }
 
   @Override
-  public Advert updateAdvert(AdvertRequest advertRequest, Advert advert) {
-    advert.setTitle(advertRequest.getTitle());
-    advert.setDescription(advertRequest.getDescription());
+  public Advert updateAdvert(AdvertDTO advertDTO, Advert advert) {
+    advert.setTitle(advertDTO.getTitle());
+    advert.setDescription(advertDTO.getDescription());
     return advertRepository.save(advert);
   }
 }

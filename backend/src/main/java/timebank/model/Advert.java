@@ -11,15 +11,20 @@ public class Advert implements Serializable {
 
   @Id
   @GeneratedValue(strategy= GenerationType.IDENTITY)
+  @Column(name = "id_advert")
   private long idAdvert;
 
+  @Column(name ="username")
   private String username;
 
+  @Column(name ="title")
   private String title;
 
+  @Column(name ="description")
   private String description;
 
   @CreationTimestamp
+  @Column(name ="date")
   private Date date;
 
   public long getIdAdvert() {

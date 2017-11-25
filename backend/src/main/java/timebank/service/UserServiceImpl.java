@@ -1,21 +1,26 @@
 package timebank.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import timebank.dto.UserInfoRequest;
+import timebank.dto.UserDTO;
 import timebank.model.User;
 import timebank.repository.UserRepository;
 
-@Service
+@Service("userService")
 public class UserServiceImpl implements UserService {
 
   @Autowired
+  @Qualifier("userRepository")
   private UserRepository userRepository;
 
   @Autowired
   private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
   @Override
   public User findByUsername(String username) {
@@ -23,8 +28,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User findByEmail(String username) {
-    return userRepository.findByEmail(username);
+  public User findByEmail(String email) {
+    return userRepository.findByEmail(email);
   }
 
   @Override
@@ -33,18 +38,18 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User createUser(UserInfoRequest userInfoRequest) {
-    User user = userInfoRequest.toUserInfo(bCryptPasswordEncoder.encode(userInfoRequest.getPassword()),"USER");
+  public User createUser(UserDTO userDTO) {
+    User user = userDTO.toUserInfo(bCryptPasswordEncoder.encode(userDTO.getPassword()),"USER");
     return userRepository.save(user);
   }
 
   @Override
-  public User updateUser(UserInfoRequest userInfoRequest) {
-    User updatedUser = userRepository.findByUsername(userInfoRequest.getUsername());
-    updatedUser.setFirstName(userInfoRequest.getFirstName());
-    updatedUser.setLastName(userInfoRequest.getLastName());
-    updatedUser.setEmail(userInfoRequest.getEmail());
-    updatedUser.setPassword(bCryptPasswordEncoder.encode(userInfoRequest.getPassword()));
+  public User updateUser(UserDTO userDTO) {
+    User updatedUser = userRepository.findByUsername(userDTO.getUsername());
+    updatedUser.setFirstName(userDTO.getFirstName());
+    updatedUser.setLastName(userDTO.getLastName());
+    updatedUser.setEmail(userDTO.getEmail());
+    updatedUser.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
     return userRepository.save(updatedUser);
   }
 }

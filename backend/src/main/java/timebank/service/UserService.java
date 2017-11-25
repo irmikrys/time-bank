@@ -1,18 +1,18 @@
 package timebank.service;
 
-import timebank.dto.UserInfoRequest;
+import timebank.dto.UserDTO;
 import timebank.model.User;
 
 public interface UserService {
 
   User findByUsername(String username);
 
-  User findByEmail(String username);
+  User findByEmail(String email);
 
   Iterable<User> findAll();
 
-  User createUser(UserInfoRequest userInfoRequest);
+  User createUser(UserDTO userDTO);
 
-  User updateUser(UserInfoRequest userInfoRequest);
+  User updateUser(UserDTO userDTO);
 
 }

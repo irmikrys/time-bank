@@ -1,6 +1,6 @@
 package timebank.service;
 
-import timebank.dto.AdvertRequest;
+import timebank.dto.AdvertDTO;
 import timebank.model.Advert;
 
 public interface AdvertService {
@@ -11,8 +11,8 @@ public interface AdvertService {
 
   Iterable<Advert> findAll();
 
-  Advert createAdvert(AdvertRequest advertRequest, String username);
+  Advert createAdvert(AdvertDTO advertDTO, String username);
 
-  Advert updateAdvert(AdvertRequest advertRequest, Advert advert);
+  Advert updateAdvert(AdvertDTO advertDTO, Advert advert);
 
 }

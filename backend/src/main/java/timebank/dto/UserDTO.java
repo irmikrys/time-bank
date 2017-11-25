@@ -6,7 +6,7 @@ import timebank.model.User;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class UserInfoRequest {
+public class UserDTO {
 
   @Pattern(regexp = "^([a-zA-Z0-9]+[-_.]?)*[a-zA-Z0-9]+$")
   @Size(min=3, max=30)

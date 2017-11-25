@@ -3,7 +3,7 @@ package timebank.dto;
 import org.hibernate.validator.constraints.NotBlank;
 import timebank.model.Advert;
 
-public class AdvertRequest {
+public class AdvertDTO {
 
   @NotBlank
   private String title;
