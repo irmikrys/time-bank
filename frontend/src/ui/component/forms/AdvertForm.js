@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import {ErrorPanel} from "./ErrorPanel";
-import {Link} from "react-router";
+import Geosuggest from "react-geosuggest";
 
 export default class AdvertForm extends Component {
 
@@ -15,6 +14,10 @@ export default class AdvertForm extends Component {
     this.setState({[inputName]: value});
   };
 
+  handleLocationSelect = value => {
+    console.log(value);
+  };
+
   render() {
     return (
       <div className="advert-form">
@@ -25,10 +28,15 @@ export default class AdvertForm extends Component {
                    onChange={this.handleInputChange}
                    required
             />
-            <input placeholder="description"
-                   name="description"
-                   onChange={this.handleInputChange}
-                   required
+            <textarea placeholder="description..."
+                      name="description"
+                      onChange={this.handleInputChange}
+                      cols="40"
+                      rows="5"
+                      required
+            />
+            <Geosuggest placeholder="location"
+                        onSuggestSelect={this.handleLocationSelect}
             />
             <button type="submit">Create Advert</button>
           </form>
