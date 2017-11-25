@@ -28,7 +28,7 @@ CREATE TABLE adverts (
   id_advert INT(30) NOT NULL AUTO_INCREMENT,
   username VARCHAR(30) NOT NULL,
   type VARCHAR(10) NOT NULL,
-  id_cathegory INT(30) NOT NULL,
+  id_category INT(30) NOT NULL,
   title VARCHAR(80) NOT NULL,
   description VARCHAR(270) NOT NULL,
   value INT(30),
@@ -46,11 +46,11 @@ CREATE TABLE interested (
   PRIMARY KEY (id_advert, interested)
 );
 
-DROP TABLE IF EXISTS cathegories;
-CREATE TABLE cathegories (
-  id_cathegory INT(30),
+DROP TABLE IF EXISTS categories;
+CREATE TABLE categories (
+  id_category INT(30),
   name VARCHAR(60),
-  PRIMARY KEY (id_cathegory)
+  PRIMARY KEY (id_category)
 );
 
 DROP TABLE IF EXISTS locations;
