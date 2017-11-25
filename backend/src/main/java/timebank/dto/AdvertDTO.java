@@ -4,12 +4,15 @@ import org.hibernate.validator.constraints.NotBlank;
 import timebank.model.Advert;
 import timebank.model.Location;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 public class AdvertDTO {
 
   @NotBlank
   private String type;
 
-  @NotBlank
+  @NotNull
   private long idCategory;
 
   @NotBlank
@@ -18,8 +21,11 @@ public class AdvertDTO {
   @NotBlank
   private String description;
 
-  @NotBlank
+  @NotNull
   private int value;
+
+  @Valid
+  private LocationDTO locationDTO;
 
   public String getType() {
     return type;
@@ -59,6 +65,14 @@ public class AdvertDTO {
 
   public void setValue(int value) {
     this.value = value;
+  }
+
+  public LocationDTO getLocationDTO() {
+    return locationDTO;
+  }
+
+  public void setLocationDTO(LocationDTO locationDTO) {
+    this.locationDTO = locationDTO;
   }
 
   public Advert toAdvert(String username, long idLocation) {

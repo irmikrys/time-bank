@@ -39,8 +39,8 @@ public class AdvertServiceImpl implements AdvertService {
   }
 
   @Override
-  public Advert createAdvert(String username, LocationDTO locationDTO, AdvertDTO advertDTO) {
-    Location location = locationService.createLocation(locationDTO);
+  public Advert createAdvert(String username, AdvertDTO advertDTO) {
+    Location location = locationService.createLocation(advertDTO.getLocationDTO());
     Advert advert = advertDTO.toAdvert(username, location.getIdLocation());
     return advertRepository.save(advert);
   }

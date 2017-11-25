@@ -3,6 +3,7 @@ package timebank.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -15,6 +16,7 @@ import timebank.exceptions.AccessingPrivateResourcesException;
 import timebank.exceptions.RegisterException;
 import timebank.dto.UserDTO;
 import timebank.model.User;
+import timebank.service.LocationService;
 import timebank.service.UserService;
 
 import javax.servlet.http.HttpSession;
@@ -28,13 +30,14 @@ public class UserController {
   @Qualifier("userService")
   private UserService userService;
 
+
   @RequestMapping(method=POST, path="/api/register")
-  public @ResponseBody ResponseEntity<User> createUser(@Valid @RequestBody LocationDTO locationDTO, @Valid @RequestBody UserDTO userDTO) throws RegisterException {
+  public @ResponseBody ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) throws RegisterException {
     userService.findByUsername(userDTO.getUsername()).ifPresent(
       user -> { throw new RegisterException("register.error.usernameExists"); });
     userService.findByEmail((userDTO.getEmail())).ifPresent(
       user -> { throw new RegisterException("register.error.emailExists"); });
-    User user = userService.createUser(locationDTO, userDTO);
+    User user = userService.createUser(userDTO);
     return ResponseEntity.ok(user);
   }
 

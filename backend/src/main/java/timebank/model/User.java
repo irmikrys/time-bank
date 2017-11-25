@@ -33,7 +33,7 @@ public class User implements Serializable {
   private Long idLocation;
 
   @Column(name = "photo")
-  private int photo;
+  private Byte photo = null;
 
   public String getUsername() {
     return username;
@@ -91,11 +91,4 @@ public class User implements Serializable {
     this.idLocation = idLocation;
   }
 
-  public int getPhoto() {
-    return photo;
-  }
-
-  public void setPhoto(int photo) {
-    this.photo = photo;
-  }
 }

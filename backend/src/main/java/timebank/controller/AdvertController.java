@@ -28,10 +28,11 @@ public class AdvertController {
   @Qualifier("advertService")
   private AdvertService advertService;
 
+
   @RequestMapping(method=POST, path="/api/advert")
-  public @ResponseBody ResponseEntity<Advert> createAdvert(@Valid @RequestBody LocationDTO locationDTO, @Valid @RequestBody AdvertDTO advertDTO, HttpSession session) {
+  public @ResponseBody ResponseEntity<Advert> createAdvert(@Valid @RequestBody AdvertDTO advertDTO, HttpSession session) {
     UserSession userSession = (UserSession) session.getAttribute("user");
-    Advert advert = advertService.createAdvert(userSession.getUsername(), locationDTO, advertDTO);
+    Advert advert = advertService.createAdvert(userSession.getUsername(), advertDTO);
     return ResponseEntity.ok(advert);
   }
 

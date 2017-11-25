@@ -21,6 +21,7 @@ public class AuthenticationResource {
   @Autowired
   AuthenticationManager authenticationManager;
 
+
   @RequestMapping(method = RequestMethod.POST)
   public UserSession login(@RequestBody Credentials credentials, HttpSession httpSession) {
     Authentication authentication = new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword());

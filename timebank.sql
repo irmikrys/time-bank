@@ -11,7 +11,7 @@ CREATE TABLE users (
   password VARCHAR(60) NOT NULL,
   id_location INT(30) NOT NULL,
   email VARCHAR(50) NOT NULL,
-  photo GEOMETRY,
+  photo GEOMETRY DEFAULT NULL,
   PRIMARY KEY (username)
 );
 

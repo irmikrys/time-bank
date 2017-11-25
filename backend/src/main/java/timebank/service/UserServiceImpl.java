@@ -46,8 +46,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User createUser(LocationDTO locationDTO, UserDTO userDTO) {
-    Location location = locationService.createLocation(locationDTO);
+  public User createUser(UserDTO userDTO) {
+    Location location = locationService.createLocation(userDTO.getLocationDTO());
     User user = userDTO.toUser(bCryptPasswordEncoder.encode(userDTO.getPassword()),"USER", location.getIdLocation());
     return userRepository.save(user);
   }

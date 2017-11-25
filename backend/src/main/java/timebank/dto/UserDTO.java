@@ -1,10 +1,14 @@
 package timebank.dto;
 
 import org.hibernate.validator.constraints.Email;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import timebank.model.User;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import javax.validation.executable.ValidateOnExecution;
 
 public class UserDTO {
 
@@ -25,6 +29,9 @@ public class UserDTO {
 
   @Email
   private String email;
+
+  @Valid
+  private LocationDTO locationDTO;
 
   public String getUsername() {
     return username;
@@ -54,6 +61,14 @@ public class UserDTO {
 
   public void setEmail(String email) { this.email = email; }
 
+  public LocationDTO getLocationDTO() {
+    return locationDTO;
+  }
+
+  public void setLocationDTO(LocationDTO locationDTO) {
+    this.locationDTO = locationDTO;
+  }
+
   public User toUser(String password, String role, long idLocation) {
     User user = new User();
     user.setUsername(getUsername());
@@ -66,4 +81,14 @@ public class UserDTO {
     return user;
   }
 
+  @Override
+  public String toString() {
+    return "UserDTO{" +
+      "username='" + username + '\'' +
+      ", password='" + password + '\'' +
+      ", firstName='" + firstName + '\'' +
+      ", lastName='" + lastName + '\'' +
+      ", email='" + email + '\'' +
+      '}';
+  }
 }

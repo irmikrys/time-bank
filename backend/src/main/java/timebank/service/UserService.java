@@ -14,7 +14,7 @@ public interface UserService {
 
   Iterable<User> findAll();
 
-  User createUser(LocationDTO locationDTO, UserDTO userDTO);
+  User createUser(UserDTO userDTO);
 
   User updateUser(UserDTO userDTO);
 

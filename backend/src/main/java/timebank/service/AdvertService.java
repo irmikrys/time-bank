@@ -14,7 +14,7 @@ public interface AdvertService {
 
   Iterable<Advert> findAll();
 
-  Advert createAdvert(String username, LocationDTO locationDTO, AdvertDTO advertDTO);
+  Advert createAdvert(String username, AdvertDTO advertDTO);
 
   Advert updateAdvert(AdvertDTO advertDTO, Advert advert);
 

@@ -1,17 +1,21 @@
 package timebank.dto;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.beans.factory.annotation.Value;
 import timebank.model.Location;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 public class LocationDTO {
 
   @NotBlank
+  @Size(min=3, max=30)
   private String description;
 
-  @NotBlank
+  @NotNull
   private double latitude;
 
-  @NotBlank
+  @NotNull
   private double longitude;
 
   public String getDescription() {
@@ -44,5 +48,14 @@ public class LocationDTO {
     location.setLatitude(getLatitude());
     location.setLongitude(getLongitude());
     return location;
+  }
+
+  @Override
+  public String toString() {
+    return "LocationDTO{" +
+      "description='" + description + '\'' +
+      ", latitude=" + latitude +
+      ", longitude=" + longitude +
+      '}';
   }
 }
