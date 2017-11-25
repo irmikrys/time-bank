@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import timebank.dto.LocationDTO;
 import timebank.dto.UserDTO;
+import timebank.model.Account;
 import timebank.model.Location;
 import timebank.model.User;
 import timebank.repository.UserRepository;
@@ -23,6 +24,10 @@ public class UserServiceImpl implements UserService {
   @Autowired
   @Qualifier("locationService")
   private LocationService locationService;
+
+  @Autowired
+  @Qualifier("accountService")
+  private AccountService accountService;
 
   @Autowired
   private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -48,6 +53,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public User createUser(UserDTO userDTO) {
     Location location = locationService.createLocation(userDTO.getLocationDTO());
+    Account account = accountService.createAccount(userDTO.getUsername());
     User user = userDTO.toUser(bCryptPasswordEncoder.encode(userDTO.getPassword()),"USER", location.getIdLocation());
     return userRepository.save(user);
   }

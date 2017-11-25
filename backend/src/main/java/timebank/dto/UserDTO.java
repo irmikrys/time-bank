@@ -27,6 +27,7 @@ public class UserDTO {
   @Size(min=3, max=30)
   private String lastName;
 
+  // @Email(message = "invalid mail!!!")
   @Email
   private String email;
 
