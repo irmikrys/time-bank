@@ -3,7 +3,8 @@ import { FormFieldBuilder } from "../component/forms/FormFieldBuilder";
 export const MENU_FOR_USER = [
   {label: 'Home', link: '/'},
   {label: 'Logout', link: '/logout'},
-  {label: 'Profile', link: '/profile'}
+  {label: 'Profile', link: '/profile'},
+  {label: 'Add advert', link: '/new_advert'}
 ];
 
 export const MENU_FOR_GUEST = [
