@@ -54,7 +54,7 @@ public class UserDTO {
 
   public void setEmail(String email) { this.email = email; }
 
-  public User toUserInfo(String password, String role) {
+  public User toUser(String password, String role, long idLocation) {
     User user = new User();
     user.setUsername(getUsername());
     user.setFirstName(getFirstName());
@@ -62,6 +62,7 @@ public class UserDTO {
     user.setEmail(getEmail());
     user.setPassword(password);
     user.setRole(role);
+    user.setIdLocation(idLocation);
     return user;
   }
 

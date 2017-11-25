@@ -4,8 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import timebank.dto.AdvertDTO;
+import timebank.dto.LocationDTO;
 import timebank.model.Advert;
+import timebank.model.Location;
 import timebank.repository.AdvertRepository;
+import timebank.repository.LocationRepository;
+
+import java.util.Optional;
 
 @Service("advertService")
 public class AdvertServiceImpl implements AdvertService {
@@ -14,8 +19,12 @@ public class AdvertServiceImpl implements AdvertService {
   @Qualifier("advertRepository")
   private AdvertRepository advertRepository;
 
+  @Autowired
+  @Qualifier("locationService")
+  private LocationService locationService;
+
   @Override
-  public Advert findByIdAdvert(Long idAdvert) {
+  public Optional<Advert> findByIdAdvert(Long idAdvert) {
     return advertRepository.findByIdAdvert(idAdvert);
   }
 
@@ -30,15 +39,17 @@ public class AdvertServiceImpl implements AdvertService {
   }
 
   @Override
-  public Advert createAdvert(AdvertDTO advertDTO, String username) {
-    Advert advert = advertDTO.toAdvert((username));
+  public Advert createAdvert(String username, LocationDTO locationDTO, AdvertDTO advertDTO) {
+    Location location = locationService.createLocation(locationDTO);
+    Advert advert = advertDTO.toAdvert(username, location.getIdLocation());
     return advertRepository.save(advert);
   }
 
   @Override
   public Advert updateAdvert(AdvertDTO advertDTO, Advert advert) {
-    advert.setTitle(advertDTO.getTitle());
-    advert.setDescription(advertDTO.getDescription());
-    return advertRepository.save(advert);
+//    advert.setTitle(advertDTO.getTitle());
+//    advert.setDescription(advertDTO.getDescription());
+//    return advertRepository.save(advert);
+    return new Advert();
   }
 }

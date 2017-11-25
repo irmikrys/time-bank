@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name="advert")
+@Table(name = "adverts")
 public class Advert implements Serializable {
 
   @Id
@@ -14,18 +14,36 @@ public class Advert implements Serializable {
   @Column(name = "id_advert")
   private long idAdvert;
 
-  @Column(name ="username")
+  @Column(name = "username")
   private String username;
 
-  @Column(name ="title")
+  @Column(name = "type")
+  private String type;
+
+  @Column(name = "id_category")
+  private long idCategory;
+
+  @Column(name = "title")
   private String title;
 
-  @Column(name ="description")
+  @Column(name = "description")
   private String description;
 
+  @Column(name = "value")
+  private int value;
+
+  @Column(name = "id_location")
+  private long idLocation;
+
+  @Column(name = "performer")
+  private String performer;
+
+  @Column(name = "active")
+  private Boolean active;
+
   @CreationTimestamp
-  @Column(name ="date")
-  private Date date;
+  @Column(name ="create_date")
+  private Date creationDate;
 
   public long getIdAdvert() {
     return idAdvert;
@@ -41,6 +59,22 @@ public class Advert implements Serializable {
 
   public void setUsername(String username) {
     this.username = username;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public long getIdCategory() {
+    return idCategory;
+  }
+
+  public void setIdCategory(long idCategory) {
+    this.idCategory = idCategory;
   }
 
   public String getTitle() {
@@ -59,12 +93,44 @@ public class Advert implements Serializable {
     this.description = description;
   }
 
-  public Date getDate() {
-    return date;
+  public int getValue() {
+    return value;
   }
 
-  public void setDate(Date date) {
-    this.date = date;
+  public void setValue(int value) {
+    this.value = value;
+  }
+
+  public long getIdLocation() {
+    return idLocation;
+  }
+
+  public void setIdLocation(long idLocation) {
+    this.idLocation = idLocation;
+  }
+
+  public String getPerformer() {
+    return performer;
+  }
+
+  public void setPerformer(String performer) {
+    this.performer = performer;
+  }
+
+  public Boolean getActive() {
+    return active;
+  }
+
+  public void setActive(Boolean active) {
+    this.active = active;
+  }
+
+  public Date getCreationDate() {
+    return creationDate;
+  }
+
+  public void setCreationDate(Date creationDate) {
+    this.creationDate = creationDate;
   }
 
 }

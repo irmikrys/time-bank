@@ -10,8 +10,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 import timebank.dto.AdvertDTO;
+import timebank.dto.LocationDTO;
 import timebank.dto.session.UserSession;
 import timebank.exceptions.AccessingPrivateResourcesException;
+import timebank.exceptions.CreateAdvertException;
 import timebank.model.Advert;
 import timebank.service.AdvertService;
 
@@ -27,16 +29,17 @@ public class AdvertController {
   private AdvertService advertService;
 
   @RequestMapping(method=POST, path="/api/advert")
-  public @ResponseBody ResponseEntity<Advert> createAdvert(@Valid @RequestBody AdvertDTO advertDTO, HttpSession session) {
+  public @ResponseBody ResponseEntity<Advert> createAdvert(@Valid @RequestBody LocationDTO locationDTO, @Valid @RequestBody AdvertDTO advertDTO, HttpSession session) {
     UserSession userSession = (UserSession) session.getAttribute("user");
-    Advert advert = advertService.createAdvert(advertDTO, userSession.getUsername());
+    Advert advert = advertService.createAdvert(userSession.getUsername(), locationDTO, advertDTO);
     return ResponseEntity.ok(advert);
   }
 
   @RequestMapping(method=PUT, path="/api/advert/{id}")
-  public @ResponseBody ResponseEntity<Advert> updateAdvert(@PathVariable("id") long idAdvert, @Valid @RequestBody AdvertDTO advertDTO, HttpSession session) throws AccessingPrivateResourcesException {
+  public @ResponseBody ResponseEntity<Advert> updateAdvert(@PathVariable("id") long idAdvert, @Valid @RequestBody AdvertDTO advertDTO, HttpSession session) throws AccessingPrivateResourcesException, CreateAdvertException {
     UserSession userSession = (UserSession) session.getAttribute("user");
-    Advert advert = advertService.findByIdAdvert(idAdvert);
+    Advert advert = advertService.findByIdAdvert(idAdvert).orElseThrow(
+      () -> new CreateAdvertException("updateAdvert.error.advertnotfound"));
     if (!userSession.getUsername().equals(advert.getUsername()))
       throw new AccessingPrivateResourcesException("updateAdvert.error.unauthorised");
     Advert updatedAdvert = advertService.updateAdvert(advertDTO, advert);

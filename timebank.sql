@@ -48,16 +48,21 @@ CREATE TABLE interested (
 
 DROP TABLE IF EXISTS categories;
 CREATE TABLE categories (
-  id_category INT(30) NOT NULL AUTO_INCREMENT,
-  name VARCHAR(60) NOT NULL,
+  id_category   INT(30)         NOT NULL AUTO_INCREMENT,
+  name          VARCHAR(60)     NOT NULL,
   PRIMARY KEY (id_category)
 );
 
 DROP TABLE IF EXISTS locations;
 CREATE TABLE  locations (
-  id_location INT(30) NOT NULL AUTO_INCREMENT,
-  description VARCHAR(60) NOT NULL,
-  latitude NUMERIC(18,14) NOT NULL,
-  longitude NUMERIC(18,14) NOT NULL,
+  id_location   INT(30)         NOT NULL AUTO_INCREMENT,
+  description   VARCHAR(60)     NOT NULL,
+  latitude      NUMERIC(18,14)  NOT NULL,
+  longitude     NUMERIC(18,14)  NOT NULL,
   PRIMARY KEY (id_location)
 );
+
+INSERT INTO categories (id_category, name) VALUES
+  (1, "zdrowie"),
+  (2, "spoleczne"),
+  (3, "nauka");

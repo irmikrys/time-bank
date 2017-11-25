@@ -1,5 +1,6 @@
 package timebank.service;
 
+import timebank.dto.LocationDTO;
 import timebank.dto.UserDTO;
 import timebank.model.User;
 
@@ -13,7 +14,7 @@ public interface UserService {
 
   Iterable<User> findAll();
 
-  User createUser(UserDTO userDTO);
+  User createUser(LocationDTO locationDTO, UserDTO userDTO);
 
   User updateUser(UserDTO userDTO);
 

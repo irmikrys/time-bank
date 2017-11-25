@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import timebank.dto.LocationDTO;
 import timebank.dto.UserDTO;
+import timebank.model.Location;
 import timebank.model.User;
 import timebank.repository.UserRepository;
 
@@ -17,6 +19,10 @@ public class UserServiceImpl implements UserService {
   @Autowired
   @Qualifier("userRepository")
   private UserRepository userRepository;
+
+  @Autowired
+  @Qualifier("locationService")
+  private LocationService locationService;
 
   @Autowired
   private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -40,8 +46,9 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User createUser(UserDTO userDTO) {
-    User user = userDTO.toUserInfo(bCryptPasswordEncoder.encode(userDTO.getPassword()),"USER");
+  public User createUser(LocationDTO locationDTO, UserDTO userDTO) {
+    Location location = locationService.createLocation(locationDTO);
+    User user = userDTO.toUser(bCryptPasswordEncoder.encode(userDTO.getPassword()),"USER", location.getIdLocation());
     return userRepository.save(user);
   }
 
