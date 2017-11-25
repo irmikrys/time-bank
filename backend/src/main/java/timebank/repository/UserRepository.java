@@ -1,13 +1,17 @@
 package timebank.repository;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import timebank.model.UserInfo;
+import org.springframework.stereotype.Repository;
+import timebank.model.User;
 
-public interface UserRepository extends CrudRepository<UserInfo, Long> {
+import java.util.Optional;
 
-  UserInfo findByUsername(String username);
+@Repository("userRepository")
+public interface UserRepository extends JpaRepository<User, String> {
 
-  UserInfo findByEmail(String email);
+  Optional<User> findByUsername(String username);
+
+  Optional<User> findByEmail(String email);
 
 }

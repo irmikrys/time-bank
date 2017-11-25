@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import timebank.model.Credentials;
-import timebank.model.UserSession;
+import timebank.dto.session.Credentials;
+import timebank.dto.session.UserSession;
 
 import javax.servlet.http.HttpSession;
 
@@ -25,7 +25,6 @@ public class AuthenticationResource {
   public UserSession login(@RequestBody Credentials credentials, HttpSession httpSession) {
     Authentication authentication = new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword());
     SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(authentication));
-
     UserSession userSession = new UserSession(credentials.getUsername(), httpSession.getId(), true);
     httpSession.setAttribute("user", userSession);
     return userSession;

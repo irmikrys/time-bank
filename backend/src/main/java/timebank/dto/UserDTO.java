@@ -1,20 +1,26 @@
-package timebank.model;
+package timebank.dto;
 
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
+import timebank.model.User;
 
-public class UserCreateRequest {
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
-  @NotBlank
+public class UserDTO {
+
+  @Pattern(regexp = "^([a-zA-Z0-9]+[-_.]?)*[a-zA-Z0-9]+$")
+  @Size(min=3, max=30)
   private String username;
 
-  @NotBlank
+  @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).{6,30}")
   private String password;
 
-  @NotBlank
+  @Pattern(regexp = "^([a-zA-Z]+\\s?)*[a-zA-Z]+$")
+  @Size(min=3, max=30)
   private String firstName;
 
-  @NotBlank
+  @Pattern(regexp = "^([a-zA-Z]+\\s?)*[a-zA-Z]+$")
+  @Size(min=3, max=30)
   private String lastName;
 
   @Email
@@ -48,14 +54,15 @@ public class UserCreateRequest {
 
   public void setEmail(String email) { this.email = email; }
 
-  public UserInfo toUserInfo(String password, String role) {
-    UserInfo userInfo = new UserInfo();
-    userInfo.setUsername(getUsername());
-    userInfo.setFirstName(getFirstName());
-    userInfo.setLastName(getLastName());
-    userInfo.setEmail(getEmail());
-    userInfo.setPassword(password);
-    userInfo.setRole(role);
-    return userInfo;
+  public User toUserInfo(String password, String role) {
+    User user = new User();
+    user.setUsername(getUsername());
+    user.setFirstName(getFirstName());
+    user.setLastName(getLastName());
+    user.setEmail(getEmail());
+    user.setPassword(password);
+    user.setRole(role);
+    return user;
   }
+
 }
