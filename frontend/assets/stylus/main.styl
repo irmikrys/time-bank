@@ -1,7 +1,8 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:300)
+@import 'select.styl'
+@import 'geosuggest.styl'
+@import 'theme.styl'
 
-theme_dark = #0a4f7d
-theme_light = #41799c
 
 body
   background theme_dark
@@ -46,7 +47,7 @@ button
   text-align center
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)
 
-  input
+  input, textarea
     font-family "Roboto", sans-serif
     outline 0
     background #f2f2f2
@@ -56,6 +57,7 @@ button
     padding 15px
     box-sizing border-box
     font-size 14px
+    resize none
 
   button
     width 100%
@@ -78,3 +80,12 @@ button
 
   .success-message
     color #4f8a10
+
+.advert-form
+  padding 8% 0 0
+
+  .form-container
+    max-width: 600px
+
+  .geosuggest
+    top -5px

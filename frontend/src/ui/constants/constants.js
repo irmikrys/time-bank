@@ -1,9 +1,17 @@
 import { FormFieldBuilder } from "../component/forms/FormFieldBuilder";
 
+export const CATEGORIES = [
+  {value: 'Pet Care', label: 'Pet Care'},
+  {value: 'Cooking', label: 'Cooking'},
+  {value: 'Housekeeping', label: 'Housekeeping'},
+  {value: 'Tutoring', label: 'Tutoring'}
+];
+
 export const MENU_FOR_USER = [
   {label: 'Home', link: '/'},
   {label: 'Logout', link: '/logout'},
-  {label: 'Profile', link: '/profile'}
+  {label: 'Profile', link: '/profile'},
+  {label: 'Add Advert', link: '/new_advert'}
 ];
 
 export const MENU_FOR_GUEST = [
