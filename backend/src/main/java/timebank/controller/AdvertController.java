@@ -25,7 +25,7 @@ import javax.validation.Valid;
 
 @RestController
 public class AdvertController {
-  
+
   @Autowired
   @Qualifier("userService")
   private UserService userService;
@@ -33,11 +33,11 @@ public class AdvertController {
   @Autowired
   @Qualifier("advertService")
   private AdvertService advertService;
-  
+
   @Autowired
   @Qualifier("categoryService")
   private CategoryService categoryService;
-  
+
   @Autowired
   @Qualifier("interestedService")
   private InterestedService interestedService;
@@ -67,16 +67,14 @@ public class AdvertController {
   public @ResponseBody Iterable<Advert> getAllAdverts() {
     return this.advertService.findAll();
   }
-  
+
   @RequestMapping(method=GET, path="/api/categories")
   public @ResponseBody Iterable<Category> getAllCategories() {
     return this.categoryService.findAll();
   }
 
-  // TODO co po zaintereoswaniu? odswiezanie strony z lista ogloszen?
-  @RequestMapping(method=PUT, path="/api/advertIntr/{id}")
+  @RequestMapping(method=PUT, path="/api/advert/showInterest/{id}")
   public void showInterest(@PathVariable("id") long idAdvert, HttpSession session) {
-//  public void showInterest(long idAdvert, HttpSession session) {
     UserSession userSession = (UserSession) session.getAttribute("user");
     this.userService.findByUsername(userSession.getUsername()).orElseThrow(
       () -> new ShowInterestException("showInterest.error.userNotFound"));
@@ -84,14 +82,13 @@ public class AdvertController {
       () -> new ShowInterestException("showInterest.error.advertNotFound"));
     this.interestedService.findByIdAdvertAndInterested(idAdvert, userSession.getUsername()).ifPresent(
       intrested -> { throw new ShowInterestException("showInterest.error.alreadyInterested"); });
-    // kiedy ogloszenie wystawil obecnie zalogowany uzytkownik
     if (advert.getEmployer().equals(userSession.getUsername())) {
-      throw new ShowInterestException("showInterest.error.youcannotshowinterestinyourownadvert");
+      throw new ShowInterestException("showInterest.error.youCannotShowInterestInYourOwnAdvert");
     }
     this.advertService.showInterest(idAdvert, userSession.getUsername());
   }
-  
-  @RequestMapping(method=PUT, path="/api/advertRem/{id}")
+
+  @RequestMapping(method=PUT, path="/api/advert/removeInterest/{id}")
   public void stopShowingInterest(@PathVariable("id") long idAdvert, HttpSession session) {
     UserSession userSession = (UserSession) session.getAttribute("user");
     this.userService.findByUsername(userSession.getUsername()).orElseThrow(
@@ -100,8 +97,8 @@ public class AdvertController {
       () -> new ShowInterestException("stopShowingInterest.error.advertNotFound"));
     this.advertService.stopShowingInterest(idAdvert, userSession.getUsername());
   }
-  
-  @RequestMapping(method=PUT, path="/api/advertFinal/{id}/{performer}")
+
+  @RequestMapping(method=PUT, path="/api/advert/{id}/{performer}")
   public void chooseFinalPerformer(@PathVariable("id") long idAdvert, @PathVariable("performer") String performer, HttpSession session) {
     UserSession userSession = (UserSession) session.getAttribute("user");
     this.userService.findByUsername(userSession.getUsername()).orElseThrow(
@@ -116,8 +113,8 @@ public class AdvertController {
     }
     this.advertService.chooseFinalPerformer(idAdvert, performer);
   }
-  
-  @RequestMapping(method=PUT, path="/api/advertRemFinal/{id}")
+
+  @RequestMapping(method=PUT, path="/api/advert/removePerformer/{id}")
   public void removeFinalPerformer(@PathVariable("id") long idAdvert, HttpSession session) {
     UserSession userSession = (UserSession) session.getAttribute("user");
     this.userService.findByUsername(userSession.getUsername()).orElseThrow(
@@ -129,8 +126,8 @@ public class AdvertController {
     }
     this.advertService.removeFinalPerformer(idAdvert, advert.getPerformer());
   }
-  
-  @RequestMapping(method=PUT, path="/api/advertFinalize/{id}")
+
+  @RequestMapping(method=PUT, path="/api/advert/finalize/{id}")
   public void finalizeTransaction(@PathVariable("id") long idAdvert, HttpSession session) {
     UserSession userSession = (UserSession) session.getAttribute("user");
     this.userService.findByUsername(userSession.getUsername()).orElseThrow(
@@ -145,5 +142,5 @@ public class AdvertController {
     }
     this.advertService.finalizeAdvert(advert);
   }
-  
+
 }

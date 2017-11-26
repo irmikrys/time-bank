@@ -3,10 +3,10 @@ package timebank.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import timebank.dto.UserDTO;
-import timebank.model.Account;
 import timebank.model.Location;
 import timebank.model.User;
 import timebank.repository.UserRepository;
@@ -32,7 +32,7 @@ public class UserService {
 
   @Autowired
   private JdbcTemplate jdbcTemplate;
-  
+
 
   public Optional<User> findByUsername(String username) {
     return this.userRepository.findByUsername(username);
@@ -47,19 +47,21 @@ public class UserService {
   }
 
   public User createUser(UserDTO userDTO) {
-    Location location = this.locationService.createLocation(userDTO.getLocationDTO());
-    Account account = this.accountService.createAccount(userDTO.getUsername());
+    Location location = this.locationService.createLocation(userDTO.getLocation());
     User user = userDTO.toUser(this.bCryptPasswordEncoder.encode(userDTO.getPassword()),"USER", location.getIdLocation());
+    this.accountService.createAccount(userDTO.getUsername());
     return this.userRepository.save(user);
   }
 
+  // TODO: Photo update
   public User updateUser(UserDTO userDTO) {
-//    User updatedUser = userRepository.findByUsername(userDTO.getUsername());
-//    updatedUser.setFirstName(userDTO.getFirstName());
-//    updatedUser.setLastName(userDTO.getLastName());
-//    updatedUser.setEmail(userDTO.getEmail());
-//    updatedUser.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
-//    return userRepository.save(updatedUser);
-    return new User();
+    User updatedUser = this.userRepository.findByUsername(userDTO.getUsername()).orElseThrow(
+      () -> new UsernameNotFoundException("updateUser.error.usernameNotFound"));
+    updatedUser.setFirstName(userDTO.getFirstName());
+    updatedUser.setLastName(userDTO.getLastName());
+    updatedUser.setEmail(userDTO.getEmail());
+    updatedUser.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+    this.locationService.updateLocation(userDTO, updatedUser);
+    return userRepository.save(updatedUser);
   }
 }

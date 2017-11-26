@@ -1,13 +1,15 @@
 package timebank.model;
 
 import org.hibernate.annotations.CreationTimestamp;
+import timebank.model.interfaces.LocationIdHolder;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "adverts")
-public class Advert implements Serializable {
+public class Advert implements Serializable, LocationIdHolder {
 
   @Id
   @GeneratedValue(strategy= GenerationType.IDENTITY)

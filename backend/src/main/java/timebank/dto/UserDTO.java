@@ -1,16 +1,14 @@
 package timebank.dto;
 
 import org.hibernate.validator.constraints.Email;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
+import timebank.dto.interfaces.LocationDTOHolder;
 import timebank.model.User;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import javax.validation.executable.ValidateOnExecution;
 
-public class UserDTO {
+public class UserDTO implements LocationDTOHolder {
 
   @Pattern(regexp = "^([a-zA-Z0-9]+[-_.]?)*[a-zA-Z0-9]+$")
   @Size(min=3, max=30)
@@ -18,7 +16,7 @@ public class UserDTO {
 
   @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).{6,30}")
   private String password;
-  
+
   @Email
   private String email;
 
@@ -31,56 +29,56 @@ public class UserDTO {
   private String lastName;
 
   @Valid
-  private LocationDTO locationDTO;
-  
+  private LocationDTO location;
+
   public String getUsername() {
     return username;
   }
-  
+
   public void setUsername(String username) {
     this.username = username;
   }
-  
+
   public String getPassword() {
     return password;
   }
-  
+
   public void setPassword(String password) {
     this.password = password;
   }
-  
+
   public String getEmail() {
     return email;
   }
-  
+
   public void setEmail(String email) {
     this.email = email;
   }
-  
+
   public String getFirstName() {
     return firstName;
   }
-  
+
   public void setFirstName(String firstName) {
     this.firstName = firstName;
   }
-  
+
   public String getLastName() {
     return lastName;
   }
-  
+
   public void setLastName(String lastName) {
     this.lastName = lastName;
   }
-  
-  public LocationDTO getLocationDTO() {
-    return locationDTO;
+
+  public LocationDTO getLocation() {
+    return location;
   }
-  
-  public void setLocationDTO(LocationDTO locationDTO) {
-    this.locationDTO = locationDTO;
+
+  public void setLocation(LocationDTO locationDTO) {
+    this.location = locationDTO;
   }
-  
+
   public User toUser(String password, String role, long idLocation) {
     User user = new User();
     user.setUsername(getUsername());

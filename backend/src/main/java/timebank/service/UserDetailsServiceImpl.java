@@ -22,10 +22,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   @Qualifier("userRepository")
   private UserRepository userRepository;
 
-  
+
   @Override
   @Transactional(readOnly = true)
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+  public UserDetails loadUserByUsername(String username) {
     User user = this.userRepository.findByUsername(username).orElseThrow(
       () -> new UsernameNotFoundException("Username not found"));
 

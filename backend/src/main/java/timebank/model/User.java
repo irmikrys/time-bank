@@ -1,5 +1,7 @@
 package timebank.model;
 
+import timebank.model.interfaces.LocationIdHolder;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -8,7 +10,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable {
+public class User implements Serializable, LocationIdHolder {
 
   @Id
   @Column(name = "username")
@@ -33,7 +35,7 @@ public class User implements Serializable {
   private Byte photo;
 
   @Column(name = "id_location")
-  private Long idLocation;
+  private long idLocation;
 
   public String getUsername() {
     return username;
@@ -91,11 +93,11 @@ public class User implements Serializable {
     this.photo = photo;
   }
 
-  public Long getIdLocation() {
+  public long getIdLocation() {
     return idLocation;
   }
 
-  public void setIdLocation(Long idLocation) {
+  public void setIdLocation(long idLocation) {
     this.idLocation = idLocation;
   }
 }

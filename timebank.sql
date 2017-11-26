@@ -79,7 +79,7 @@ CREATE TABLE archive (
 );
 
 INSERT INTO categories (id_category, name) VALUES
-  (1, "inne"),
-  (2, "spoleczne"),
-  (3, "nauka"),
-  (4, "sprzatanie");
+  (1, "Pet Care"),
+  (2, "Cooking"),
+  (3, "Housekeeping"),
+  (4, "Tutoring");
