@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 public class LocationDTO {
 
   @NotBlank
-  @Size(min=3, max=30)
+  @Size(min=3, max=60)
   private String description;
 
   @NotNull

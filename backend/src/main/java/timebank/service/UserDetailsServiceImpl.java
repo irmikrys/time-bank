@@ -16,16 +16,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService{
+public class UserDetailsServiceImpl implements UserDetailsService {
 
   @Autowired
   @Qualifier("userRepository")
   private UserRepository userRepository;
 
+  
   @Override
   @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = userRepository.findByUsername(username).orElseThrow(
+    User user = this.userRepository.findByUsername(username).orElseThrow(
       () -> new UsernameNotFoundException("Username not found"));
 
     Set<GrantedAuthority> grantedAuthorities = new HashSet<>();

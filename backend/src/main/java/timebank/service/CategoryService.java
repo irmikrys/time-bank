@@ -1,17 +1,35 @@
 package timebank.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 import timebank.model.Category;
-
+import timebank.repository.CategoryRepository;
 import java.util.Optional;
 
-public interface CategoryService {
+@Service("categoryService")
+public class CategoryService {
 
-  Optional<Category> findByIdCategory(long idCategory);
+  @Autowired
+  @Qualifier("categoryRepository")
+  private CategoryRepository categoryRepository;
 
-  Optional<Category> findByName(String name);
+  
+  public Optional<Category> findByIdCategory(long idCategory) {
+    return this.categoryRepository.findByIdCategory(idCategory);
+  }
 
-  Iterable<Category> findAll();
+  public Optional<Category> findByName(String name) {
+    return this.categoryRepository.findByName(name);
+  }
 
-  Category createCategory(String name);
+  public Iterable<Category> findAll() {
+    return this.categoryRepository.findAll();
+  }
 
+  public Category createCategory(String name) {
+    Category category = new Category();
+    category.setName(name);
+    return this.categoryRepository.save(category);
+  }
 }

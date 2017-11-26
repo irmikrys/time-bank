@@ -1,25 +1,23 @@
 package timebank.model;
 
 import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "adverts")
-public class Advert implements Serializable {
-
+@Table(name = "archive")
+public class ArchiveAdvert implements Serializable {
+  
   @Id
   @GeneratedValue(strategy= GenerationType.IDENTITY)
   @Column(name = "id_advert")
   private long idAdvert;
   
-  @Column(name = "active")
-  private Boolean active;
-  
   @Column(name = "type")
   private String type;
-
+  
   @Column(name = "employer")
   private String employer;
   
@@ -28,22 +26,22 @@ public class Advert implements Serializable {
   
   @Column(name = "title")
   private String title;
-
+  
   @Column(name = "description")
   private String description;
   
   @Column(name = "id_category")
   private long idCategory;
-
+  
   @Column(name = "value")
   private int value;
   
-  @CreationTimestamp
   @Column(name ="create_date")
   private Date creationDate;
-
-  @Column(name = "id_location")
-  private long idLocation;
+  
+  @CreationTimestamp
+  @Column(name ="close_date")
+  private Date closeDate;
   
   public long getIdAdvert() {
     return idAdvert;
@@ -51,14 +49,6 @@ public class Advert implements Serializable {
   
   public void setIdAdvert(long idAdvert) {
     this.idAdvert = idAdvert;
-  }
-  
-  public Boolean getActive() {
-    return active;
-  }
-  
-  public void setActive(Boolean active) {
-    this.active = active;
   }
   
   public String getType() {
@@ -125,24 +115,11 @@ public class Advert implements Serializable {
     this.creationDate = creationDate;
   }
   
-  public long getIdLocation() {
-    return idLocation;
+  public Date getCloseDate() {
+    return closeDate;
   }
   
-  public void setIdLocation(long idLocation) {
-    this.idLocation = idLocation;
-  }
-  
-  public ArchiveAdvert toArchiveAdvert() {
-    ArchiveAdvert archiveAdvert = new ArchiveAdvert();
-    archiveAdvert.setType(getType());
-    archiveAdvert.setEmployer(getEmployer());
-    archiveAdvert.setPerformer(getPerformer());
-    archiveAdvert.setTitle(getTitle());
-    archiveAdvert.setDescription(getDescription());
-    archiveAdvert.setIdCategory(getIdCategory());
-    archiveAdvert.setValue(getValue());
-    archiveAdvert.setCreationDate(getCreationDate());
-    return archiveAdvert;
+  public void setCloseDate(Date closeDate) {
+    this.closeDate = closeDate;
   }
 }

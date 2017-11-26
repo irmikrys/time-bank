@@ -12,34 +12,37 @@ public class Account implements Serializable {
   @Column(name = "account_nr")
   private long accountNr;
 
-  @Column(name = "username")
-  private String username;
+  @Column(name = "owner")
+  private String owner;
 
-  @Column(name = "amount")
-  private int amount;
-
+  @Column(name = "balance")
+  private int balance;
+  
   public long getAccountNr() {
     return accountNr;
   }
-
+  
   public void setAccountNr(long accountNr) {
     this.accountNr = accountNr;
   }
-
-  public String getUsername() {
-    return username;
+  
+  public String getOwner() {
+    return owner;
   }
-
-  public void setUsername(String username) {
-    this.username = username;
+  
+  public void setOwner(String owner) {
+    this.owner = owner;
   }
-
+  
   public int getAmount() {
-    return amount;
+    return balance;
   }
-
+  
   public void setAmount(int amount) {
-    this.amount = amount;
+    this.balance = amount;
   }
-
+  
+  public void changeAccountBalance(int amount) {
+    this.balance += amount;
+  }
 }

@@ -15,6 +15,7 @@ import timebank.dto.ErrorMessage;
 
 @ControllerAdvice(assignableTypes = UserController.class)
 public class UserControllerExceptionHandler {
+  
   private final Log log = LogFactory.getLog(getClass());
 
   @ExceptionHandler(RegisterException.class)

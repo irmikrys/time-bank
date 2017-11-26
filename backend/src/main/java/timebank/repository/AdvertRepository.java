@@ -9,8 +9,10 @@ import java.util.Optional;
 @Repository("advertRepository")
 public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
-  Optional<Advert> findByIdAdvert(Long idAdvert);
+  Optional<Advert> findByIdAdvert(long idAdvert);
 
-  Iterable<Advert> findAllByUsername(String username);
+  Iterable<Advert> findAllByEmployer(String username);
+  
+  void deleteByIdAdvert(long idAdvert);
 
 }
