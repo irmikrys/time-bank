@@ -23,6 +23,10 @@ public class AdvertServiceImpl implements AdvertService {
   @Qualifier("locationService")
   private LocationService locationService;
 
+  @Autowired
+  @Qualifier("interestedService")
+  private InterestedService interestedService;
+
   @Override
   public Optional<Advert> findByIdAdvert(Long idAdvert) {
     return advertRepository.findByIdAdvert(idAdvert);
@@ -51,5 +55,10 @@ public class AdvertServiceImpl implements AdvertService {
 //    advert.setDescription(advertDTO.getDescription());
 //    return advertRepository.save(advert);
     return new Advert();
+  }
+
+  @Override
+  public void showInterest(long idAdvert, String username) {
+    this.interestedService.showInterest(idAdvert, username);
   }
 }

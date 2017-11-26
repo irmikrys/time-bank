@@ -18,4 +18,6 @@ public interface AdvertService {
 
   Advert updateAdvert(AdvertDTO advertDTO, Advert advert);
 
+  void showInterest(long idAdvert, String username);
+
 }

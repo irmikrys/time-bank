@@ -14,7 +14,9 @@ import timebank.dto.LocationDTO;
 import timebank.dto.session.UserSession;
 import timebank.exceptions.AccessingPrivateResourcesException;
 import timebank.exceptions.CreateAdvertException;
+import timebank.exceptions.ShowInterestException;
 import timebank.model.Advert;
+import timebank.model.Interested;
 import timebank.service.AdvertService;
 
 import javax.servlet.http.HttpSession;
@@ -50,5 +52,16 @@ public class AdvertController {
   @RequestMapping(method=GET, path="/api/adverts")
   public @ResponseBody Iterable<Advert> getAllAdverts() {
     return advertService.findAll();
+  }
+
+  public void showInterest(long idAdvert, HttpSession session) {
+    UserSession userSession = (UserSession) session.getAttribute("user");
+    Advert advert = advertService.findByIdAdvert(idAdvert).orElseThrow(
+      () -> new ShowInterestException("showInterest.error.advertnotfound"));
+    // kiedy ogloszenie wystawil obecnie zalogowany uzytkownik
+    if (advert.getUsername().equals(userSession.getUsername())) {
+      throw new ShowInterestException("showInterest.error.youcannotshowinterestinyourownadvert");
+    }
+    advertService.showInterest(idAdvert, userSession.getUsername());
   }
 }
