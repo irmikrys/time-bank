@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { getSession } from "../../reducers/authentication";
 import "stylus/main.styl";
 import {MENU_FOR_GUEST, MENU_FOR_USER} from "../constants/constants";
+import {fetchCategories} from "../../reducers/categories";
 
 
 const TopMenu = (props) => {
@@ -25,6 +26,11 @@ const TopMenu = (props) => {
 
 export class App extends Component {
 
+  constructor(props) {
+    super(props);
+    this.props.fetchCategories();
+  }
+
   componentDidMount() {
     this.props.getSession();
   }
@@ -44,5 +50,5 @@ export class App extends Component {
 
 export default connect(
   state => ({isAuthenticated: state.authentication.isAuthenticated}),
-  {getSession}
+  {getSession, fetchCategories}
 )(App);

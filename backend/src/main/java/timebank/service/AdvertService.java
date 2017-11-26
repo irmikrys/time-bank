@@ -77,15 +77,15 @@ public class AdvertService {
 
   public void chooseFinalPerformer(long idAdvert, String performer) {
     final String sql = "UPDATE adverts a SET a.active = FALSE, a.performer = ? WHERE a.id_advert = ?";
-    int wynik = this.jdbcTemplate.update(sql, performer, idAdvert);
-    System.out.println("->-> chooseFinalPerformer: " + wynik);
+    int result = this.jdbcTemplate.update(sql, performer, idAdvert);
+    System.out.println("->-> chooseFinalPerformer: " + result);
   }
 
   public void removeFinalPerformer(long idAdvert, String performer) {
     final String sql = "UPDATE adverts a SET a.active = TRUE, a.performer = NULL WHERE a.id_advert = ?";
-    int wynik = this.jdbcTemplate.update(sql, idAdvert);
+    int result = this.jdbcTemplate.update(sql, idAdvert);
     this.stopShowingInterest(idAdvert, performer);
-    System.out.println("->-> removeFinalPerformer: " + wynik);
+    System.out.println("->-> removeFinalPerformer: " + result);
   }
 
   @Transactional
@@ -103,10 +103,10 @@ public class AdvertService {
       minus = archiveAdvert.getPerformer();
     }
     final String sql = "UPDATE accounts a SET a.balance = (a.balance + ?) WHERE a.owner = ?";
-    int wynikPlus = this.jdbcTemplate.update(sql, archiveAdvert.getValue(), plus);
-    int wynikMinus = this.jdbcTemplate.update(sql, -archiveAdvert.getValue(), minus);
-    System.out.println("->-> wynikPlus: " + wynikPlus);
-    System.out.println("->-> wynikMinus: " + wynikMinus);
+    int resultPlus = this.jdbcTemplate.update(sql, archiveAdvert.getValue(), plus);
+    int resultMinus = this.jdbcTemplate.update(sql, -archiveAdvert.getValue(), minus);
+    System.out.println("->-> wynikPlus: " + resultPlus);
+    System.out.println("->-> wynikMinus: " + resultMinus);
     System.out.println("->-> spokojnie to nie jest ostateczna wersja :C ");
 
     // 3. usuwanie wszystkich niepotrzebnych rekordow z 'adverts', 'interested' i 'locations'

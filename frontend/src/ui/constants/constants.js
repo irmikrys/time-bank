@@ -1,12 +1,5 @@
 import { FormFieldBuilder } from "../component/forms/FormFieldBuilder";
 
-export const CATEGORIES = [
-  {value: 'Pet Care', label: 'Pet Care'},
-  {value: 'Cooking', label: 'Cooking'},
-  {value: 'Housekeeping', label: 'Housekeeping'},
-  {value: 'Tutoring', label: 'Tutoring'}
-];
-
 export const MENU_FOR_USER = [
   {label: 'Home', link: '/'},
   {label: 'Logout', link: '/logout'},
@@ -64,3 +57,7 @@ const FORM_FIELDS = new Map([
     .build()
   ]
 ]);
+
+
+export const ADVERT_TYPE_REQUEST = "REQUEST";
+export const ADVERT_TYPE_OFFER = "OFFER";
