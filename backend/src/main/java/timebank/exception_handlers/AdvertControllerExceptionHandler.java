@@ -17,7 +17,7 @@ import timebank.exceptions.AdvertException;
 public class AdvertControllerExceptionHandler {
 
   private final Log log = LogFactory.getLog(getClass());
-  
+
   @ExceptionHandler(AdvertException.class)
   @ResponseBody
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -44,6 +44,7 @@ public class AdvertControllerExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   @ResponseBody
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public ErrorMessage handleUnknownException(Exception e) {
     log.warn(e.getMessage());
     return new ErrorMessage("advertService.error.unknownError");
