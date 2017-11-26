@@ -6,8 +6,10 @@ import {
   EMAIL,
   USERNAME,
   PASSWORD,
+  LOCATION,
   getFormField
 } from "../../constants/constants";
+import Geosuggest from "react-geosuggest";
 
 export default class RegisterForm extends Component {
 
@@ -16,13 +18,23 @@ export default class RegisterForm extends Component {
     [LAST_NAME]:  "",
     [EMAIL]:  "",
     [USERNAME]: "",
-    [PASSWORD]: ""
+    [PASSWORD]: "",
+    [LOCATION]: {}
   };
 
   handleInputChange = event => {
     let value = event.target.value;
     let inputName = event.target.name;
     this.setState({[inputName]: value});
+  };
+
+  handleLocationSelect = value => {
+    const location = {
+      description : value.label,
+      latitude : value.location.lat,
+      longitude: value.location.lng
+    };
+    this.setState({location: location})
   };
 
   render() {
@@ -46,6 +58,9 @@ export default class RegisterForm extends Component {
                 />
               })
             }
+            <Geosuggest placeholder={LOCATION}
+                        onSuggestSelect={this.handleLocationSelect}
+            />
             <button type="submit">Register</button>
           </form>
         </div>
