@@ -10,7 +10,8 @@ export default class AdvertForm extends Component {
     type: ADVERT_TYPE_OFFER,
     title: "",
     description: "",
-    category: "",
+    idCategory: "",
+    value: "2",
     location: {}
   };
 
@@ -30,7 +31,7 @@ export default class AdvertForm extends Component {
   };
 
   handleCategoryChange = value => {
-    this.setState({category: value})
+    this.setState({idCategory: value})
   };
 
   render() {
@@ -60,7 +61,7 @@ export default class AdvertForm extends Component {
             <Select simpleValue
                     placeholder="category"
                     clearable={false}
-                    value={this.state.category}
+                    value={this.state.idCategory}
                     onChange={this.handleCategoryChange}
                     options={this.props.categories.map(item => { return {value: item.idCategory, label: item.name }})}
             />
@@ -89,6 +90,6 @@ export default class AdvertForm extends Component {
   handleSubmit = event => {
     event.preventDefault();
     const { createAdvert } = this.props;
-    createAdvert(JSON.stringify(this.state));
+    createAdvert(this.state);
   }
 }
