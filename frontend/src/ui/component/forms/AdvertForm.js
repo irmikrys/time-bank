@@ -1,11 +1,14 @@
 import React, { Component } from "react";
+import Select from "react-select";
 import Geosuggest from "react-geosuggest";
+import {CATEGORIES} from "../../constants/constants";
 
 export default class AdvertForm extends Component {
 
   state = {
     title: "",
-    description: ""
+    description: "",
+    category: ""
   };
 
   handleInputChange = event => {
@@ -18,11 +21,22 @@ export default class AdvertForm extends Component {
     console.log(value);
   };
 
+  handleCategoryChange = value => {
+    this.setState({category: value})
+  };
+
   render() {
     return (
       <div className="advert-form">
         <div className="form-container">
           <form onSubmit={this.handleSubmit}>
+            <Select simpleValue
+                    placeholder="category"
+                    clearable={false}
+                    value={this.state.category}
+                    onChange={this.handleCategoryChange}
+                    options={CATEGORIES}
+            />
             <input placeholder="title"
                    name="title"
                    onChange={this.handleInputChange}
