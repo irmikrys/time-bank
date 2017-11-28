@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Select from "react-select";
 import Geosuggest from "react-geosuggest";
-import {ADVERT_TYPE_OFFER, ADVERT_TYPE_REQUEST} from "../../constants/constants";
+import {ADVERT_TYPE_OFFER, ADVERT_TYPE_SEEK} from "../../constants/constants";
 
 export default class AdvertForm extends Component {
 
@@ -11,7 +11,7 @@ export default class AdvertForm extends Component {
     title: "",
     description: "",
     idCategory: "",
-    value: "2",
+    value: "",
     location: {}
   };
 
@@ -52,10 +52,10 @@ export default class AdvertForm extends Component {
               <label className={`btn btn-primary toggle-btn ${!offerAdvertTypeActive ? "active" : ""}`}>
                 <input type="radio"
                        name="type"
-                       value={ADVERT_TYPE_REQUEST}
+                       value={ADVERT_TYPE_SEEK}
                        onChange={this.handleInputChange}
                        checked={!offerAdvertTypeActive}
-                /> REQUEST
+                /> SEEK
               </label>
             </div>
             <Select simpleValue
@@ -64,6 +64,11 @@ export default class AdvertForm extends Component {
                     value={this.state.idCategory}
                     onChange={this.handleCategoryChange}
                     options={this.props.categories.map(item => { return {value: item.idCategory, label: item.name }})}
+            />
+            <input placeholder="hours"
+                   name="value"
+                   onChange={this.handleInputChange}
+                   required
             />
             <input placeholder="title"
                    name="title"

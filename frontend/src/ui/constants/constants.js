@@ -60,5 +60,5 @@ const FORM_FIELDS = new Map([
 ]);
 
 
-export const ADVERT_TYPE_REQUEST = "REQUEST";
+export const ADVERT_TYPE_SEEK = "SEEK";
 export const ADVERT_TYPE_OFFER = "OFFER";
