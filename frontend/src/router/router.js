@@ -6,8 +6,9 @@ import UsersListComponent from '../ui/container/UsersListComponent';
 import UserProfile from '../ui/container/UserProfile';
 import LoginPage from '../ui/container/LoginPage';
 import RegisterPage from '../ui/container/RegisterPage';
-import privateRoute from './privateRoute';
 import NewAdvertPage from "../ui/container/NewAdvertPage";
+import TermsPage from "../ui/container/TermsPage";
+import privateRoute from './privateRoute';
 
 export default (onLogout) => (
   <Route path="/" name="app" component={App}>
@@ -17,5 +18,6 @@ export default (onLogout) => (
     <Route path="login" component={LoginPage}/>
     <Route path="logout" onEnter={onLogout}/>
     <Route path="new_advert" component={NewAdvertPage}/>
+    <Route path="terms" component={TermsPage}/>
   </Route>
 );
