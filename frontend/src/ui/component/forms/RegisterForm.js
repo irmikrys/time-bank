@@ -10,6 +10,7 @@ import {
   getFormField
 } from "../../constants/constants";
 import Geosuggest from "react-geosuggest";
+import {Link} from "react-router";
 
 export default class RegisterForm extends Component {
 
@@ -62,6 +63,7 @@ export default class RegisterForm extends Component {
                         onSuggestSelect={this.handleLocationSelect}
             />
             <button type="submit">Register</button>
+            <p className="message">Read <Link to="/terms" target="_blank">Terms of Service</Link></p>
           </form>
         </div>
       </div>
