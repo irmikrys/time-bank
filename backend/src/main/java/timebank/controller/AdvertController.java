@@ -2,6 +2,8 @@ package timebank.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -64,8 +66,8 @@ public class AdvertController {
   }
 
   @RequestMapping(method=GET, path="/api/adverts")
-  public @ResponseBody Iterable<Advert> getAllAdverts() {
-    return this.advertService.findAll();
+  public @ResponseBody Page<Advert> getAdverts(Pageable pageable) {
+    return this.advertService.findAll(pageable);
   }
 
   @RequestMapping(method=GET, path="/api/categories")

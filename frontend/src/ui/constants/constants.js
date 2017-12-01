@@ -65,6 +65,20 @@ const FORM_FIELDS = new Map([
 export const ADVERT_TYPE_SEEK = "SEEK";
 export const ADVERT_TYPE_OFFER = "OFFER";
 
+const COLORS = ['#EC407A', '#EF5350', '#AB47BC', '#7E57C2', '#5C6BC0', '#42A5F5', '#29B6F6', '#26C6DA', '#26A69A', '#66BB6A', '#9CCC65', '#EF6C00'];
+
+const HEIGHTS = [350, 370, 390, 410, 430];
+
+const getRandomElement = array => array[Math.floor(Math.random() * array.length)];
+
+export const addColorAndHeight = item => {
+  return {
+    color: getRandomElement(COLORS),
+    height: `${getRandomElement(HEIGHTS)}px`,
+    advert: item
+  }
+};
+
 export const terms = "Last updated: 2017-11-30 \n" +
   "Please read these Terms of Use (\"Terms\", \"Terms of Use\") " +
   "carefully before using the http://www.mywebsite.com (change this) " +

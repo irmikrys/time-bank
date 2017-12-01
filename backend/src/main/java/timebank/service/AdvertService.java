@@ -2,6 +2,8 @@ package timebank.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,8 +46,8 @@ public class AdvertService {
     return this.advertRepository.findAllByEmployer(username);
   }
 
-  public Iterable<Advert> findAll() {
-    return this.advertRepository.findAll();
+  public Page<Advert> findAll(Pageable pageable) {
+    return this.advertRepository.findAll(pageable);
   }
 
   public Advert createAdvert(String username, AdvertDTO advertDTO) {
