@@ -17,33 +17,19 @@ export class TermsPage extends Component {
           <div className="terms-details">
             <label>Last Updated: {new Date().toISOString().slice(0,10)}</label>
             <h3>General</h3>
-              {terms.split("\n").map(i => {
-                return <div>{i}</div>;
-              })}
+              {renderText(terms)}
             <h3>Purchases</h3>
-              {purchases.split("\n").map(i => {
-                return <div>{i}</div>;
-              })}
+              {renderText(purchases)}
             <h3>Termination</h3>
-              {termination.split("\n").map(i => {
-                return <div>{i}</div>;
-              })}
+              {renderText(termination)}
             <h3>Content</h3>
-              {content.split("\n").map(i => {
-                return <div>{i}</div>;
-              })}
+              {renderText(content)}
             <h3>Links To Other Websites</h3>
-              {links.split("\n").map(i => {
-                return <div>{i}</div>;
-              })}
+              {renderText(links)}
             <h3>Changes</h3>
-              {changes.split("\n").map(i => {
-                return <div>{i}</div>;
-              })}
+              {renderText(changes)}
             <h3>Contact Us</h3>
-              {contact.split("\n").map(i => {
-                return <div>{i}</div>;
-              })}
+              {renderText(contact)}
           </div>
         </div>
       </div>
@@ -54,3 +40,10 @@ export class TermsPage extends Component {
 export default connect(
 
 )(TermsPage);
+
+function renderText(text) {
+  return(
+  text.split("\n").map(i => {
+    return <div>{i}</div>;
+  }))
+}
