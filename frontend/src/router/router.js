@@ -2,7 +2,6 @@ import React from 'react';
 import { Route, Redirect, IndexRoute } from 'react-router';
 
 import App from '../ui/container/App';
-import UsersListComponent from '../ui/container/UsersListComponent';
 import UserProfile from '../ui/container/UserProfile';
 import LoginPage from '../ui/container/LoginPage';
 import RegisterPage from '../ui/container/RegisterPage';
