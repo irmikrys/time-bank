@@ -93,7 +93,12 @@ export default class RegisterForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const { register } = this.props;
-    register(this.state);
+    if(this.state.termsAccepted){
+      const { register } = this.props;
+      register(this.state);
+    }
+    else {
+      console.log('You have to accept terms first.')
+    }
   }
 }
