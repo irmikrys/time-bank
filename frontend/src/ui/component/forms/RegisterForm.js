@@ -74,7 +74,6 @@ export default class RegisterForm extends Component {
             <Geosuggest placeholder={LOCATION}
                         onSuggestSelect={this.handleLocationSelect}
             />
-            <button type="submit">Register</button>
             <Checkbox
               label={
                 <div>
@@ -85,6 +84,7 @@ export default class RegisterForm extends Component {
               handleCheckboxChange={this.toggleCheckbox}
               key={'Acceptation'}
             />
+            <button type="submit">Register</button>
           </form>
         </div>
       </div>
