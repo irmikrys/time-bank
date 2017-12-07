@@ -9,35 +9,43 @@ import {
 
 export class TermsPage extends Component {
 
-  renderText() {
-
-  }
-
   render() {
     return (
-      <div>
-        <h2>Terms of Service</h2>
-        {terms.split("\n").map(i => {
-          return <div>{i}</div>;
-        })}
-        {purchases.split("\n").map(i => {
-          return <div>{i}</div>;
-        })}
-        {termination.split("\n").map(i => {
-          return <div>{i}</div>;
-        })}
-        {content.split("\n").map(i => {
-          return <div>{i}</div>;
-        })}
-        {links.split("\n").map(i => {
-          return <div>{i}</div>;
-        })}
-        {changes.split("\n").map(i => {
-          return <div>{i}</div>;
-        })}
-        {contact.split("\n").map(i => {
-          return <div>{i}</div>;
-        })}
+      <div className="advert-grid">
+        <h1>Terms of Service</h1>
+        <div className="container">
+          <div className="terms-details">
+            <h3>General</h3>
+            <label>Last Updated: {new Date().toDateString()}</label>
+              {terms.split("\n").map(i => {
+                return <div>{i}</div>;
+              })}
+            <h3>Purchases</h3>
+              {purchases.split("\n").map(i => {
+                return <div>{i}</div>;
+              })}
+            <h3>Termination</h3>
+              {termination.split("\n").map(i => {
+                return <div>{i}</div>;
+              })}
+            <h3>Content</h3>
+              {content.split("\n").map(i => {
+                return <div>{i}</div>;
+              })}
+            <h3>Links To Other Websites</h3>
+              {links.split("\n").map(i => {
+                return <div>{i}</div>;
+              })}
+            <h3>Changes</h3>
+              {changes.split("\n").map(i => {
+                return <div>{i}</div>;
+              })}
+            <h3>Contact Us</h3>
+              {contact.split("\n").map(i => {
+                return <div>{i}</div>;
+              })}
+          </div>
+        </div>
       </div>
     )
   }
