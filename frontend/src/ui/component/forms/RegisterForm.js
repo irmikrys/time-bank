@@ -11,6 +11,7 @@ import {
 } from "../../constants/constants";
 import Geosuggest from "react-geosuggest";
 import {Link} from "react-router";
+import Checkbox from "../../component/Checkbox";
 
 export default class RegisterForm extends Component {
 
@@ -20,7 +21,8 @@ export default class RegisterForm extends Component {
     [EMAIL]:  "",
     [USERNAME]: "",
     [PASSWORD]: "",
-    [LOCATION]: {}
+    [LOCATION]: {},
+    termsAccepted: false
   };
 
   handleInputChange = event => {
@@ -36,6 +38,16 @@ export default class RegisterForm extends Component {
       longitude: value.location.lng
     };
     this.setState({location: location})
+  };
+
+  toggleCheckbox = label => {
+    if (this.state.termsAccepted = false) {
+      this.state.termsAccepted = true;
+      console.log('Terms accepted');
+    } else {
+      this.state.termsAccepted = false;
+      console.log('Terms not accepted');
+    }
   };
 
   render() {
@@ -63,7 +75,16 @@ export default class RegisterForm extends Component {
                         onSuggestSelect={this.handleLocationSelect}
             />
             <button type="submit">Register</button>
-            <p className="message">Read <Link to="/terms" target="_blank">Terms of Service</Link></p>
+            <Checkbox
+              label={
+                <a>
+                  <span>I accept the </span>
+                  <Link to={'/terms'} target="_blank">Terms of Use</Link>
+                </a>
+              }
+              handleCheckboxChange={this.toggleCheckbox}
+              key={'I accept'}
+            />
           </form>
         </div>
       </div>
