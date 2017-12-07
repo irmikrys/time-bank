@@ -11,12 +11,12 @@ export class TermsPage extends Component {
 
   render() {
     return (
-      <div className="advert-grid">
+      <div className="terms-main">
         <h1>Terms of Service</h1>
         <div className="container">
           <div className="terms-details">
+            <label>Last Updated: {new Date().toISOString().slice(0,10)}</label>
             <h3>General</h3>
-            <label>Last Updated: {new Date().toDateString()}</label>
               {terms.split("\n").map(i => {
                 return <div>{i}</div>;
               })}
