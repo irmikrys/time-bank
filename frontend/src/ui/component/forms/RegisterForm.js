@@ -40,8 +40,8 @@ export default class RegisterForm extends Component {
     this.setState({location: location})
   };
 
-  toggleCheckbox = label => {
-    if (this.state.termsAccepted = false) {
+  toggleCheckbox = () => {
+    if (!this.state.termsAccepted) {
       this.state.termsAccepted = true;
       console.log('Terms accepted');
     } else {
@@ -77,13 +77,13 @@ export default class RegisterForm extends Component {
             <button type="submit">Register</button>
             <Checkbox
               label={
-                <a>
+                <div>
                   <span>I accept the </span>
                   <Link to={'/terms'} target="_blank">Terms of Use</Link>
-                </a>
+                </div>
               }
               handleCheckboxChange={this.toggleCheckbox}
-              key={'I accept'}
+              key={'Acceptation'}
             />
           </form>
         </div>
