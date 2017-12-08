@@ -41,13 +41,7 @@ export default class RegisterForm extends Component {
   };
 
   toggleCheckbox = () => {
-    if (!this.state.termsAccepted) {
-      this.state.termsAccepted = true;
-      console.log('Terms accepted');
-    } else {
-      this.state.termsAccepted = false;
-      console.log('Terms not accepted');
-    }
+    this.state.termsAccepted = !this.state.termsAccepted;
   };
 
   render() {
@@ -76,13 +70,13 @@ export default class RegisterForm extends Component {
             />
             <Checkbox
               label={
-                <div>
+                <div className="checkbox-label">
                   <span>I accept the </span>
                   <Link to={'/terms'} target="_blank">Terms of Use</Link>
                 </div>
               }
               handleCheckboxChange={this.toggleCheckbox}
-              key={'Acceptation'}
+              key={'acceptation'}
             />
             <button type="submit">Register</button>
           </form>
@@ -98,7 +92,7 @@ export default class RegisterForm extends Component {
       register(this.state);
     }
     else {
-      console.log('You have to accept terms first.')
+      console.log('You have to accept terms first.') //todo: move to error label
     }
   }
 }
