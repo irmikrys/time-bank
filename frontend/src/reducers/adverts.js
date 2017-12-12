@@ -32,6 +32,6 @@ export default function advertsReducer(state = initialState, action) {
 export function fetchAdverts() {
   return  {
     types: [FETCH_ADVERTS, FETCH_ADVERTS_SUCCESS, FETCH_ADVERTS_FAIL],
-    promise: client => client.get("/api/adverts?page=0&size=10")
+    promise: client => client.get("/api/adverts?page=0&size=6")
   };
 }
