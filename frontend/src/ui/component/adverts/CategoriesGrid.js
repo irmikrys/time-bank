@@ -24,10 +24,10 @@ export default class CategoriesGrid extends Component {
                    className="tile"
                    style={{ height: `200px`, background: item.color }}
               >
-                <h2 style={{background: item.color}}>
+                <p>
                   {this.props.categories
                     .filter(e => e.idCategory === item.category.idCategory)[0].name}
-                </h2>
+                </p>
               </div>
             ))
           }
