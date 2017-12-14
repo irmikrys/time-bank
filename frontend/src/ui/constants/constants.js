@@ -5,7 +5,6 @@ export const MENU_FOR_USER = [
   {label: 'Logout', link: '/logout'},
   {label: 'Profile', link: '/profile'},
   {label: 'Add Advert', link: '/new_advert'},
-  {label: 'Terms Of Use', link: '/terms'},
   {label: 'Categories', link: '/categories'}
 ];
 
@@ -13,14 +12,13 @@ export const MENU_FOR_GUEST = [
   {label: 'Home', link: '/'},
   {label: 'Register', link: '/register'},
   {label: 'Login', link: '/login'},
-  {label: 'Terms Of Use', link: '/terms'},
   {label: 'Categories', link: '/categories'}
 ];
 
 export const FOOTER = [
   {label: 'Terms Of Use', link: '/terms'},
   {label: 'About Service', link: '/about'},
-  {label: 'How does it work?', link: '/how'},
+  {label: 'How does it work?', link: '/howworks'},
   {label: 'Contact', link: '/contact'}
 ];
 

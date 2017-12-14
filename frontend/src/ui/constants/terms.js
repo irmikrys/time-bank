@@ -48,6 +48,3 @@ export const changes =
   "(change this) days' notice prior to any new terms taking effect. " +
   "What constitutes a material change will be determined at our sole discretion.\n" +
   "\n";
-
-export const contact =
-  "If you have any questions about these Terms, please contact us.\n";
