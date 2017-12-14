@@ -41,9 +41,10 @@ export default connect(
 
 )(TermsPage);
 
-function renderText(text) {
+
+export function renderText(text) {
   return(
-  text.split("\n").map(i => {
-    return <div>{i}</div>;
-  }))
+    text.split("\n").map(i => {
+      return <div>{i}</div>;
+    }))
 }

@@ -17,6 +17,13 @@ export const MENU_FOR_GUEST = [
   {label: 'Categories', link: '/categories'}
 ];
 
+export const FOOTER = [
+  {label: 'Terms Of Use', link: '/terms'},
+  {label: 'About Service', link: '/about'},
+  {label: 'How does it work?', link: '/how'},
+  {label: 'Contact', link: '/contact'}
+];
+
 export const USERNAME = "username";
 export const PASSWORD = "password";
 export const FIRST_NAME = "firstName";
@@ -62,7 +69,6 @@ const FORM_FIELDS = new Map([
     .build()
   ]
 ]);
-
 
 export const ADVERT_TYPE_SEEK = "SEEK";
 export const ADVERT_TYPE_OFFER = "OFFER";
