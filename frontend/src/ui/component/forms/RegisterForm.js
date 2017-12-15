@@ -76,7 +76,6 @@ export default class RegisterForm extends Component {
                 </div>
               }
               handleCheckboxChange={this.toggleCheckbox}
-              key={'acceptation'}
             />
             <button type="submit">Register</button>
           </form>

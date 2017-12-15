@@ -5,14 +5,16 @@ export const MENU_FOR_USER = [
   {label: 'Logout', link: '/logout'},
   {label: 'Profile', link: '/profile'},
   {label: 'Add Advert', link: '/new_advert'},
-  {label: 'Terms Of Use', link: '/terms'}
+  {label: 'Terms Of Use', link: '/terms'},
+  {label: 'Categories', link: '/categories'}
 ];
 
 export const MENU_FOR_GUEST = [
   {label: 'Home', link: '/'},
   {label: 'Register', link: '/register'},
   {label: 'Login', link: '/login'},
-  {label: 'Terms Of Use', link: '/terms'}
+  {label: 'Terms Of Use', link: '/terms'},
+  {label: 'Categories', link: '/categories'}
 ];
 
 export const USERNAME = "username";
@@ -76,5 +78,12 @@ export const addColorAndHeight = item => {
     color: getRandomElement(COLORS),
     height: `${getRandomElement(HEIGHTS)}px`,
     advert: item
+  }
+};
+
+export const addColor = item => {
+  return {
+    color: getRandomElement(COLORS),
+    category: item
   }
 };

@@ -6,7 +6,10 @@ export class UserProfile extends Component {
   render() {
     return (
       <div>
-        <h1>Hello, {this.props.username}!</h1>
+        <h1>My Profile</h1>
+        <div className="container">
+          <p>Hello {this.props.username}!</p>
+        </div>
       </div>
     )
   }

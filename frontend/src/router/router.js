@@ -9,6 +9,7 @@ import NewAdvertPage from "../ui/container/NewAdvertPage";
 import AdvertsPage from "../ui/container/AdvertsPage";
 import TermsPage from "../ui/container/TermsPage";
 import privateRoute from './privateRoute';
+import CategoriesPage from "../ui/container/CategoriesPage";
 
 export default (onLogout) => (
   <Route path="/" name="app" component={App}>
@@ -19,5 +20,7 @@ export default (onLogout) => (
     <Route path="logout" onEnter={onLogout}/>
     <Route path="new_advert" component={NewAdvertPage}/>
     <Route path="terms" component={TermsPage}/>
+    <Route path="categories" component={CategoriesPage}/>
+    <Route path="adverts/:category" component={AdvertsPage}/>
   </Route>
 );
