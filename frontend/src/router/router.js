@@ -21,5 +21,6 @@ export default (onLogout) => (
     <Route path="new_advert" component={NewAdvertPage}/>
     <Route path="terms" component={TermsPage}/>
     <Route path="categories" component={CategoriesPage}/>
+    <Route path="adverts/:category" component={AdvertsPage}/>
   </Route>
 );
