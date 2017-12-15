@@ -4,13 +4,15 @@ export const MENU_FOR_USER = [
   {label: 'Home', link: '/'},
   {label: 'Logout', link: '/logout'},
   {label: 'Profile', link: '/profile'},
-  {label: 'Add Advert', link: '/new_advert'}
+  {label: 'Add Advert', link: '/new_advert'},
+  {label: 'Terms Of Use', link: '/terms'}
 ];
 
 export const MENU_FOR_GUEST = [
   {label: 'Home', link: '/'},
   {label: 'Register', link: '/register'},
-  {label: 'Login', link: '/login'}
+  {label: 'Login', link: '/login'},
+  {label: 'Terms Of Use', link: '/terms'}
 ];
 
 export const USERNAME = "username";
@@ -58,6 +60,7 @@ const FORM_FIELDS = new Map([
     .build()
   ]
 ]);
+
 
 export const ADVERT_TYPE_SEEK = "SEEK";
 export const ADVERT_TYPE_OFFER = "OFFER";
