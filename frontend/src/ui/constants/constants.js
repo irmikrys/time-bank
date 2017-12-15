@@ -69,7 +69,7 @@ export const ADVERT_TYPE_OFFER = "OFFER";
 
 const COLORS = ['#EC407A', '#EF5350', '#AB47BC', '#7E57C2', '#5C6BC0', '#42A5F5', '#29B6F6', '#26C6DA', '#26A69A', '#66BB6A', '#9CCC65', '#EF6C00'];
 
-const HEIGHTS = [350, 370, 390, 410, 430];
+const HEIGHTS = [390, 410, 430, 450, 470];
 
 const getRandomElement = array => array[Math.floor(Math.random() * array.length)];
 

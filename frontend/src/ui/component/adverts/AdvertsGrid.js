@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import Masonry from 'react-masonry-infinite';
 import axios from 'axios';
 import {addColorAndHeight} from "../../constants/constants";
+import {dateFormatter} from "../utils";
 
 export default class AdvertsGrid extends Component {
 
@@ -15,7 +16,7 @@ export default class AdvertsGrid extends Component {
   }
 
   loadMore = page => {
-    axios.get(`/api/adverts?page=${page}&size=10`)
+    axios.get(`/api/adverts?page=${page}&size=6`)
       .then(response => {
         setTimeout(() => {
           this.setState({
@@ -56,8 +57,10 @@ export default class AdvertsGrid extends Component {
                     <div>{this.props.categories.filter(e => e.idCategory === item.advert.idCategory)[0].name}</div>
                     <label>Description:</label>
                     <div>{item.advert.description}</div>
+                    <label>Hours</label>
+                    <div>{item.advert.value}</div>
                     <label>Create Date:</label>
-                    <div>{new Date(item.advert.creationDate).toDateString()}</div>
+                    <div>{dateFormatter(new Date(item.advert.creationDate))}</div>
                   </div>
                 </div>
               ))
