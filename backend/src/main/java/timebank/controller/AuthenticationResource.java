@@ -21,10 +21,11 @@ public class AuthenticationResource {
   @Autowired
   AuthenticationManager authenticationManager;
 
+
   @RequestMapping(method = RequestMethod.POST)
   public UserSession login(@RequestBody Credentials credentials, HttpSession httpSession) {
     Authentication authentication = new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword());
-    SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(authentication));
+    SecurityContextHolder.getContext().setAuthentication(this.authenticationManager.authenticate(authentication));
     UserSession userSession = new UserSession(credentials.getUsername(), httpSession.getId(), true);
     httpSession.setAttribute("user", userSession);
     return userSession;

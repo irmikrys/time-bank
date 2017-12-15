@@ -1,5 +1,7 @@
 package timebank.model;
 
+import timebank.model.interfaces.LocationIdHolder;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -7,8 +9,8 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-@Table(name="users")
-public class User implements Serializable {
+@Table(name = "users")
+public class User implements Serializable, LocationIdHolder {
 
   @Id
   @Column(name = "username")
@@ -17,17 +19,23 @@ public class User implements Serializable {
   @Column(name = "password")
   private String password;
 
+  @Column(name = "email")
+  private String email;
+
   @Column(name = "first_name")
   private String firstName;
 
   @Column(name = "last_name")
   private String lastName;
 
-  @Column(name = "email")
-  private String email;
-
   @Column(name = "role")
   private String role;
+
+  @Column(name = "photo")
+  private Byte photo;
+
+  @Column(name = "id_location")
+  private long idLocation;
 
   public String getUsername() {
     return username;
@@ -45,17 +53,29 @@ public class User implements Serializable {
     this.password = password;
   }
 
-  public String getFirstName() { return firstName; }
+  public String getEmail() {
+    return email;
+  }
 
-  public void setFirstName(String firstName) { this.firstName = firstName; }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-  public String getLastName() { return lastName; }
+  public String getFirstName() {
+    return firstName;
+  }
 
-  public void setLastName(String lastName) { this.lastName = lastName; }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-  public String getEmail() { return email; }
+  public String getLastName() {
+    return lastName;
+  }
 
-  public void setEmail(String email) { this.email = email; }
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
   public String getRole() {
     return role;
@@ -63,5 +83,21 @@ public class User implements Serializable {
 
   public void setRole(String role) {
     this.role = role;
+  }
+
+  public Byte getPhoto() {
+    return photo;
+  }
+
+  public void setPhoto(Byte photo) {
+    this.photo = photo;
+  }
+
+  public long getIdLocation() {
+    return idLocation;
+  }
+
+  public void setIdLocation(long idLocation) {
+    this.idLocation = idLocation;
   }
 }

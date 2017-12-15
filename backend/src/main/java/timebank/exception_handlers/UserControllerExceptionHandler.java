@@ -15,6 +15,7 @@ import timebank.dto.ErrorMessage;
 
 @ControllerAdvice(assignableTypes = UserController.class)
 public class UserControllerExceptionHandler {
+
   private final Log log = LogFactory.getLog(getClass());
 
   @ExceptionHandler(RegisterException.class)
@@ -43,6 +44,7 @@ public class UserControllerExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   @ResponseBody
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public ErrorMessage handleUnknownException(Exception e) {
     return new ErrorMessage("userService.error.unknownError");
   }

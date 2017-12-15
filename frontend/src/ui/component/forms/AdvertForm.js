@@ -1,14 +1,18 @@
 import React, { Component } from "react";
 import Select from "react-select";
 import Geosuggest from "react-geosuggest";
-import {CATEGORIES} from "../../constants/constants";
+import {ADVERT_TYPE_OFFER, ADVERT_TYPE_SEEK} from "../../constants/constants";
 
 export default class AdvertForm extends Component {
 
   state = {
+    username: this.props.username,
+    type: ADVERT_TYPE_OFFER,
     title: "",
     description: "",
-    category: ""
+    idCategory: "",
+    value: "",
+    location: {}
   };
 
   handleInputChange = event => {
@@ -18,24 +22,53 @@ export default class AdvertForm extends Component {
   };
 
   handleLocationSelect = value => {
-    console.log(value);
+    const location = {
+      description : value.label,
+      latitude : value.location.lat,
+      longitude: value.location.lng
+    };
+    this.setState({location: location})
   };
 
   handleCategoryChange = value => {
-    this.setState({category: value})
+    this.setState({idCategory: value})
   };
 
   render() {
+    const offerAdvertTypeActive = this.state.type === ADVERT_TYPE_OFFER;
     return (
       <div className="advert-form">
         <div className="form-container">
           <form onSubmit={this.handleSubmit}>
+            <div className="toggle" data-toggle="buttons">
+              <label className={`btn btn-primary toggle-btn ${offerAdvertTypeActive ? "active" : ""}`}>
+                <input type="radio"
+                       name="type"
+                       value={ADVERT_TYPE_OFFER}
+                       onChange={this.handleInputChange}
+                       checked={offerAdvertTypeActive}
+                /> OFFER
+              </label>
+              <label className={`btn btn-primary toggle-btn ${!offerAdvertTypeActive ? "active" : ""}`}>
+                <input type="radio"
+                       name="type"
+                       value={ADVERT_TYPE_SEEK}
+                       onChange={this.handleInputChange}
+                       checked={!offerAdvertTypeActive}
+                /> SEEK
+              </label>
+            </div>
             <Select simpleValue
                     placeholder="category"
                     clearable={false}
-                    value={this.state.category}
+                    value={this.state.idCategory}
                     onChange={this.handleCategoryChange}
-                    options={CATEGORIES}
+                    options={this.props.categories.map(item => { return {value: item.idCategory, label: item.name }})}
+            />
+            <input placeholder="hours"
+                   name="value"
+                   onChange={this.handleInputChange}
+                   required
             />
             <input placeholder="title"
                    name="title"
@@ -61,8 +94,7 @@ export default class AdvertForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const { title, description } = this.state;
     const { createAdvert } = this.props;
-    createAdvert(title, description);
+    createAdvert(this.state);
   }
 }

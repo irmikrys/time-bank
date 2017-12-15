@@ -6,7 +6,7 @@ export class UserProfile extends Component {
   render() {
     return (
       <div>
-        <h2>Hello {this.props.username}!</h2>
+        <h1>Hello, {this.props.username}!</h1>
       </div>
     )
   }

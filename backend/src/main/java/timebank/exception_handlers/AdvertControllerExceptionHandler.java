@@ -11,11 +11,20 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import timebank.controller.AdvertController;
 import timebank.dto.ErrorMessage;
 import timebank.exceptions.AccessingPrivateResourcesException;
+import timebank.exceptions.AdvertException;
 
 @ControllerAdvice(assignableTypes = AdvertController.class)
 public class AdvertControllerExceptionHandler {
 
   private final Log log = LogFactory.getLog(getClass());
+
+  @ExceptionHandler(AdvertException.class)
+  @ResponseBody
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorMessage handleAdvertException(AdvertException e) {
+    log.warn(e.getMessage());
+    return new ErrorMessage(e.getMessage());
+  }
 
   @ExceptionHandler(AccessingPrivateResourcesException.class)
   @ResponseBody
@@ -35,6 +44,7 @@ public class AdvertControllerExceptionHandler {
 
   @ExceptionHandler(Exception.class)
   @ResponseBody
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public ErrorMessage handleUnknownException(Exception e) {
     log.warn(e.getMessage());
     return new ErrorMessage("advertService.error.unknownError");

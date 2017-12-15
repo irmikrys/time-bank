@@ -1,12 +1,5 @@
 import { FormFieldBuilder } from "../component/forms/FormFieldBuilder";
 
-export const CATEGORIES = [
-  {value: 'Pet Care', label: 'Pet Care'},
-  {value: 'Cooking', label: 'Cooking'},
-  {value: 'Housekeeping', label: 'Housekeeping'},
-  {value: 'Tutoring', label: 'Tutoring'}
-];
-
 export const MENU_FOR_USER = [
   {label: 'Home', link: '/'},
   {label: 'Logout', link: '/logout'},
@@ -25,6 +18,7 @@ export const PASSWORD = "password";
 export const FIRST_NAME = "firstName";
 export const LAST_NAME = "lastName";
 export const EMAIL = "email";
+export const LOCATION = "location";
 
 export const getFormField = fieldKey => FORM_FIELDS.get(fieldKey);
 
@@ -64,3 +58,20 @@ const FORM_FIELDS = new Map([
     .build()
   ]
 ]);
+
+export const ADVERT_TYPE_SEEK = "SEEK";
+export const ADVERT_TYPE_OFFER = "OFFER";
+
+const COLORS = ['#EC407A', '#EF5350', '#AB47BC', '#7E57C2', '#5C6BC0', '#42A5F5', '#29B6F6', '#26C6DA', '#26A69A', '#66BB6A', '#9CCC65', '#EF6C00'];
+
+const HEIGHTS = [390, 410, 430, 450, 470];
+
+const getRandomElement = array => array[Math.floor(Math.random() * array.length)];
+
+export const addColorAndHeight = item => {
+  return {
+    color: getRandomElement(COLORS),
+    height: `${getRandomElement(HEIGHTS)}px`,
+    advert: item
+  }
+};

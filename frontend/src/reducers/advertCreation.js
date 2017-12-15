@@ -10,7 +10,7 @@ const initialState = {
 
 // Reducer
 
-export default function registerReducer(state = initialState, action) {
+export default function advertCreationReducer(state = initialState, action) {
   switch (action.type) {
     case CREATE_ADVERT_SUCCESS:
       return {
@@ -24,10 +24,10 @@ export default function registerReducer(state = initialState, action) {
 
 // Actions
 
-export function createAdvert(title, description) {
+export function createAdvert(advert) {
   return  {
     types: [CREATE_ADVERT, CREATE_ADVERT_SUCCESS, CREATE_ADVERT_FAIL],
-    promise: (client) => client.post('/api/advert', {title, description}),
+    promise: (client) => client.post('/api/advert', advert),
     afterSuccess: () => {
       browserHistory.push('/');
     }

@@ -1,9 +1,16 @@
 package timebank.dto;
 
 import org.hibernate.validator.constraints.NotBlank;
+import timebank.dto.interfaces.LocationDTOHolder;
 import timebank.model.Advert;
 
-public class AdvertDTO {
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+public class AdvertDTO implements LocationDTOHolder {
+
+  @NotBlank
+  private String type;
 
   @NotBlank
   private String title;
@@ -11,19 +18,73 @@ public class AdvertDTO {
   @NotBlank
   private String description;
 
-  public String getTitle() { return title; }
+  @NotNull
+  private long idCategory;
 
-  public void setTitle(String title) { this.title = title; }
+  @NotNull
+  private int value;
 
-  public String getDescription() { return description; }
+  @Valid
+  private LocationDTO location;
 
-  public void setDescription(String description) { this.description = description; }
+  public String getType() {
+    return type;
+  }
 
-  public Advert toAdvert(String username) {
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public void setDescription(String description) {
+    this.description = description;
+  }
+
+  public long getIdCategory() {
+    return idCategory;
+  }
+
+  public void setIdCategory(long idCategory) {
+    this.idCategory = idCategory;
+  }
+
+  public int getValue() {
+    return value;
+  }
+
+  public void setValue(int value) {
+    this.value = value;
+  }
+
+  public LocationDTO getLocation() {
+    return location;
+  }
+
+  public void setLocation(LocationDTO locationDTO) {
+    this.location = locationDTO;
+  }
+
+  public Advert toAdvert(String username, long idLocation) {
     Advert advert = new Advert();
-    advert.setUsername(username);
+    advert.setActive(true);
+    advert.setType(getType());
+    advert.setEmployer(username);
     advert.setTitle(getTitle());
     advert.setDescription(getDescription());
+    advert.setIdCategory(getIdCategory());
+    advert.setValue(getValue());
+    advert.setIdLocation(idLocation);
     return advert;
   }
 
