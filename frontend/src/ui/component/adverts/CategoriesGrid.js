@@ -11,14 +11,10 @@ export default class CategoriesGrid extends Component {
         <div className="wrapper">
           {
             this.props.categories.map(addColor).map((item, i) => (
-              <Link
-                to={'/'}
-                activeStyle={{ color: `#fff` }}
-                activeClassName="wrapper"
-              >
+              <Link to={'/'}>
                 <div key={item.category.idCategory}
                      className="tile"
-                     style={{ height: `200px`, background: item.color }}
+                     style={{ background: item.color }}
                 >
                   <p>
                     {item.category.name}

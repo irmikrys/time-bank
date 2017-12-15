@@ -10,8 +10,11 @@ export class ContactPage extends Component {
         <h1>Contact</h1>
         <div className="container">
           <div className="details">
-            <label>e-mail: <a href="mailto:timebank.manager@gmail.com">timebank.manager@gmail.com</a>
-            </label>
+            <div className="paragraph">
+              <h3>E-mail</h3>
+              <div>e-mail: <a href="mailto:timebank.manager@gmail.com">timebank.manager@gmail.com</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>

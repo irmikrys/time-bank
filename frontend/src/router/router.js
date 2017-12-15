@@ -27,5 +27,6 @@ export default (onLogout) => (
     <Route path="about" component={AboutPage}/>
     <Route path="contact" component={ContactPage}/>
     <Route path="howworks" component={HowItWorksPage}/>
+    <Route path="adverts/:category" component={AdvertsPage}/>
   </Route>
 );

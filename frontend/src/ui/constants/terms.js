@@ -1,4 +1,6 @@
-export const terms =
+const TERMS_PARAGRAPGH_HEADER = "General";
+
+const TERMS_PARAGRAPGH =
   "Please read these Terms of Use (\"Terms\", \"Terms of Use\") " +
   "carefully before using the http://www.mywebsite.com (change this) " +
   "website My Company (change this) (\"us\", \"we\", or \"our\"). " +
@@ -9,13 +11,17 @@ export const terms =
   "By accessing or using the Service you agree to be bound by these Terms. " +
   "If you disagree with any part of the terms then you may not access the Service.";
 
-export const purchases =
+const PURCHASES_PARAGRAPGH_HEADER = "Purchases";
+
+const PURCHASES_PARAGRAPGH =
   "If you wish to purchase any product or service made available through the Service " +
   "(\"Purchase\"), you may be asked to supply certain information relevant to your " +
   "Purchase including, without limitation, your …\n" +
   "\n";
 
-export const termination =
+const TERMINATION_PARAGRAPGH_HEADER = "Termination";
+
+const TERMINATION_PARAGRAPGH =
   "We may terminate or suspend access to our Service immediately, without prior " +
   "notice or liability, for any reason whatsoever, including without limitation " +
   "if you breach the Terms.\n" +
@@ -25,12 +31,16 @@ export const termination =
   "warranty disclaimers, indemnity and limitations of liability.\n" +
   "\n";
 
-export const content =
+const CONTENT_PARAGRAPGH_HEADER = "Content";
+
+const CONTENT_PARAGRAPGH =
   "Our Service allows you to post, link, store, share and otherwise make available " +
   "certain information, text, graphics, videos, or other material (\"Content\"). " +
   "You are responsible for the …\n";
 
-export const links =
+const LINKS_PARAGRAPGH_HEADER = "Links To Other Websites";
+
+const LINKS_PARAGRAPGH =
   "Our Service may contain links to third-party web sites or services that are not " +
   "owned or controlled by My Company (change this).\n" +
   "\n" +
@@ -42,9 +52,20 @@ export const links =
   "content, goods or services available on or through any such web sites or services.\n" +
   "\n";
 
-export const changes =
+const CHANGES_PARAGRAPGH_HEADER = "Changes";
+
+const CHANGES_PARAGRAPGH =
   "We reserve the right, at our sole discretion, to modify or replace these Terms " +
   "at any time. If a revision is material we will try to provide at least 30 " +
   "(change this) days' notice prior to any new terms taking effect. " +
   "What constitutes a material change will be determined at our sole discretion.\n" +
   "\n";
+
+export const TERMS = [
+  {header: TERMS_PARAGRAPGH_HEADER, content: TERMS_PARAGRAPGH},
+  {header: PURCHASES_PARAGRAPGH_HEADER, content: PURCHASES_PARAGRAPGH},
+  {header: TERMINATION_PARAGRAPGH_HEADER, content: TERMINATION_PARAGRAPGH},
+  {header: CONTENT_PARAGRAPGH_HEADER, content: CONTENT_PARAGRAPGH},
+  {header: LINKS_PARAGRAPGH_HEADER, content: LINKS_PARAGRAPGH},
+  {header: CHANGES_PARAGRAPGH_HEADER, content: CHANGES_PARAGRAPGH}
+];
