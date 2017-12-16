@@ -2,13 +2,14 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {TERMS} from "../constants/terms";
 import {Link} from "react-router"
+import {renderText} from "../constants/constants";
 
 export class TermsPage extends Component {
 
   render() {
     return (
       <div className="main">
-        <h1>Terms of Service</h1>
+        <h1>Terms of Use</h1>
         <div className="container">
           <div className="details">
             <label>Last Updated: {new Date().toISOString().slice(0,10)}</label>
@@ -38,10 +39,3 @@ export class TermsPage extends Component {
 }
 
 export default connect()(TermsPage);
-
-const renderText = text => {
-  return(
-    text.split("\n").map(i => {
-      return <p>{i}</p>;
-    }))
-};

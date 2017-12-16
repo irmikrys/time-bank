@@ -1,4 +1,5 @@
 import { FormFieldBuilder } from "../component/forms/FormFieldBuilder";
+import React from 'react'
 
 export const MENU_FOR_USER = [
   {label: 'Home', link: '/'},
@@ -18,7 +19,6 @@ export const MENU_FOR_GUEST = [
 export const FOOTER = [
   {label: 'Terms Of Use', link: '/terms'},
   {label: 'About Service', link: '/about'},
-  {label: 'How does it work?', link: '/howworks'},
   {label: 'Contact', link: '/contact'}
 ];
 
@@ -90,4 +90,11 @@ export const addColor = item => {
     color: getRandomElement(COLORS),
     category: item
   }
+};
+
+export const renderText = text => {
+  return(
+    text.split("\n").map(i => {
+      return <p>{i}</p>;
+    }))
 };

@@ -1,4 +1,4 @@
-export const about = "Here you have the opportunity " +
+export const ABOUT = "Here you have the opportunity " +
   "to take part in the non-commercial exchange of services and skills. " +
   "Share your skills and time with others and use what they can offer you for free! \n" +
   "\n" +
@@ -7,3 +7,5 @@ export const about = "Here you have the opportunity " +
   "find some Tom guy who offers guitar lessons if you are willing to learn to play. " +
   "In Time Bank, regardless of education and age, everyone has some skills and time " +
   "to offer and at this time those are needed by another human. ";
+
+export const HOW_IT_WORKS = "See how the Time Bank works:";

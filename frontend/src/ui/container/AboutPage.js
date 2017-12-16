@@ -1,19 +1,24 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {about} from "../constants/aboutus";
+import {ABOUT, HOW_IT_WORKS} from "../constants/aboutus";
 import {Link} from "react-router";
+import {renderText} from "../constants/constants";
 
 export class AboutPage extends Component {
 
   render() {
     return (
       <div className="main">
-        <h1>About us</h1>
+        <h1>About Service</h1>
         <div className="container">
           <div className="details">
             <div className="paragraph">
               <h3>Welcome to Time Bank!</h3>
-              <div>{renderText(about)}</div>
+              <div>{renderText(ABOUT)}</div>
+            </div>
+            <div className="paragraph">
+              <h3>How it works?</h3>
+              <div>{renderText(HOW_IT_WORKS)}</div>
             </div>
             <div className="paragraph">
               <h3>How to start?</h3>
@@ -30,14 +35,4 @@ export class AboutPage extends Component {
   }
 }
 
-export default connect(
-
-)(AboutPage);
-
-
-const renderText = text => {
-  return(
-    text.split("\n").map(i => {
-      return <p>{i}</p>;
-    }))
-};
+export default connect()(AboutPage);
