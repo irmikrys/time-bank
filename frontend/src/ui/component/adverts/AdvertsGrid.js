@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import Masonry from 'react-masonry-infinite';
 import axios from 'axios';
 import {addColorAndHeight} from "../../constants/constants";
+import {Link} from "react-router";
 
 export default class AdvertsGrid extends Component {
 
@@ -47,19 +48,29 @@ export default class AdvertsGrid extends Component {
           >
             {
               this.state.elements.map((item, i) => (
-                <div key={item.advert.idAdvert} className="card" style={{ height: item.height }}>
-                  <h2 style={{ background: item.color }}>{item.advert.title}</h2>
-                  <div className="advert-details">
-                    <label>Type:</label>
-                    <div>{item.advert.type}</div>
-                    <label>Category:</label>
-                    <div>{this.props.categories.filter(e => e.idCategory === item.advert.idCategory)[0].name}</div>
-                    <label>Description:</label>
-                    <div>{item.advert.description}</div>
-                    <label>Create Date:</label>
-                    <div>{new Date(item.advert.creationDate).toDateString()}</div>
+                <Link
+                  to={
+                  '/adverts/'+
+                  this.props.categories.filter(e => e.idCategory === item.advert.idCategory)[0].name+
+                  '/'+item.advert.idAdvert}
+                >
+                  <div key={item.advert.idAdvert}
+                       className="card"
+                       style={{ height: item.height }}
+                  >
+                    <h2 style={{ background: item.color }}>{item.advert.title}</h2>
+                    <div className="advert-details">
+                      <label>Type:</label>
+                      <div>{item.advert.type}</div>
+                      <label>Category:</label>
+                      <div>{this.props.categories.filter(e => e.idCategory === item.advert.idCategory)[0].name}</div>
+                      <label>Description:</label>
+                      <div>{item.advert.description}</div>
+                      <label>Create Date:</label>
+                      <div>{new Date(item.advert.creationDate).toDateString()}</div>
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))
             }
           </Masonry>
