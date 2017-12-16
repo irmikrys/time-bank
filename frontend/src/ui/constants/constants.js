@@ -1,11 +1,11 @@
 import { FormFieldBuilder } from "../component/forms/FormFieldBuilder";
+import React from 'react'
 
 export const MENU_FOR_USER = [
   {label: 'Home', link: '/'},
   {label: 'Logout', link: '/logout'},
   {label: 'Profile', link: '/profile'},
   {label: 'Add Advert', link: '/new_advert'},
-  {label: 'Terms Of Use', link: '/terms'},
   {label: 'Categories', link: '/categories'}
 ];
 
@@ -13,8 +13,13 @@ export const MENU_FOR_GUEST = [
   {label: 'Home', link: '/'},
   {label: 'Register', link: '/register'},
   {label: 'Login', link: '/login'},
-  {label: 'Terms Of Use', link: '/terms'},
   {label: 'Categories', link: '/categories'}
+];
+
+export const FOOTER = [
+  {label: 'Terms Of Use', link: '/terms'},
+  {label: 'About Service', link: '/about'},
+  {label: 'Contact', link: '/contact'}
 ];
 
 export const USERNAME = "username";
@@ -63,7 +68,6 @@ const FORM_FIELDS = new Map([
   ]
 ]);
 
-
 export const ADVERT_TYPE_SEEK = "SEEK";
 export const ADVERT_TYPE_OFFER = "OFFER";
 
@@ -86,4 +90,11 @@ export const addColor = item => {
     color: getRandomElement(COLORS),
     category: item
   }
+};
+
+export const renderText = text => {
+  return(
+    text.split("\n").map(i => {
+      return <p>{i}</p>;
+    }))
 };
