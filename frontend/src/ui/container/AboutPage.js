@@ -19,6 +19,14 @@ export class AboutPage extends Component {
             <div className="paragraph">
               <h3>How it works?</h3>
               <div>{renderText(HOW_IT_WORKS)}</div>
+              <div className="more-info">
+                <span>For more information about time banking visit </span>
+                <a href="http://www.timebanking.org.uk/how_time_banking_works.asp"
+                   target="_blank">
+                  this page
+                </a>
+                <span>.</span>
+              </div>
             </div>
             <div className="paragraph">
               <h3>How to start?</h3>
