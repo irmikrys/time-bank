@@ -43,6 +43,8 @@ module.exports = {
     }, {
       test: /\.json/,
       loaders: ['json-loader']
+    }, {
+      test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192'
     }]
   },
   stylus: {

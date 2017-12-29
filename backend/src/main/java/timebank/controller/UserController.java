@@ -4,17 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import timebank.dto.UserDTO;
 import timebank.dto.session.UserSession;
 import timebank.exceptions.AccessingPrivateResourcesException;
 import timebank.exceptions.RegisterException;
-import timebank.dto.UserDTO;
 import timebank.model.User;
 import timebank.service.UserService;
+
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 
 @RestController
@@ -48,4 +48,16 @@ public class UserController {
   public @ResponseBody Iterable<User> getAllUsers() {
     return this.userService.findAll();
   }
+
+  @RequestMapping(method=GET, path="/api/profile")
+  public @ResponseBody ResponseEntity<User> getUserProfile(HttpSession session) {
+    UserSession userSession = (UserSession) session.getAttribute("user");
+    return ResponseEntity.ok(this.userService.findByUsername(userSession.getUsername()).get());
+  }
+
+  @RequestMapping(method=GET, path="/api/profile/{username}")
+  public @ResponseBody ResponseEntity<User> getUserProfile(@PathVariable("username") String username) {
+    return ResponseEntity.ok(this.userService.findByUsername(username).get());
+  }
+
 }

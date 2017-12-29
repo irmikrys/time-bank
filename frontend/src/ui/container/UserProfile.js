@@ -8,6 +8,13 @@ export class UserProfile extends Component {
       <div>
         <h1>My Profile</h1>
         <div className="container">
+          <div className="avatar-field">
+            <img id="myAvatar"
+                 src=''
+                 width="200px"
+                 height="200px" />
+            <button type="button">Change avatar</button>
+          </div>
           <p>Hello {this.props.username}!</p>
         </div>
       </div>
