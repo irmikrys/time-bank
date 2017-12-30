@@ -10,9 +10,8 @@ export class UserProfile extends Component {
         <div className="container">
           <div className="avatar-field">
             <img id="myAvatar"
-                 src=''
-                 width="200px"
-                 height="200px" />
+                 src="http://eoclimlab.eu/wp-content/uploads/2017/01/default.png"
+            />
             <button type="button">Change avatar</button>
           </div>
           <p>Hello {this.props.username}!</p>
