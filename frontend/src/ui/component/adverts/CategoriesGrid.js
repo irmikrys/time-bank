@@ -11,9 +11,8 @@ export default class CategoriesGrid extends Component {
         <div className="wrapper">
           {
             this.props.categories.map(addColor).map((item, i) => (
-              <Link to={'/adverts/'+item.category.name}>
-                <div key={item.category.idCategory}
-                     className="tile"
+              <Link to={'/adverts'} key={item.category.idCategory}>
+                <div className="tile"
                      style={{ background: item.color }}
                 >
                   <p>

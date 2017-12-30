@@ -19,7 +19,7 @@ body
   min-height 100vh
   position relative
 
-h1
+h1, h3
   color #fff
   text-align center
 
@@ -44,6 +44,18 @@ button
   transition all 0.3 ease
   cursor pointer
 
+input, textarea
+  font-family "Roboto", sans-serif
+  outline 0
+  background #f2f2f2
+  width 100%
+  border 0
+  margin 0 0 15px
+  padding 15px
+  box-sizing border-box
+  font-size 14px
+  resize none
+
 #application > div
   padding-bottom 5rem
 
@@ -51,29 +63,17 @@ button
   padding 10% 0 0
 
 .register-page
-  padding 4% 0 0
+  padding 2% 0 0
 
 .form-container
   position relative
   z-index 1
   background #ffffff
   max-width: 360px
-  margin 0 auto 100px
+  margin 0 auto 0
   padding 45px
   text-align center
   box-shadow 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)
-
-  input, textarea
-    font-family "Roboto", sans-serif
-    outline 0
-    background #f2f2f2
-    width 100%
-    border 0
-    margin 0 0 15px
-    padding 15px
-    box-sizing border-box
-    font-size 14px
-    resize none
 
   button
     width 100%
@@ -203,3 +203,45 @@ button
 
   .container-fluid
     padding 0
+
+.search-bar-container
+  text-align center
+  margin-top 1rem
+
+  .search-bar
+    width 96%
+    display inline-flex
+
+    div.search-bar-item:first-child
+      margin-right 3px
+      width 20%
+
+    div.search-bar-item:nth-child(2)
+      margin-right 3px
+      width 20%
+
+    div.search-bar-item:nth-child(3)
+      width 60%
+      position relative
+
+      .glyphicon-search
+        position absolute
+        font-size 20px
+        top 15px
+        right 15px
+        z-index 1
+        color #757575
+
+.loader
+  margin 2rem auto 2rem
+  border 10px solid #f3f3f3
+  border-top 10px solid theme_light
+  border-radius 50%
+  width 50px
+  height 50px
+  animation spin 1s linear infinite
+
+@keyframes spin
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+

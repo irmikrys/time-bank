@@ -44,6 +44,22 @@ public class AdvertController {
   @Qualifier("interestedService")
   private InterestedService interestedService;
 
+  @RequestMapping(method=GET, path="/api/adverts")
+  public @ResponseBody Page<Advert> getAdverts(Pageable pageable) {
+    return this.advertService.findAll(pageable);
+  }
+
+  @RequestMapping(method=GET, path="/api/categories")
+  public @ResponseBody Iterable<Category> getAllCategories() {
+    return this.categoryService.findAll();
+  }
+
+  @RequestMapping(method=GET, path="/api/advert/{id}")
+  public @ResponseBody ResponseEntity<Advert> getAdvert(@PathVariable("id") long idAdvert) {
+    Advert updatedAdvert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
+      () -> new AdvertException("getAdvert.error.advertNotFound"));
+    return ResponseEntity.ok(updatedAdvert);
+  }
 
   @RequestMapping(method=POST, path="/api/advert")
   public @ResponseBody ResponseEntity<Advert> createAdvert(@Valid @RequestBody AdvertDTO advertDTO, HttpSession session) {
@@ -63,16 +79,6 @@ public class AdvertController {
       throw new AccessingPrivateResourcesException("updateAdvert.error.unauthorised");
     Advert updatedAdvert = this.advertService.updateAdvert(advertDTO, advert);
     return ResponseEntity.ok(updatedAdvert);
-  }
-
-  @RequestMapping(method=GET, path="/api/adverts")
-  public @ResponseBody Page<Advert> getAdverts(Pageable pageable) {
-    return this.advertService.findAll(pageable);
-  }
-
-  @RequestMapping(method=GET, path="/api/categories")
-  public @ResponseBody Iterable<Category> getAllCategories() {
-    return this.categoryService.findAll();
   }
 
   @RequestMapping(method=PUT, path="/api/advert/showInterest/{id}")

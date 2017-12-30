@@ -1,4 +1,5 @@
 import { browserHistory } from 'react-router';
+import {fetchAdverts} from "./adverts";
 
 const CREATE_ADVERT = 'CREATE_ADVERT';
 const CREATE_ADVERT_SUCCESS = 'CREATE_ADVERT_SUCCESS';
@@ -28,7 +29,8 @@ export function createAdvert(advert) {
   return  {
     types: [CREATE_ADVERT, CREATE_ADVERT_SUCCESS, CREATE_ADVERT_FAIL],
     promise: (client) => client.post('/api/advert', advert),
-    afterSuccess: () => {
+    afterSuccess: (dispatch, getState, result) => {
+      dispatch(fetchAdverts());
       browserHistory.push('/');
     }
   };

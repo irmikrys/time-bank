@@ -1,16 +1,17 @@
 import React, { Component } from "react";
 import { Link } from "react-router";
 import { connect } from "react-redux";
-import { getSession } from "../../reducers/authentication";
+import {displayAuthError, getSession} from "../../reducers/authentication";
 import "stylus/main.styl";
 import {FOOTER, MENU_FOR_GUEST, MENU_FOR_USER} from "../constants/constants";
 import {fetchCategories} from "../../reducers/categories";
+import {setSearchCriteria} from "../../reducers/adverts";
 
 
 const TopMenu = (props) => {
   const items = props.items.map((item, key) => (
     <li key={key}>
-      <Link to={item.link}>{item.label}</Link>
+      <Link to={item.link} onClick={props.onClick}>{item.label}</Link>
     </li>
   ));
   return (
@@ -52,13 +53,18 @@ export class App extends Component {
     this.props.getSession();
   }
 
+  clearErrorMessagesAndSearchCriteria() {
+    this.props.setSearchCriteria({});
+    this.props.displayAuthError(null);
+  }
+
   render() {
     const {isAuthenticated} = this.props;
     const menuItems = isAuthenticated ? MENU_FOR_USER : MENU_FOR_GUEST;
 
     return (
       <div id="application">
-        <TopMenu items={menuItems}/>
+        <TopMenu onClick={this.clearErrorMessagesAndSearchCriteria.bind(this)} items={menuItems}/>
         {this.props.children}
         <FooterMenu items={FOOTER}/>
       </div>
@@ -68,5 +74,5 @@ export class App extends Component {
 
 export default connect(
   state => ({isAuthenticated: state.authentication.isAuthenticated}),
-  {getSession, fetchCategories}
+  {getSession, fetchCategories, setSearchCriteria, displayAuthError}
 )(App);

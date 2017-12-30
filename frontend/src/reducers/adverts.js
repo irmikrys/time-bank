@@ -1,8 +1,10 @@
 const FETCH_ADVERTS = 'adverts/FETCH_ADVERTS';
 const FETCH_ADVERTS_SUCCESS = 'adverts/FETCH_ADVERTS_SUCCESS';
 const FETCH_ADVERTS_FAIL = 'adverts/FETCH_ADVERTS_FAIL';
+const SEARCH_CRITERIA = 'advert/SEARCH_CRITERIA';
 
 const initialState = {
+  searchCriteria: {},
   updating: true,
   adverts: {}
 };
@@ -22,6 +24,11 @@ export default function advertsReducer(state = initialState, action) {
         updating: false,
         adverts: action.result.data
       };
+    case SEARCH_CRITERIA:
+      return {
+        ...state,
+        searchCriteria: action.searchCriteria
+      };
     default:
       return state;
   }
@@ -29,9 +36,19 @@ export default function advertsReducer(state = initialState, action) {
 
 // Actions
 
-export function fetchAdverts() {
+export function setSearchCriteria(searchCriteria) {
+  return {type: SEARCH_CRITERIA, searchCriteria};
+}
+
+export function fetchAdverts(searchCriteria) {
+  const request = searchCriteria ? buildRequest(searchCriteria)  : "";
   return  {
     types: [FETCH_ADVERTS, FETCH_ADVERTS_SUCCESS, FETCH_ADVERTS_FAIL],
-    promise: client => client.get("/api/adverts?page=0&size=6")
+    promise: client => client
+      .get(`/api/adverts?page=0&size=6&${request}`)
   };
 }
+
+const buildRequest = searchCriteria => {
+  return Object.keys(searchCriteria).reduce((previous, current) => `${previous}&${current}=${searchCriteria[current]}`, "");
+};

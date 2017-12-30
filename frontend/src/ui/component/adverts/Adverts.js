@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import AdvertsGrid from './AdvertsGrid';
+import SearchBar from "./SearchBar";
 
 export default class Adverts extends Component {
 
@@ -7,31 +8,16 @@ export default class Adverts extends Component {
     this.props.fetchAdverts()
   }
 
-  searchForCategory = categoryName => {
-    return(
-      this.props.categories.filter(e => e.name === categoryName)[0]
-    )
-  };
-
-  advertsInCategory = categoryName => {
-    const category = this.searchForCategory(categoryName);
-    return(
-      this.props.adverts.content.filter(e => e.idCategory === category.idCategory)
-    )
-  };
-
   render() {
-    const isUndefined = this.props.params.category === undefined;
-    const adverts = isUndefined ?
-      this.props.adverts.content : this.advertsInCategory(this.props.params.category);
     return (
       <div>
+        <SearchBar categories={this.props.categories} searchCriteria={this.props.searchCriteria} />
         {
-          this.props.updating ?
-            null :
-            <AdvertsGrid adverts={adverts}
+          !this.props.updating ?
+            <AdvertsGrid adverts={this.props.adverts.content}
                          categories={this.props.categories}
             />
+            : <div className="loader"/>
         }
       </div>
     )
