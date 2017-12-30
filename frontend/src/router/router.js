@@ -10,6 +10,9 @@ import AdvertsPage from "../ui/container/AdvertsPage";
 import TermsPage from "../ui/container/TermsPage";
 import privateRoute from './privateRoute';
 import CategoriesPage from "../ui/container/CategoriesPage";
+import AboutPage from "../ui/container/AboutPage";
+import ContactPage from "../ui/container/ContactPage";
+import AdvertView from "../ui/container/AdvertView";
 
 export default (onLogout) => (
   <Route path="/" name="app" component={App}>
@@ -21,6 +24,9 @@ export default (onLogout) => (
     <Route path="new_advert" component={NewAdvertPage}/>
     <Route path="terms" component={TermsPage}/>
     <Route path="categories" component={CategoriesPage}/>
+    <Route path="about" component={AboutPage}/>
+    <Route path="contact" component={ContactPage}/>
     <Route path="adverts/:category" component={AdvertsPage}/>
+    <Route path="adverts/:category/:idAdvert" component={AdvertView}/>
   </Route>
 );

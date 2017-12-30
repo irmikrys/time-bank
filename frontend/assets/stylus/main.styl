@@ -2,7 +2,7 @@
 @import 'select.styl'
 @import 'geosuggest.styl'
 @import 'theme.styl'
-@import 'terms.styl'
+@import 'footerpages.styl'
 
 body
   background theme_dark
@@ -13,6 +13,7 @@ body
   font-family "Roboto", sans-serif
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
+  min-height 100%
 
 h1
   color #fff
@@ -44,21 +45,6 @@ button
 
 .register-page
   padding 4% 0 0
-
-  .checkbox-register
-    text-align left
-
-    input
-      width auto
-
-    .checkbox-label
-      font-size 12px
-      padding 0 5px
-      font-weight 500
-
-    a
-      text-decoration none
-
 
 .form-container
   position relative
@@ -134,6 +120,10 @@ button
 .advert-grid
   margin-bottom 2rem
 
+  a
+    display inline-block
+    text-decoration none
+
   .container
     margin-top 2rem
 
@@ -164,6 +154,21 @@ button
           label
             margin-top 10px
 
+.checkbox-register
+  text-align left
+
+  input
+    width auto
+
+  .checkbox-label
+    font-size 12px
+    padding 0 5px
+    font-weight 500
+
+  a
+    text-decoration none
+
+
 .categories-grid
   text-align center
 
@@ -184,3 +189,6 @@ button
     p
       font-size 25px
 
+.footer
+  position absolute
+  bottom inherit

@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { connect } from "react-redux";
 import { getSession } from "../../reducers/authentication";
 import "stylus/main.styl";
-import {MENU_FOR_GUEST, MENU_FOR_USER} from "../constants/constants";
+import {FOOTER, MENU_FOR_GUEST, MENU_FOR_USER} from "../constants/constants";
 import {fetchCategories} from "../../reducers/categories";
 
 
@@ -17,6 +17,23 @@ const TopMenu = (props) => {
     <nav>
       <div className="container-fluid">
         <ul className="nav navbar-nav navbar-right">
+          {items}
+        </ul>
+      </div>
+    </nav>
+  );
+};
+
+const FooterMenu = (props) => {
+  const items = props.items.map((item, key) => (
+    <li key={key}>
+      <Link to={item.link}>{item.label}</Link>
+    </li>
+  ));
+  return (
+    <nav className="footer">
+      <div className="container-fluid">
+        <ul className="nav navbar-nav navbar-left">
           {items}
         </ul>
       </div>
@@ -43,6 +60,7 @@ export class App extends Component {
       <div id="application">
         <TopMenu items={menuItems}/>
         {this.props.children}
+        <FooterMenu items={FOOTER}/>
       </div>
     );
   }
