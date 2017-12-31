@@ -12,6 +12,7 @@ import timebank.controller.AdvertController;
 import timebank.dto.ErrorMessage;
 import timebank.exceptions.AccessingPrivateResourcesException;
 import timebank.exceptions.AdvertException;
+import timebank.exceptions.ShowInterestException;
 
 @ControllerAdvice(assignableTypes = AdvertController.class)
 public class AdvertControllerExceptionHandler {
@@ -22,6 +23,14 @@ public class AdvertControllerExceptionHandler {
   @ResponseBody
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorMessage handleAdvertException(AdvertException e) {
+    log.warn(e.getMessage());
+    return new ErrorMessage(e.getMessage());
+  }
+
+  @ExceptionHandler(ShowInterestException.class)
+  @ResponseBody
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorMessage handleShowInterestException(ShowInterestException e) {
     log.warn(e.getMessage());
     return new ErrorMessage(e.getMessage());
   }

@@ -80,7 +80,7 @@ public class AdvertService {
   public void chooseFinalPerformer(long idAdvert, String performer) {
     final String sql = "UPDATE adverts a SET a.active = FALSE, a.performer = ? WHERE a.id_advert = ?";
     int result = this.jdbcTemplate.update(sql, performer, idAdvert);
-    System.out.println("->-> chooseFinalPerformer: " + result);
+//    System.out.println("->-> chooseFinalPerformer: " + result);
   }
 
   public void removeFinalPerformer(long idAdvert, String performer) {

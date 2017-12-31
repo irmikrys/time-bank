@@ -1,10 +1,15 @@
 package timebank.controller;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -81,8 +86,25 @@ public class AdvertController {
     return ResponseEntity.ok(updatedAdvert);
   }
 
-  @RequestMapping(method=PUT, path="/api/advert/showInterest/{id}")
-  public void showInterest(@PathVariable("id") long idAdvert, HttpSession session) {
+//  @RequestMapping(method=PUT, path="/api/advert/showInterest/{id}")
+//  public @ResponseBody ResponseEntity<HttpStatus> showInterest(@PathVariable("id") long idAdvert, HttpSession session) {
+//    UserSession userSession = (UserSession) session.getAttribute("user");
+//    this.userService.findByUsername(userSession.getUsername()).orElseThrow(
+//      () -> new ShowInterestException("showInterest.error.userNotFound"));
+//    Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
+//      () -> new ShowInterestException("showInterest.error.advertNotFound"));
+//    this.interestedService.findByIdAdvertAndInterested(idAdvert, userSession.getUsername()).ifPresent(
+//      intrested -> { throw new ShowInterestException("showInterest.error.alreadyInterested"); });
+//    if (advert.getEmployer().equals(userSession.getUsername())) {
+//      throw new ShowInterestException("showInterest.error.youCannotShowInterestInYourOwnAdvert");
+//    }
+//    this.advertService.showInterest(idAdvert, userSession.getUsername());
+//    return ResponseEntity.ok(HttpStatus.OK);
+//  }
+
+  @RequestMapping(method=POST, path="/api/advert/showInterest2")
+  public @ResponseBody ResponseEntity<HttpStatus> showInterest(@RequestBody JSONObject jsonObject, HttpSession session) {
+    long idAdvert = ((Number) jsonObject.get("idAdvert")).longValue();
     UserSession userSession = (UserSession) session.getAttribute("user");
     this.userService.findByUsername(userSession.getUsername()).orElseThrow(
       () -> new ShowInterestException("showInterest.error.userNotFound"));
@@ -94,20 +116,22 @@ public class AdvertController {
       throw new ShowInterestException("showInterest.error.youCannotShowInterestInYourOwnAdvert");
     }
     this.advertService.showInterest(idAdvert, userSession.getUsername());
+    return ResponseEntity.ok(HttpStatus.OK);
   }
 
   @RequestMapping(method=PUT, path="/api/advert/removeInterest/{id}")
-  public void stopShowingInterest(@PathVariable("id") long idAdvert, HttpSession session) {
+  public @ResponseBody ResponseEntity<HttpStatus> stopShowingInterest(@PathVariable("id") long idAdvert, HttpSession session) {
     UserSession userSession = (UserSession) session.getAttribute("user");
     this.userService.findByUsername(userSession.getUsername()).orElseThrow(
       () -> new ShowInterestException("stopShowingInterest.error.userNotFound"));
     this.advertService.findByIdAdvert(idAdvert).orElseThrow(
       () -> new ShowInterestException("stopShowingInterest.error.advertNotFound"));
     this.advertService.stopShowingInterest(idAdvert, userSession.getUsername());
+    return ResponseEntity.ok(HttpStatus.OK);
   }
 
   @RequestMapping(method=PUT, path="/api/advert/{id}/{performer}")
-  public void chooseFinalPerformer(@PathVariable("id") long idAdvert, @PathVariable("performer") String performer, HttpSession session) {
+  public @ResponseBody ResponseEntity<HttpStatus> chooseFinalPerformer(@PathVariable("id") long idAdvert, @PathVariable("performer") String performer, HttpSession session) {
     UserSession userSession = (UserSession) session.getAttribute("user");
     this.userService.findByUsername(userSession.getUsername()).orElseThrow(
       () -> new ShowInterestException("chooseFinalPerformer.error.userNotFound"));
@@ -120,6 +144,7 @@ public class AdvertController {
       throw new ShowInterestException("chooseFinalPerformer.error.unauthorised");
     }
     this.advertService.chooseFinalPerformer(idAdvert, performer);
+    return ResponseEntity.ok(HttpStatus.OK);
   }
 
   @RequestMapping(method=PUT, path="/api/advert/removePerformer/{id}")

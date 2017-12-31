@@ -5,7 +5,10 @@ import timebank.dto.interfaces.LocationDTOHolder;
 import timebank.model.Advert;
 
 import javax.validation.Valid;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 
 public class AdvertDTO implements LocationDTOHolder {
 
@@ -18,10 +21,12 @@ public class AdvertDTO implements LocationDTOHolder {
   @NotBlank
   private String description;
 
-  @NotNull
+  @DecimalMin(value = "0")
+  @DecimalMax(value = "9223372036854775807")
   private long idCategory;
 
-  @NotNull
+  @DecimalMin(value = "0", inclusive = false)
+  @DecimalMax(value = "1000")
   private int value;
 
   @Valid
