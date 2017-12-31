@@ -87,7 +87,7 @@ public class AdvertService {
     final String sql = "UPDATE adverts a SET a.active = TRUE, a.performer = NULL WHERE a.id_advert = ?";
     int result = this.jdbcTemplate.update(sql, idAdvert);
     this.stopShowingInterest(idAdvert, performer);
-    System.out.println("->-> removeFinalPerformer: " + result);
+//    System.out.println("->-> removeFinalPerformer: " + result);
   }
 
   @Transactional
@@ -107,9 +107,9 @@ public class AdvertService {
     final String sql = "UPDATE accounts a SET a.balance = (a.balance + ?) WHERE a.owner = ?";
     int resultPlus = this.jdbcTemplate.update(sql, archiveAdvert.getValue(), plus);
     int resultMinus = this.jdbcTemplate.update(sql, -archiveAdvert.getValue(), minus);
-    System.out.println("->-> wynikPlus: " + resultPlus);
-    System.out.println("->-> wynikMinus: " + resultMinus);
-    System.out.println("->-> spokojnie to nie jest ostateczna wersja :C ");
+//    System.out.println("->-> wynikPlus: " + resultPlus);
+//    System.out.println("->-> wynikMinus: " + resultMinus);
+//    System.out.println("->-> spokojnie to nie jest ostateczna wersja :C ");
 
     // 3. usuwanie wszystkich niepotrzebnych rekordow z 'adverts', 'interested' i 'locations'
     this.locationService.deleteLocation(advert.getIdLocation());

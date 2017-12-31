@@ -86,25 +86,8 @@ public class AdvertController {
     return ResponseEntity.ok(updatedAdvert);
   }
 
-//  @RequestMapping(method=PUT, path="/api/advert/showInterest/{id}")
-//  public @ResponseBody ResponseEntity<HttpStatus> showInterest(@PathVariable("id") long idAdvert, HttpSession session) {
-//    UserSession userSession = (UserSession) session.getAttribute("user");
-//    this.userService.findByUsername(userSession.getUsername()).orElseThrow(
-//      () -> new ShowInterestException("showInterest.error.userNotFound"));
-//    Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
-//      () -> new ShowInterestException("showInterest.error.advertNotFound"));
-//    this.interestedService.findByIdAdvertAndInterested(idAdvert, userSession.getUsername()).ifPresent(
-//      intrested -> { throw new ShowInterestException("showInterest.error.alreadyInterested"); });
-//    if (advert.getEmployer().equals(userSession.getUsername())) {
-//      throw new ShowInterestException("showInterest.error.youCannotShowInterestInYourOwnAdvert");
-//    }
-//    this.advertService.showInterest(idAdvert, userSession.getUsername());
-//    return ResponseEntity.ok(HttpStatus.OK);
-//  }
-
-  @RequestMapping(method=POST, path="/api/advert/showInterest2")
-  public @ResponseBody ResponseEntity<HttpStatus> showInterest(@RequestBody JSONObject jsonObject, HttpSession session) {
-    long idAdvert = ((Number) jsonObject.get("idAdvert")).longValue();
+  @RequestMapping(method=PUT, path="/api/advert/showInterest/{id}")
+  public @ResponseBody ResponseEntity<HttpStatus> showInterest(@PathVariable("id") long idAdvert, HttpSession session) {
     UserSession userSession = (UserSession) session.getAttribute("user");
     this.userService.findByUsername(userSession.getUsername()).orElseThrow(
       () -> new ShowInterestException("showInterest.error.userNotFound"));
@@ -118,6 +101,15 @@ public class AdvertController {
     this.advertService.showInterest(idAdvert, userSession.getUsername());
     return ResponseEntity.ok(HttpStatus.OK);
   }
+
+//  @RequestMapping(method=POST, path="/api/advert/showInterest2")
+//  public @ResponseBody ResponseEntity<HttpStatus> showInterest(@RequestBody JSONObject jsonObject, HttpSession session) {
+//    long idAdvert = ((Number) jsonObject.get("idAdvert")).longValue();
+//    UserSession userSession = (UserSession) session.getAttribute("user");
+//    // [..]
+//    this.advertService.showInterest(idAdvert, userSession.getUsername());
+//    return ResponseEntity.ok(HttpStatus.OK);
+//  }
 
   @RequestMapping(method=PUT, path="/api/advert/removeInterest/{id}")
   public @ResponseBody ResponseEntity<HttpStatus> stopShowingInterest(@PathVariable("id") long idAdvert, HttpSession session) {
@@ -148,7 +140,7 @@ public class AdvertController {
   }
 
   @RequestMapping(method=PUT, path="/api/advert/removePerformer/{id}")
-  public void removeFinalPerformer(@PathVariable("id") long idAdvert, HttpSession session) {
+  public @ResponseBody ResponseEntity<HttpStatus> removeFinalPerformer(@PathVariable("id") long idAdvert, HttpSession session) {
     UserSession userSession = (UserSession) session.getAttribute("user");
     this.userService.findByUsername(userSession.getUsername()).orElseThrow(
       () -> new ShowInterestException("chooseFinalPerformer.error.userNotFound"));
@@ -158,10 +150,11 @@ public class AdvertController {
       throw new ShowInterestException("chooseFinalPerformer.error.unauthorised");
     }
     this.advertService.removeFinalPerformer(idAdvert, advert.getPerformer());
+    return ResponseEntity.ok(HttpStatus.OK);
   }
 
   @RequestMapping(method=PUT, path="/api/advert/finalize/{id}")
-  public void finalizeTransaction(@PathVariable("id") long idAdvert, HttpSession session) {
+  public @ResponseBody ResponseEntity<HttpStatus> finalizeTransaction(@PathVariable("id") long idAdvert, HttpSession session) {
     UserSession userSession = (UserSession) session.getAttribute("user");
     this.userService.findByUsername(userSession.getUsername()).orElseThrow(
       () -> new ShowInterestException("finalizeTransaction.error.userNotFound"));
@@ -174,6 +167,7 @@ public class AdvertController {
       throw new ShowInterestException("finalizeTransaction.error.advertNotReadyForFinalization");
     }
     this.advertService.finalizeAdvert(advert);
+    return ResponseEntity.ok(HttpStatus.OK);
   }
 
 }
