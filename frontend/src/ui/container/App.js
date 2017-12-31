@@ -53,10 +53,10 @@ export class App extends Component {
     this.props.getSession();
   }
 
-  clearErrorMessagesAndSearchCriteria() {
+  clearErrorMessagesAndSearchCriteria = () => {
     this.props.setSearchCriteria({});
     this.props.displayAuthError(null);
-  }
+  };
 
   render() {
     const {isAuthenticated} = this.props;
