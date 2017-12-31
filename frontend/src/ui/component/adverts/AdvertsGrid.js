@@ -4,6 +4,7 @@ import axios from 'axios';
 import {addColorAndHeight} from "../../constants/constants";
 import {dateFormatter} from "../utils";
 import {Link} from "react-router";
+import {buildRequest} from "../../../reducers/adverts";
 
 export default class AdvertsGrid extends Component {
 
@@ -14,23 +15,20 @@ export default class AdvertsGrid extends Component {
       hasMore: true,
       elements: this.props.adverts.map(addColorAndHeight),
       isLoading: false,
-      currentPage: 1
     };
   }
 
-  loadMore(page) {
-    if (page === this.state.currentPage) {
-      this.setState({isLoading: true});
-      axios.get(`/api/adverts?page=${page}&size=6`)
-        .then(response => {
+  loadMore = page => {
+    axios.get(`/api/adverts?page=${page}&size=6${buildRequest(this.props.searchCriteria)}`)
+      .then(response => {
+        setTimeout(() => {
           this.setState({
-            isLoading: false,
             hasMore: !response.data.last,
-            elements: this.state.elements.concat(response.data.content.map(addColorAndHeight)),
-            currentPage: this.state.currentPage + 1
+            elements: this.state.elements.concat(response.data.content.map(addColorAndHeight)
+            )
           });
-        })
-    }
+        }, 1500)
+      })
   };
 
   render() {
@@ -41,15 +39,9 @@ export default class AdvertsGrid extends Component {
             className="masonry"
             elementType="a"
             hasMore={this.state.hasMore}
-            loader={
-              <div className="sk-folding-cube">
-                <div className="sk-cube1 sk-cube" />
-                <div className="sk-cube2 sk-cube" />
-                <div className="sk-cube4 sk-cube" />
-                <div className="sk-cube3 sk-cube" />
-              </div>
-            }
+            loader={<div className="loader"/>}
             loadMore={this.loadMore.bind(this)}
+            threshold={10}
           >
             {
               this.state.elements.map((item, i) => (
@@ -71,7 +63,6 @@ export default class AdvertsGrid extends Component {
               ))
             }
           </Masonry>
-          {this.state.isLoading ? <div className="loader"/> : null}
         </div>
       </div>
 

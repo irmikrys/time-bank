@@ -12,7 +12,7 @@ export class TermsPage extends Component {
         <h1>Terms of Use</h1>
         <div className="container">
           <div className="details">
-            <label>Last Updated: {new Date().toISOString().slice(0,10)}</label>
+            <div className="last-updated">Last Updated: {new Date().toISOString().slice(0,10)}</div>
             {
               TERMS.map(item =>
                 (

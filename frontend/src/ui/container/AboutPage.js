@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {ABOUT, HOW_IT_WORKS} from "../constants/aboutus";
+import {ABOUT, HOW_IT_WORKS} from "../constants/aboutUs";
 import {Link} from "react-router";
 import {renderText} from "../constants/constants";
 

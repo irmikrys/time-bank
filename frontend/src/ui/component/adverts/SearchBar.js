@@ -1,7 +1,21 @@
 import React, {Component} from "react";
 import Select from "react-select";
+import {SORT_BY_SELECT_OPTIONS, TYPE_SELECT_OPTIONS} from "../../constants/constants";
 
 export default class SearchBar extends Component {
+
+  handleSelectChange = (field, value) => {
+    let currentSortCriteria = Object.assign({}, this.props.searchCriteria, {[field]: value ? value : ""});
+    this.props.onChange(currentSortCriteria);
+  };
+
+  handleInputChange = event => {
+    let value = event.target.value;
+    let inputName = event.target.name;
+    let currentSortCriteria = Object.assign({}, this.props.searchCriteria, {[inputName]: value});
+    this.props.onChange(currentSortCriteria);
+  };
+
 
   render() {
     return (
@@ -11,24 +25,35 @@ export default class SearchBar extends Component {
             <Select simpleValue
                     placeholder="type"
                     clearable={false}
-                    value={null}
-                    options={[{value: "SEEK", label: "SEEK"}, {value: "OFFER", label: "OFFER"}]}
+                    value={this.props.searchCriteria.type}
+                    options={TYPE_SELECT_OPTIONS}
+                    onChange={this.handleSelectChange.bind(this, "type")}
             />
           </div>
           <div className="search-bar-item">
             <Select simpleValue
                     placeholder="category"
                     clearable={false}
-                    value={"1"}
+                    value={this.props.searchCriteria.idCategory}
                     options={this.props.categories.map(item => { return {value: item.idCategory, label: item.name }})}
+                    onChange={this.handleSelectChange.bind(this, "idCategory")}
             />
           </div>
           <div className="search-bar-item">
             <input placeholder="search for adverts..."
-                   name="search"
-                   onChange={null}
+                   name="title"
+                   onChange={this.handleInputChange.bind(this)}
             />
             <span className="glyphicon glyphicon-search"/>
+          </div>
+          <div className="search-bar-item">
+            <Select simpleValue
+                    placeholder="sort by"
+                    clearable={false}
+                    value={this.props.searchCriteria.sort}
+                    options={SORT_BY_SELECT_OPTIONS}
+                    onChange={this.handleSelectChange.bind(this, "sort")}
+            />
           </div>
         </div>
       </div>
