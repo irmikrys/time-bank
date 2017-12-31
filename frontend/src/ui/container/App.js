@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router";
 import { connect } from "react-redux";
-import {displayAuthError, getSession} from "../../reducers/authentication";
+import {displayAuthError, getSession, setRegisterSuccess} from "../../reducers/authentication";
 import "stylus/main.styl";
 import {FOOTER, MENU_FOR_GUEST, MENU_FOR_USER} from "../constants/constants";
 import {fetchCategories} from "../../reducers/categories";
@@ -56,6 +56,7 @@ export class App extends Component {
   clearErrorMessagesAndSearchCriteria = () => {
     this.props.setSearchCriteria({});
     this.props.displayAuthError(null);
+    this.props.setRegisterSuccess(false);
   };
 
   render() {
@@ -74,5 +75,5 @@ export class App extends Component {
 
 export default connect(
   state => ({isAuthenticated: state.authentication.isAuthenticated}),
-  {getSession, fetchCategories, setSearchCriteria, displayAuthError}
+  {getSession, fetchCategories, setSearchCriteria, displayAuthError, setRegisterSuccess}
 )(App);

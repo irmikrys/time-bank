@@ -41,6 +41,7 @@ export default class SearchBar extends Component {
           </div>
           <div className="search-bar-item">
             <input placeholder="search for adverts..."
+                   autoComplete="off"
                    name="title"
                    onChange={this.handleInputChange.bind(this)}
             />

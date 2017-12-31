@@ -26,7 +26,7 @@ module.exports = {
       }
     }),
     new HtmlWebpackPlugin({
-      title: 'Boot React',
+      title: 'Time Bank',
       template: path.join(__dirname, 'assets/index-template.html')
     }),
     new webpack.DefinePlugin({
