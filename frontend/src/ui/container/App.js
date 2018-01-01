@@ -3,7 +3,7 @@ import { Link } from "react-router";
 import { connect } from "react-redux";
 import {displayAuthError, getSession, setRegisterSuccess} from "../../reducers/authentication";
 import "stylus/main.styl";
-import {FOOTER, MENU_FOR_GUEST, MENU_FOR_USER} from "../constants/constants";
+import {FOOTER, getUserMenu, MENU_FOR_GUEST} from "../constants/constants";
 import {fetchCategories} from "../../reducers/categories";
 import {setSearchCriteria} from "../../reducers/adverts";
 
@@ -61,7 +61,7 @@ export class App extends Component {
 
   render() {
     const {isAuthenticated} = this.props;
-    const menuItems = isAuthenticated ? MENU_FOR_USER : MENU_FOR_GUEST;
+    const menuItems = isAuthenticated ? getUserMenu(this.props.username) : MENU_FOR_GUEST;
 
     return (
       <div id="application">
@@ -74,6 +74,9 @@ export class App extends Component {
 }
 
 export default connect(
-  state => ({isAuthenticated: state.authentication.isAuthenticated}),
+  state => ({
+    isAuthenticated: state.authentication.isAuthenticated,
+    username: state.authentication.username
+  }),
   {getSession, fetchCategories, setSearchCriteria, displayAuthError, setRegisterSuccess}
 )(App);

@@ -1,26 +1,45 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 
 export class UserProfile extends Component {
 
   render() {
+    const {user} = this.props;
+    console.log(this.props);
     return (
       <div>
-        <h1>My Profile</h1>
         <div className="container">
           <div className="avatar-field">
             <img id="myAvatar"
                  src="http://eoclimlab.eu/wp-content/uploads/2017/01/default.png"
             />
-            <button type="button">Change avatar</button>
+            <button type="button">CHANGE AVATAR</button>
           </div>
-          <p>Hello {this.props.username}!</p>
+          <div className="data-div">
+            <div className="paragraph">
+              <h3>Personal Data</h3>
+              <div>
+                <label>First name: </label>
+                <div>{user.firstName}</div>
+                <label>Last name: </label>
+                <div>{user.lastName}</div>
+                <label>username:</label>
+                <div>{user.username}</div>
+              </div>
+            </div>
+            <div className="paragraph">
+              <h3>Account</h3>
+              <div>
+              </div>
+            </div>
+            <div className="paragraph">
+              <h3>Transactions</h3>
+              <div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     )
   }
 }
 
-export default connect(
-  ({authentication}) => ({username: authentication.username})
-)(UserProfile);
