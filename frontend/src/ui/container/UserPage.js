@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {UserProfile} from "./UserProfile";
+import {UserProfile} from "../component/UserProfile";
 import {fetchUserByUsername} from "../../reducers/user";
 
 export class UserPage extends Component {

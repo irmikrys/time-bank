@@ -7,10 +7,10 @@ export class UserProfile extends Component {
     console.log(this.props);
     return (
       <div>
-        <div className="container">
+        <div className="profile-container container">
           <div className="avatar-field">
             <img id="myAvatar"
-                 src="http://eoclimlab.eu/wp-content/uploads/2017/01/default.png"
+                 src={require("avatar.png")}
             />
             <button type="button">CHANGE AVATAR</button>
           </div>
