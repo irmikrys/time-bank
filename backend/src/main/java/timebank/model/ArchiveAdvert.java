@@ -40,7 +40,7 @@ public class ArchiveAdvert implements Serializable {
   private Date createDate;
 
   @CreationTimestamp
-  @Column(name ="close_date")
+  @Column(name ="closeDate")
   private Date closeDate;
 
   public long getIdAdvert() {

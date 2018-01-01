@@ -1,5 +1,7 @@
 package timebank.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -18,6 +20,7 @@ public class Account implements Serializable {
   @Column(name = "balance")
   private int balance;
 
+  @JsonIgnore
   public long getAccountNr() {
     return accountNr;
   }
@@ -26,6 +29,7 @@ public class Account implements Serializable {
     this.accountNr = accountNr;
   }
 
+  @JsonIgnore
   public String getOwner() {
     return owner;
   }

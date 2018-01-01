@@ -1,5 +1,6 @@
 package timebank.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import timebank.model.interfaces.LocationIdHolder;
 
 import javax.persistence.Column;
@@ -45,6 +46,7 @@ public class User implements Serializable, LocationIdHolder {
     this.username = username;
   }
 
+  @JsonIgnore
   public String getPassword() {
     return password;
   }
@@ -93,6 +95,7 @@ public class User implements Serializable, LocationIdHolder {
     this.photo = photo;
   }
 
+  @JsonIgnore
   public long getIdLocation() {
     return idLocation;
   }

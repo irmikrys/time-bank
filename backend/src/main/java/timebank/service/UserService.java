@@ -6,7 +6,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import timebank.dto.AdvertDetailsDTO;
 import timebank.dto.UserDTO;
+import timebank.dto.UserDetailsDTO;
+import timebank.model.Account;
 import timebank.model.Location;
 import timebank.model.User;
 import timebank.repository.UserRepository;
@@ -36,6 +39,13 @@ public class UserService {
 
   public Optional<User> findByUsername(String username) {
     return this.userRepository.findByUsername(username);
+  }
+
+  public UserDetailsDTO findByUsernameUserDetails(String username) {
+    User user = this.userRepository.findByUsername(username).get();
+    Location location = this.locationService.findByIdLocation(user.getIdLocation()).get();
+    Account account = this.accountService.findByOwner(username).get();
+    return new UserDetailsDTO(user, location, account);
   }
 
   public Optional<User> findByEmail(String email) {

@@ -1,5 +1,6 @@
 package timebank.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
 import timebank.model.interfaces.LocationIdHolder;
 
@@ -127,6 +128,7 @@ public class Advert implements Serializable, LocationIdHolder {
     this.createDate = createDate;
   }
 
+  @JsonIgnore
   public long getIdLocation() {
     return idLocation;
   }
