@@ -11,6 +11,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 import timebank.dto.AdvertDTO;
+import timebank.dto.AdvertDetailsDTO;
 import timebank.dto.session.UserSession;
 import timebank.exceptions.AccessingPrivateResourcesException;
 import timebank.exceptions.AdvertException;
@@ -59,10 +60,13 @@ public class AdvertController {
   }
 
   @RequestMapping(method=GET, path="/api/advert/{id}")
-  public @ResponseBody ResponseEntity<Advert> getAdvert(@PathVariable("id") long idAdvert) {
-    Advert updatedAdvert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
+  public @ResponseBody ResponseEntity<AdvertDetailsDTO> getAdvert(@PathVariable("id") long idAdvert, HttpSession session) {
+    UserSession userSession = (UserSession) session.getAttribute("user");
+    this.userService.findByUsername(userSession.getUsername()).orElseThrow(
+      () -> new ShowInterestException("getAdvert.error.userNotFound"));
+    this.advertService.findByIdAdvert(idAdvert).orElseThrow(
       () -> new AdvertException("getAdvert.error.advertNotFound"));
-    return ResponseEntity.ok(updatedAdvert);
+    return ResponseEntity.ok(this.advertService.findByIdAdvertDetails(idAdvert, userSession.getUsername()));
   }
 
   @RequestMapping(method=POST, path="/api/advert")
@@ -74,16 +78,16 @@ public class AdvertController {
     return ResponseEntity.ok(advert);
   }
 
-  @RequestMapping(method=PUT, path="/api/advert/{id}")
-  public @ResponseBody ResponseEntity<Advert> updateAdvert(@PathVariable("id") long idAdvert, @Valid @RequestBody AdvertDTO advertDTO, HttpSession session) throws AccessingPrivateResourcesException, AdvertException {
-    UserSession userSession = (UserSession) session.getAttribute("user");
-    Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
-      () -> new AdvertException("updateAdvert.error.advertNotFound"));
-    if (!userSession.getUsername().equals(advert.getEmployer()))
-      throw new AccessingPrivateResourcesException("updateAdvert.error.unauthorised");
-    Advert updatedAdvert = this.advertService.updateAdvert(advertDTO, advert);
-    return ResponseEntity.ok(updatedAdvert);
-  }
+//  @RequestMapping(method=PUT, path="/api/advert/{id}")
+//  public @ResponseBody ResponseEntity<Advert> updateAdvert(@PathVariable("id") long idAdvert, @Valid @RequestBody AdvertDTO advertDTO, HttpSession session) throws AccessingPrivateResourcesException, AdvertException {
+//    UserSession userSession = (UserSession) session.getAttribute("user");
+//    Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
+//      () -> new AdvertException("updateAdvert.error.advertNotFound"));
+//    if (!userSession.getUsername().equals(advert.getEmployer()))
+//      throw new AccessingPrivateResourcesException("updateAdvert.error.unauthorised");
+//    Advert updatedAdvert = this.advertService.updateAdvert(advertDTO, advert);
+//    return ResponseEntity.ok(updatedAdvert);
+//  }
 
   @RequestMapping(method=PUT, path="/api/advert/showInterest/{id}")
   public @ResponseBody ResponseEntity<HttpStatus> showInterest(@PathVariable("id") long idAdvert, HttpSession session) {
@@ -167,6 +171,24 @@ public class AdvertController {
     }
     this.advertService.finalizeAdvert(advert);
     return ResponseEntity.ok(HttpStatus.OK);
+  }
+
+  // wystawione przez uzytkownika ogloszenia - do podgladu w profilu
+  @RequestMapping(method=GET, path="/api/createdAdverts")
+  public @ResponseBody Iterable<Advert> getAllCreatedAdverts(HttpSession session) {
+    UserSession userSession = (UserSession) session.getAttribute("user");
+    this.userService.findByUsername(userSession.getUsername()).orElseThrow(
+      () -> new AdvertException("getAllCreatedAdverts.error.userNotFound"));
+    return this.advertService.findAllByEmployer(userSession.getUsername());
+  }
+
+  // ogloszenia ktorymi uzytkownik jest zainteresowany - do podgladu w profilu
+  @RequestMapping(method=GET, path="/api/interestingAdverts")
+  public @ResponseBody Iterable<Advert> getAllInterestingAdverts(HttpSession session) {
+    UserSession userSession = (UserSession) session.getAttribute("user");
+    this.userService.findByUsername(userSession.getUsername()).orElseThrow(
+      () -> new AdvertException("getAllInterestingAdverts.error.userNotFound"));
+    return this.advertService.findAllInterestingAdverts(userSession.getUsername());
   }
 
 }

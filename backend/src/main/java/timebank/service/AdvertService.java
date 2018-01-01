@@ -5,14 +5,23 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import timebank.dto.AdvertDTO;
+import timebank.dto.AdvertDetailsDTO;
 import timebank.model.Advert;
 import timebank.model.ArchiveAdvert;
+import timebank.model.Interested;
 import timebank.model.Location;
 import timebank.repository.AdvertRepository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service("advertService")
@@ -37,13 +46,66 @@ public class AdvertService {
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
+  private class AdvertRowMapper implements RowMapper<Advert> {
+    @Override
+    public Advert mapRow(ResultSet rs, int rowNum) throws SQLException {
+      Advert advert = new Advert();
+      advert.setIdAdvert(rs.getLong("idAdvert"));
+      advert.setActive(rs.getBoolean("active"));
+      advert.setType(rs.getString("type"));
+      advert.setEmployer(rs.getString("employer"));
+      advert.setPerformer(rs.getString("performer"));
+      advert.setTitle(rs.getString("title"));
+      advert.setDescription(rs.getString("description"));
+      advert.setIdCategory(rs.getLong("idCategory"));
+      advert.setValue(rs.getInt("value"));
+      advert.setCreateDate(rs.getTimestamp("createDate"));
+      advert.setIdLocation(rs.getLong("idLocation"));
+      return advert;
+    }
+  }
+
 
   public Optional<Advert> findByIdAdvert(long idAdvert) {
     return this.advertRepository.findByIdAdvert(idAdvert);
   }
 
+  public AdvertDetailsDTO findByIdAdvertDetails(long idAdvert, String username) {
+    Advert advert = this.advertRepository.findByIdAdvert(idAdvert).get();
+    Location location = this.locationService.findByIdLocation(advert.getIdLocation()).get();
+    Iterable<Interested> interested = this.interestedService.findAllByIdAdvert(idAdvert);
+    boolean usernameIsAdvertCreator = false;
+    if (username.equals(advert.getEmployer())) {
+      usernameIsAdvertCreator = true;
+    }
+    return new AdvertDetailsDTO(advert, location, interested, usernameIsAdvertCreator);
+  }
+
   public Iterable<Advert> findAllByEmployer(String username) {
     return this.advertRepository.findAllByEmployer(username);
+  }
+
+  public Iterable<Advert> findAllInterestingAdverts(String username) {
+    // lista obiektow Intrested ktorymi user jest zainteresowany
+    Iterable<Interested> interestingList = this.interestedService.findAllByInterested(username);
+
+    // lista id advertow ktorymi user jest zainteresowany (przejscie z listy Interested na long)
+    List<Long> interestingAdvertsIds = new ArrayList<Long>();
+    for( Interested interestingAdvert : interestingList ) {
+      interestingAdvertsIds.add(interestingAdvert.getIdAdvert());
+    }
+
+//    System.out.println(interestingAdvertsIds.toString());
+
+    // lista advertow o danych id
+    List<Advert> interestingAdvertsResult = new ArrayList<Advert>();
+    if (!interestingAdvertsIds.isEmpty()) {
+      NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+      MapSqlParameterSource parameters = new MapSqlParameterSource();
+      parameters.addValue("advertsID", interestingAdvertsIds);
+      interestingAdvertsResult = namedParameterJdbcTemplate.query("SELECT * FROM adverts WHERE idAdvert IN (:advertsID)", parameters, new AdvertRowMapper());
+    }
+    return interestingAdvertsResult;
   }
 
   public Page<Advert> findAll(Pageable pageable) {
@@ -82,13 +144,13 @@ public class AdvertService {
   }
 
   public void chooseFinalPerformer(long idAdvert, String performer) {
-    final String sql = "UPDATE adverts a SET a.active = FALSE, a.performer = ? WHERE a.id_advert = ?";
+    final String sql = "UPDATE adverts a SET a.active = FALSE, a.performer = ? WHERE a.idAdvert = ?";
     int result = this.jdbcTemplate.update(sql, performer, idAdvert);
 //    System.out.println("->-> chooseFinalPerformer: " + result);
   }
 
   public void removeFinalPerformer(long idAdvert, String performer) {
-    final String sql = "UPDATE adverts a SET a.active = TRUE, a.performer = NULL WHERE a.id_advert = ?";
+    final String sql = "UPDATE adverts a SET a.active = TRUE, a.performer = NULL WHERE a.iddvert = ?";
     int result = this.jdbcTemplate.update(sql, idAdvert);
     this.stopShowingInterest(idAdvert, performer);
 //    System.out.println("->-> removeFinalPerformer: " + result);
