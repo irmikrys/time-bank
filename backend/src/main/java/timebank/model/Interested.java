@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class Interested implements Serializable {
 
   @Id
-  @Column(name = "id_advert")
+  @Column(name = "idAdvert")
   private long idAdvert;
 
   @Id

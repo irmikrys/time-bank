@@ -6,6 +6,7 @@ export default class CategoriesGrid extends Component {
 
   setSearchCriteria = idCategory => {
     this.props.setSearchCriteria({idCategory});
+    this.props.fetchAdverts({idCategory});
   };
 
   render() {

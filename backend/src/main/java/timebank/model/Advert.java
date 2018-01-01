@@ -13,7 +13,7 @@ public class Advert implements Serializable, LocationIdHolder {
 
   @Id
   @GeneratedValue(strategy= GenerationType.IDENTITY)
-  @Column(name = "id_advert")
+  @Column(name = "idAdvert")
   private long idAdvert;
 
   @Column(name = "active")
@@ -34,17 +34,17 @@ public class Advert implements Serializable, LocationIdHolder {
   @Column(name = "description")
   private String description;
 
-  @Column(name = "id_category")
+  @Column(name = "idCategory")
   private long idCategory;
 
   @Column(name = "value")
   private int value;
 
   @CreationTimestamp
-  @Column(name ="create_date")
-  private Date creationDate;
+  @Column(name ="createDate")
+  private Date createDate;
 
-  @Column(name = "id_location")
+  @Column(name = "idLocation")
   private long idLocation;
 
   public long getIdAdvert() {
@@ -119,12 +119,12 @@ public class Advert implements Serializable, LocationIdHolder {
     this.value = value;
   }
 
-  public Date getCreationDate() {
-    return creationDate;
+  public Date getCreateDate() {
+    return createDate;
   }
 
-  public void setCreationDate(Date creationDate) {
-    this.creationDate = creationDate;
+  public void setCreateDate(Date createDate) {
+    this.createDate = createDate;
   }
 
   public long getIdLocation() {
@@ -144,7 +144,7 @@ public class Advert implements Serializable, LocationIdHolder {
     archiveAdvert.setDescription(getDescription());
     archiveAdvert.setIdCategory(getIdCategory());
     archiveAdvert.setValue(getValue());
-    archiveAdvert.setCreationDate(getCreationDate());
+    archiveAdvert.setCreateDate(getCreateDate());
     return archiveAdvert;
   }
 }

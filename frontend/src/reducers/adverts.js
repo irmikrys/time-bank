@@ -1,3 +1,5 @@
+import {PAGE_SIZE} from "../ui/constants/constants";
+
 const FETCH_ADVERTS = 'adverts/FETCH_ADVERTS';
 const FETCH_ADVERTS_SUCCESS = 'adverts/FETCH_ADVERTS_SUCCESS';
 const FETCH_ADVERTS_FAIL = 'adverts/FETCH_ADVERTS_FAIL';
@@ -45,7 +47,7 @@ export function fetchAdverts(searchCriteria) {
   return  {
     types: [FETCH_ADVERTS, FETCH_ADVERTS_SUCCESS, FETCH_ADVERTS_FAIL],
     promise: client => client
-      .get(`/api/adverts?page=0&size=6${request}`)
+      .get(`/api/adverts?page=0&size=${PAGE_SIZE}${request}`)
   };
 }
 

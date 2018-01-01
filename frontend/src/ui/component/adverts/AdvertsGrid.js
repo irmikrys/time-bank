@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import Masonry from 'react-masonry-infinite';
 import axios from 'axios';
-import {addColorAndHeight} from "../../constants/constants";
+import {addColorAndHeight, PAGE_SIZE} from "../../constants/constants";
 import {dateFormatter} from "../utils";
 import {Link} from "react-router";
 import {buildRequest} from "../../../reducers/adverts";
@@ -12,14 +12,13 @@ export default class AdvertsGrid extends Component {
     super(props);
 
     this.state = {
-      hasMore: true,
+      hasMore: this.props.adverts.length === PAGE_SIZE,
       elements: this.props.adverts.map(addColorAndHeight),
-      isLoading: false,
     };
   }
 
   loadMore = page => {
-    axios.get(`/api/adverts?page=${page}&size=6${buildRequest(this.props.searchCriteria)}`)
+    axios.get(`/api/adverts?page=${page}&size=${PAGE_SIZE}${buildRequest(this.props.searchCriteria)}`)
       .then(response => {
         setTimeout(() => {
           this.setState({
@@ -56,13 +55,14 @@ export default class AdvertsGrid extends Component {
                       <label>Description:</label>
                       <div>{item.advert.description}</div>
                       <label>Create Date:</label>
-                      <div>{dateFormatter(new Date(item.advert.creationDate))}</div>
+                      <div>{dateFormatter(new Date(item.advert.createDate))}</div>
                     </div>
                   </div>
                 </Link>
               ))
             }
           </Masonry>
+          { !this.state.hasMore && !this.state.elements.length ? <h3>No matching adverts</h3> : null }
         </div>
       </div>
 

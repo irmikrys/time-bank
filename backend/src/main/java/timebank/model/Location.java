@@ -9,7 +9,7 @@ public class Location implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id_location")
+  @Column(name = "idLocation")
   private long idLocation;
 
   @Column(name = "description")

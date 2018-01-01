@@ -1,15 +1,11 @@
 package timebank.controller;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -50,8 +46,11 @@ public class AdvertController {
   private InterestedService interestedService;
 
   @RequestMapping(method=GET, path="/api/adverts")
-  public @ResponseBody Page<Advert> getAdverts(Pageable pageable) {
-    return this.advertService.findAll(pageable);
+  public @ResponseBody Page<Advert> getAdverts(@RequestParam(name="type", required=false) String type,
+                                               @RequestParam(name="idCategory", required=false) String idCategory,
+                                               @RequestParam(name="title", required=false) String title,
+                                               Pageable pageable) {
+    return this.advertService.findAllByParams(type, idCategory, title, pageable);
   }
 
   @RequestMapping(method=GET, path="/api/categories")

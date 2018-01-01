@@ -22,7 +22,7 @@ export default class AdvertView extends Component {
               <label>Created By:</label>
               <div>{advert.employer}</div>
               <label>Create Date:</label>
-              <div>{dateFormatter(new Date(advert.creationDate))}</div>
+              <div>{dateFormatter(new Date(advert.createDate))}</div>
             </div>
           </div>
         </div>

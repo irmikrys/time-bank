@@ -50,6 +50,10 @@ public class AdvertService {
     return this.advertRepository.findAll(pageable);
   }
 
+  public Page<Advert> findAllByParams(String type, String idCategory, String title, Pageable pageable) {
+    return this.advertRepository.findAdvertsByParams(type, idCategory, title, pageable);
+  }
+
   public Advert createAdvert(String username, AdvertDTO advertDTO) {
     Location location = this.locationService.createLocation(advertDTO.getLocation());
     Advert advert = advertDTO.toAdvert(username, location.getIdLocation());

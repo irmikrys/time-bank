@@ -1,6 +1,8 @@
 import { FormFieldBuilder } from "../component/forms/FormFieldBuilder";
 import React from 'react'
 
+export const PAGE_SIZE = 6;
+
 export const MENU_FOR_USER = [
   {label: 'Home', link: '/'},
   {label: 'Logout', link: '/logout'},
@@ -79,8 +81,8 @@ export const TYPE_SELECT_OPTIONS = [
 export const SORT_BY_SELECT_OPTIONS = [
   {value: "title", label: `${String.fromCharCode(8593)} Title`},
   {value: "title,desc", label: `${String.fromCharCode(8595)} Title`},
-  {value: "creationDate", label: `${String.fromCharCode(8593)} Create Date`},
-  {value: "creationDate,desc", label: `${String.fromCharCode(8595)} Create Date`},
+  {value: "createDate", label: `${String.fromCharCode(8593)} Create Date`},
+  {value: "createDate,desc", label: `${String.fromCharCode(8595)} Create Date`},
 ];
 
 const COLORS = ['#EC407A', '#EF5350', '#AB47BC', '#7E57C2', '#5C6BC0', '#42A5F5', '#29B6F6', '#26C6DA', '#26A69A', '#66BB6A', '#9CCC65', '#EF6C00'];
