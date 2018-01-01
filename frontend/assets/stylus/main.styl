@@ -14,6 +14,7 @@ body
   background -o-linear-gradient(right, theme_dark, theme_light)
   background linear-gradient(to left, theme_dark, theme_light)
   font-family "Roboto", sans-serif
+  font-weight 300
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
   min-height 100%
@@ -22,6 +23,7 @@ body
 h1, h3
   color #fff
   text-align center
+  font-weight 300
 
 nav a
   color #ffffff
@@ -151,6 +153,7 @@ input, textarea
           padding-bottom 10px
           width 100%
           margin-top 0
+          font-weight 300
 
         .advert-details
           width 100%
@@ -160,6 +163,7 @@ input, textarea
 
           label
             margin-top 10px
+            font-weight 700
 
 .checkbox-register
   text-align left
@@ -200,6 +204,14 @@ input, textarea
   position absolute
   bottom 0
   width 100%
+
+  .nav
+    float left
+    margin 0
+    min-width 400px
+
+  li
+    float left
 
   .container-fluid
     padding 0
@@ -250,3 +262,25 @@ input, textarea
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 
+.advert-view
+  min-height 400px
+  overflow hidden
+
+.column
+  float left
+  width 50%
+  padding 1rem
+
+
+@media (max-width: 720px)
+  .column
+    width 100%
+
+#map
+  height 250px
+
+  div
+    padding 0
+
+  #state
+    float left
