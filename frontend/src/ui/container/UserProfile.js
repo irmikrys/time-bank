@@ -10,7 +10,7 @@ export class UserProfile extends Component {
         <div className="container">
           <div className="avatar-field">
             <img id="myAvatar"
-                 src="http://eoclimlab.eu/wp-content/uploads/2017/01/default.png"
+                 src={require("avatar.png")}
             />
             <button type="button">Change avatar</button>
           </div>
@@ -22,5 +22,5 @@ export class UserProfile extends Component {
 }
 
 export default connect(
-  ({authentication}) => ({username: authentication.username})
+  state => ({username: state.authentication.username})
 )(UserProfile);
