@@ -12,7 +12,7 @@ export default class AdvertsGrid extends Component {
     super(props);
 
     this.state = {
-      hasMore: this.props.adverts.length === PAGE_SIZE,
+      hasMore: !this.props.lastPage,
       elements: this.props.adverts.map(addColorAndHeight),
     };
   }

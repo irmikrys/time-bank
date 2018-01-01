@@ -21,9 +21,11 @@ export class ContactPage extends Component {
             </div>
             <div className="paragraph">
               <h3>Address</h3>
-              <div>You can also write to: </div>
-              <div className="bold">
-                {renderText(ADDRESS)}
+              <div>
+                <p>You can also write to:</p>
+                <p className="bold">
+                  {renderText(ADDRESS)}
+                </p>
               </div>
             </div>
           </div>

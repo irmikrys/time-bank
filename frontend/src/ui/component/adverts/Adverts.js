@@ -36,8 +36,9 @@ export default class Adverts extends Component {
         />
         {
           !this.props.updating && <AdvertsGrid adverts={this.props.adverts.content}
-                         categories={this.props.categories}
-                         searchCriteria={this.state.searchCriteria}
+                                               lastPage={this.props.adverts.last}
+                                               categories={this.props.categories}
+                                               searchCriteria={this.state.searchCriteria}
           />
         }
 
