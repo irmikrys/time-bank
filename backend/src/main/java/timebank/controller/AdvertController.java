@@ -15,8 +15,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 import timebank.dto.AdvertDTO;
 import timebank.dto.AdvertDetailsDTO;
+import timebank.dto.LocationDTO;
 import timebank.dto.session.UserSession;
-import timebank.exceptions.AccessingPrivateResourcesException;
 import timebank.exceptions.AdvertException;
 import timebank.exceptions.ShowInterestException;
 import timebank.model.*;
@@ -113,16 +113,23 @@ public class AdvertController {
     return ResponseEntity.ok(HttpStatus.OK);
   }
 
-//  @RequestMapping(method=PUT, path="/api/advert/{id}")
-//  public @ResponseBody ResponseEntity<Advert> updateAdvert(@PathVariable("id") long idAdvert, @Valid @RequestBody AdvertDTO advertDTO, HttpSession session) throws AccessingPrivateResourcesException, AdvertException {
-//    UserSession userSession = (UserSession) session.getAttribute("user");
-//    Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
-//      () -> new AdvertException("updateAdvert.error.advertNotFound"));
-//    if (!userSession.getUsername().equals(advert.getEmployer()))
-//      throw new AccessingPrivateResourcesException("updateAdvert.error.unauthorised");
-//    Advert updatedAdvert = this.advertService.updateAdvert(advertDTO, advert);
-//    return ResponseEntity.ok(updatedAdvert);
-//  }
+  @RequestMapping(method=PUT, path="/api/updateAdvert/{id}")
+  public @ResponseBody ResponseEntity<HttpStatus> updateAdvert(@PathVariable("id") long idAdvert, @Valid @RequestBody AdvertDTO advertDTO, HttpSession session) {
+    long start = System.nanoTime();
+
+    UserSession userSession = (UserSession) session.getAttribute("user");
+    Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
+      () -> new AdvertException("updateAdvert.error.advertNotFound"));
+    if (!userSession.getUsername().equals(advert.getEmployer()))
+      throw new AdvertException("updateAdvert.error.unauthorised");
+    Location location = this.locationService.findByIdLocation(advert.getIdLocation()).orElseThrow(
+      () -> new AdvertException("updateAdvert.error.locationNotFound"));
+    this.advertService.updateAdvert(advert, location, advertDTO);
+
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "updateAdvert", (elapsedTime/Math.pow(10,9))));
+    return ResponseEntity.ok(HttpStatus.OK);
+  }
 
   @RequestMapping(method=PUT, path="/api/advert/switchInterest/{id}")
   public @ResponseBody ResponseEntity<HttpStatus> switchInterest(@PathVariable("id") long idAdvert, HttpSession session) {
@@ -232,5 +239,23 @@ public class AdvertController {
     log.info(format("%s: %.10f [s]", "getAllInterestingAdverts", (elapsedTime/Math.pow(10,9))));
     return interestingAdverts;
   }
+
+
+
+  //>>>>>>>
+  @RequestMapping(method=POST, path="/api/updateLocation/{id}")
+  public @ResponseBody ResponseEntity<HttpStatus> updateLocation(@Valid @RequestBody LocationDTO locationDTO, @PathVariable("id") long idLocation) {
+    long start = System.nanoTime();
+    System.out.println("updateLocation początek: " +locationDTO.toString());
+
+    Location oldLocation = this.locationService.findByIdLocation(idLocation).orElseThrow(
+      () -> new AdvertException("updateLocation.error.locationNotFound"));
+    this.locationService.updateLocation(oldLocation, locationDTO);
+
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "updateLocation", (elapsedTime/Math.pow(10,9))));
+    return ResponseEntity.ok(HttpStatus.OK);
+  }
+  //<<<<<<<
 
 }
