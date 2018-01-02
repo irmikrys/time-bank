@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 export class UserProfile extends Component {
 
   render() {
-    const {user} = this.props;
+    const {user, location, account} = this.props.user;
     console.log(this.props);
     return (
       <div>
@@ -18,17 +18,23 @@ export class UserProfile extends Component {
             <div className="paragraph">
               <h3>Personal Data</h3>
               <div>
-                <label>First name: </label>
+                <label>First Name: </label>
                 <div>{user.firstName}</div>
-                <label>Last name: </label>
+                <label>Last Name: </label>
                 <div>{user.lastName}</div>
-                <label>username:</label>
+                <label>Username:</label>
                 <div>{user.username}</div>
+                <label>Email:</label>
+                <div>{user.email}</div>
+                <label>Location:</label>
+                <div>{location.description}</div>
               </div>
             </div>
             <div className="paragraph">
               <h3>Account</h3>
               <div>
+                <label>Account Balance: </label>
+                <div>{account.amount}</div>
               </div>
             </div>
             <div className="paragraph">

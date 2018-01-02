@@ -27,8 +27,7 @@ export class AdvertViewPage extends Component {
 
 export default connect(
   state => ({
-    advert: state.advert.advert.advert,
-    location: state.advert.advert.location,
+    advert: state.advert.advert,
     updating: state.advert.updating,
     categories: state.categories.categories
   }),

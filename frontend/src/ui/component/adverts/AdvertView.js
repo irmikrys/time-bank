@@ -5,7 +5,7 @@ import {dateFormatter} from "../utils";
 export default class AdvertView extends Component {
 
   componentDidMount() {
-    const {latitude, longitude, description} = this.props.location;
+    const {latitude, longitude, description} = this.props.advert.location;
     let map = new window.google.maps.Map(document.getElementById('map'), {
       center: {
         lat: latitude,
@@ -26,7 +26,8 @@ export default class AdvertView extends Component {
   }
 
   render() {
-    const {advert, categories} = this.props;
+    const {categories} = this.props;
+    const {advert, location, listSize} =  this.props.advert;
     return (
       <div className="container">
         <div className="details">
@@ -48,10 +49,14 @@ export default class AdvertView extends Component {
                 </div>
                 <label className="margin-top-2">Description:</label>
                 <div>{advert.description}</div>
+                <label className="margin-top-2">Location:</label>
+                <div>{location.description}</div>
                 <label className="margin-top-2">Created By:</label>
                 <div>{advert.employer}</div>
                 <label className="margin-top-2">Create Date:</label>
                 <div>{dateFormatter(new Date(advert.createDate))}</div>
+                <label className="margin-top-2">Interested:</label>
+                <div>{listSize}</div>
               </div>
               <div className="column">
                 <div id="map"/>
