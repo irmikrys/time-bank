@@ -3,7 +3,7 @@ import {PAGE_SIZE} from "../ui/constants/constants";
 const FETCH_ADVERTS = 'adverts/FETCH_ADVERTS';
 const FETCH_ADVERTS_SUCCESS = 'adverts/FETCH_ADVERTS_SUCCESS';
 const FETCH_ADVERTS_FAIL = 'adverts/FETCH_ADVERTS_FAIL';
-const SEARCH_CRITERIA = 'advert/SEARCH_CRITERIA';
+const SEARCH_CRITERIA = 'adverts/SEARCH_CRITERIA';
 
 const initialState = {
   searchCriteria: {},
@@ -18,7 +18,7 @@ export default function advertsReducer(state = initialState, action) {
     case FETCH_ADVERTS:
       return {
         ...state,
-        updating: true,
+        updating: true
       };
     case FETCH_ADVERTS_SUCCESS:
       return {
@@ -29,7 +29,8 @@ export default function advertsReducer(state = initialState, action) {
     case SEARCH_CRITERIA:
       return {
         ...state,
-        searchCriteria: action.searchCriteria
+        searchCriteria: action.searchCriteria,
+        updating: true
       };
     default:
       return state;
