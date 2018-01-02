@@ -7,6 +7,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 import timebank.model.Advert;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Repository("advertRepository")
@@ -21,6 +22,7 @@ public interface AdvertRepository extends PagingAndSortingRepository<Advert, Int
 
   Iterable<Advert> findAllByEmployer(String username);
 
+  @Transactional
   void deleteByIdAdvert(long idAdvert);
 
 }

@@ -149,4 +149,5 @@ public class Advert implements Serializable, LocationIdHolder {
     archiveAdvert.setCreateDate(getCreateDate());
     return archiveAdvert;
   }
+
 }

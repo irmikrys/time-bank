@@ -15,8 +15,8 @@ public class InterestedService {
   @Autowired
   @Qualifier("interestedRepository")
   private InterestedRepository interestedRepository;
-  
-  
+
+
   public Optional<Interested> findByIdAdvertAndInterested(long idAdvert, String interested) {
     return this.interestedRepository.findByIdAdvertAndInterested(idAdvert, interested);
   }
@@ -36,13 +36,11 @@ public class InterestedService {
     interested.setUsername(username);
     return this.interestedRepository.save(interested);
   }
-  
-  @Transactional
+
   public void stopShowingInterest(long idAdvert, String username) {
     this.interestedRepository.deleteByIdAdvertAndInterested(idAdvert, username);
   }
-  
-  @Transactional
+
   public void deleteInterestedInAdvert(long idAdvert) {
     this.interestedRepository.deleteByIdAdvert(idAdvert);
   }

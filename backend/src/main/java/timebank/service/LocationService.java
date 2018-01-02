@@ -29,7 +29,6 @@ public class LocationService {
     return this.locationRepository.save(location);
   }
 
-  @Transactional
   public void deleteLocation(long idLocation) {
     this.locationRepository.deleteByIdLocation(idLocation);
   }

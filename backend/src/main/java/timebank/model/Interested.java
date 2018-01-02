@@ -80,4 +80,11 @@ public class Interested implements Serializable {
     }
   }
 
+  @Override
+  public String toString() {
+    return "Interested{" +
+      "idAdvert=" + idAdvert +
+      ", interested='" + interested + '\'' +
+      '}';
+  }
 }

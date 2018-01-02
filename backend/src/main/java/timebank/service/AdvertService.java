@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import timebank.dto.AdvertDTO;
 import timebank.dto.AdvertDetailsDTO;
+import timebank.exceptions.AdvertException;
 import timebank.model.Advert;
 import timebank.model.ArchiveAdvert;
 import timebank.model.Interested;
@@ -65,21 +66,49 @@ public class AdvertService {
     }
   }
 
+  //>>>>>>
+  // uzupelnia AdvertDetailsDTO o dane adverta i location (nie uzupelnia intrested)
+  private class AdvertDetailsRowMapper implements RowMapper<AdvertDetailsDTO> {
+    @Override
+    public AdvertDetailsDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+      AdvertDetailsDTO advert = new AdvertDetailsDTO();
+      advert.setIdAdvert(rs.getLong("a.idAdvert"));
+      advert.setActive(rs.getBoolean("a.active"));
+      advert.setType(rs.getString("a.type"));
+      advert.setEmployer(rs.getString("a.employer"));
+      advert.setPerformer(rs.getString("a.performer"));
+      advert.setTitle(rs.getString("a.title"));
+      advert.setDescription(rs.getString("a.description"));
+      advert.setIdCategory(rs.getLong("a.idCategory"));
+      advert.setValue(rs.getInt("a.value"));
+      advert.setCreateDate(rs.getTimestamp("a.createDate"));
+      advert.setIdLocation(rs.getLong("a.idLocation"));
+      advert.setLocationDescription(rs.getString("l.description"));
+      advert.setLatitude(rs.getDouble("l.latitude"));
+      advert.setLongitude(rs.getDouble("l.longitude"));
+      return advert;
+    }
+  }
+  //<<<<<<
+
 
   public Optional<Advert> findByIdAdvert(long idAdvert) {
     return this.advertRepository.findByIdAdvert(idAdvert);
   }
 
+  //>>>>>>
   public AdvertDetailsDTO findByIdAdvertDetails(long idAdvert, String username) {
-    Advert advert = this.advertRepository.findByIdAdvert(idAdvert).get();
-    Location location = this.locationService.findByIdLocation(advert.getIdLocation()).get();
-    Iterable<Interested> interested = this.interestedService.findAllByIdAdvert(idAdvert);
-    boolean usernameIsAdvertCreator = false;
-    if (username.equals(advert.getEmployer())) {
-      usernameIsAdvertCreator = true;
-    }
-    return new AdvertDetailsDTO(advert, location, interested, usernameIsAdvertCreator);
+    NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+    MapSqlParameterSource parameters = new MapSqlParameterSource();
+    parameters.addValue("idAdvert", idAdvert);
+    final String sql = "SELECT * FROM adverts a JOIN locations l USING (idLocation) WHERE a.idAdvert = :idAdvert";
+    AdvertDetailsDTO advert = namedParameterJdbcTemplate.queryForObject(sql, parameters, new AdvertDetailsRowMapper());
+
+    advert.setInterested(this.interestedService.findAllByIdAdvert(idAdvert));
+
+    return advert;
   }
+  //<<<<<<
 
   public Iterable<Advert> findAllByEmployer(String username) {
     return this.advertRepository.findAllByEmployer(username);
@@ -122,8 +151,10 @@ public class AdvertService {
     return this.advertRepository.save(advert);
   }
 
-  @Transactional
-  void deleteAdvert(long idAdvert) {
+  // usuwanie wszystkich powiazanych rekordow z 'adverts', 'interested' i 'locations' powiazanych z danym advertem
+  public void deleteAdvert(long idAdvert, long idLocation) {
+    this.interestedService.deleteInterestedInAdvert(idAdvert);
+    this.locationService.deleteLocation(idLocation);
     this.advertRepository.deleteByIdAdvert(idAdvert);
   }
 
@@ -135,8 +166,8 @@ public class AdvertService {
     return advertRepository.save(advert);
   }
 
-  public void showInterest(long idAdvert, String username) {
-    this.interestedService.showInterest(idAdvert, username);
+  public Interested showInterest(long idAdvert, String username) {
+    return this.interestedService.showInterest(idAdvert, username);
   }
 
   public void stopShowingInterest(long idAdvert, String username) {
@@ -146,17 +177,14 @@ public class AdvertService {
   public void chooseFinalPerformer(long idAdvert, String performer) {
     final String sql = "UPDATE adverts a SET a.active = FALSE, a.performer = ? WHERE a.idAdvert = ?";
     int result = this.jdbcTemplate.update(sql, performer, idAdvert);
-//    System.out.println("->-> chooseFinalPerformer: " + result);
   }
 
   public void removeFinalPerformer(long idAdvert, String performer) {
-    final String sql = "UPDATE adverts a SET a.active = TRUE, a.performer = NULL WHERE a.iddvert = ?";
+    final String sql = "UPDATE adverts a SET a.active = TRUE, a.performer = NULL WHERE a.idAdvert = ?";
     int result = this.jdbcTemplate.update(sql, idAdvert);
     this.stopShowingInterest(idAdvert, performer);
-//    System.out.println("->-> removeFinalPerformer: " + result);
   }
 
-  @Transactional
   public void finalizeAdvert(Advert advert) {
     // 1. stworzenie rekordu z bazy archiwum i go zapisanie
     ArchiveAdvert archiveAdvert = this.archiveAdvertService.createArchiveAdvert(advert);
@@ -173,13 +201,8 @@ public class AdvertService {
     final String sql = "UPDATE accounts a SET a.balance = (a.balance + ?) WHERE a.owner = ?";
     int resultPlus = this.jdbcTemplate.update(sql, archiveAdvert.getValue(), plus);
     int resultMinus = this.jdbcTemplate.update(sql, -archiveAdvert.getValue(), minus);
-//    System.out.println("->-> wynikPlus: " + resultPlus);
-//    System.out.println("->-> wynikMinus: " + resultMinus);
-//    System.out.println("->-> spokojnie to nie jest ostateczna wersja :C ");
 
-    // 3. usuwanie wszystkich niepotrzebnych rekordow z 'adverts', 'interested' i 'locations'
-    this.locationService.deleteLocation(advert.getIdLocation());
-    this.interestedService.deleteInterestedInAdvert(advert.getIdAdvert());
-    this.deleteAdvert(advert.getIdAdvert());
+    // 3. usuwanie wszystkich niepotrzebnych rekordow
+    this.deleteAdvert(advert.getIdAdvert(), advert.getIdLocation());
   }
 }
