@@ -64,6 +64,30 @@ export class UserProfile extends Component {
                   </div>
                 </div>
                 <div className="column">
+
+                  <table>
+                    <tr>
+                      <th>First Name:</th>
+                      <td>{user.firstName}</td>
+                    </tr>
+                    <tr>
+                      <th>Last Name:</th>
+                      <td>{user.lastName}</td>
+                    </tr>
+                    <tr>
+                      <th>Username:</th>
+                      <td>{user.username}</td>
+                    </tr>
+                    <tr>
+                      <th>Email:</th>
+                      <td>{user.email}</td>
+                    </tr>
+                    <tr>
+                      <th>Location:</th>
+                      <td>{location.description}</td>
+                    </tr>
+                  </table>
+
                   <label>First Name:</label>
                   <div>{user.firstName}</div>
                   <label className="margin-top-2">Last Name:</label>
@@ -90,6 +114,18 @@ export class UserProfile extends Component {
                 <div>
                   {this.showAdverts(createdAdverts)}
                 </div>
+              </div>
+            </div>
+            <div className="paragraph">
+              <h3>Account</h3>
+              <div>
+                <label>Account Balance: </label>
+                <span> {account.amount}</span>
+              </div>
+            </div>
+            <div className="paragraph">
+              <h3>Transactions</h3>
+              <div>
               </div>
             </div>
           </div>

@@ -17,11 +17,13 @@ CREATE TABLE users (
 
 DROP TABLE IF EXISTS accounts;
 CREATE TABLE accounts (
-  accountNr     INTEGER(30)     NOT NULL AUTO_INCREMENT,
+  accountNr     BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   owner         VARCHAR(30)     NOT NULL,
   balance       INTEGER(11)     NOT NULL,
   PRIMARY KEY (accountNr)
 ) ENGINE = innodb DEFAULT CHARSET = utf8;
+
+ALTER TABLE accounts AUTO_INCREMENT=10000000000000;
 
 DROP TABLE IF EXISTS adverts;
 CREATE TABLE adverts (
@@ -56,7 +58,7 @@ CREATE TABLE categories (
 
 DROP TABLE IF EXISTS locations;
 CREATE TABLE  locations (
-  idLocation    INTEGER(30)     NOT NULL AUTO_INCREMENT,
+  idLocation    INTEGER(30)      NOT NULL AUTO_INCREMENT,
   description   VARCHAR(150)     NOT NULL,
   latitude      NUMERIC(19,16)   NOT NULL,
   longitude     NUMERIC(19,15)   NOT NULL,
