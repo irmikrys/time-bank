@@ -66,8 +66,6 @@ public class AdvertService {
     }
   }
 
-  //>>>>>>
-  // uzupelnia AdvertDetailsDTO o dane adverta i location (nie uzupelnia intrested)
   private class AdvertDetailsRowMapper implements RowMapper<AdvertDetailsDTO> {
     @Override
     public AdvertDetailsDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -89,26 +87,10 @@ public class AdvertService {
       return advert;
     }
   }
-  //<<<<<<
-
 
   public Optional<Advert> findByIdAdvert(long idAdvert) {
     return this.advertRepository.findByIdAdvert(idAdvert);
   }
-
-  //>>>>>>
-  public AdvertDetailsDTO findByIdAdvertDetails(long idAdvert, String username) {
-    NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
-    MapSqlParameterSource parameters = new MapSqlParameterSource();
-    parameters.addValue("idAdvert", idAdvert);
-    final String sql = "SELECT * FROM adverts a JOIN locations l USING (idLocation) WHERE a.idAdvert = :idAdvert";
-    AdvertDetailsDTO advert = namedParameterJdbcTemplate.queryForObject(sql, parameters, new AdvertDetailsRowMapper());
-
-    advert.setInterested(this.interestedService.findAllByIdAdvert(idAdvert));
-
-    return advert;
-  }
-  //<<<<<<
 
   public Iterable<Advert> findAllByEmployer(String username) {
     return this.advertRepository.findAllByEmployer(username);

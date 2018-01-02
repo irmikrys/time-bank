@@ -16,8 +16,6 @@ public class AdvertDetailsDTO {
 
   private Iterable<Interested> interested;
 
-  private int interestedNumber;
-
   private String userEmail;
 
 
@@ -25,15 +23,12 @@ public class AdvertDetailsDTO {
     this.advert = new Advert();
     this.location = new Location();
     this.interested = new ArrayList<>();
-    this.interestedNumber = 0;
   }
 
   public AdvertDetailsDTO(Advert advert, Location location, Iterable<Interested> interested, String email) {
-  public AdvertDetailsDTO(Advert advert, Location location, Iterable<Interested> interested) {
     this.advert = advert;
     this.location = location;
     this.interested = interested;
-    this.interestedNumber = Lists.newArrayList(interested).size();
     this.userEmail = email;
   }
 
@@ -49,17 +44,12 @@ public class AdvertDetailsDTO {
     return interested;
   }
 
-  public int getListSize() {
-    return interestedNumber;
-  }
-
   public String getUserEmail() {
     return userEmail;
   }
 
   public void setInterested(Iterable<Interested> interested) {
     this.interested = interested;
-    this.interestedNumber = Lists.newArrayList(interested).size();
   }
 
   public void setActive(boolean active) {

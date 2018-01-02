@@ -70,7 +70,6 @@ public class AdvertController {
   public @ResponseBody ResponseEntity<AdvertDetailsDTO> getAdvert(@PathVariable("id") long idAdvert, HttpSession session) {
     long start = System.nanoTime();
 
-    UserSession userSession = (UserSession) session.getAttribute("user");
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
       () -> new AdvertException("getAdvert.error.advertNotFound"));
     User employer = this.userService.findByUsername(advert.getEmployer()).orElseThrow(
