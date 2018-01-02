@@ -161,7 +161,6 @@ public class AdvertService {
   public void removeFinalContractor(long idAdvert, String contractor) {
     final String sql = "UPDATE adverts a SET a.active = TRUE, a.contractor = NULL WHERE a.idAdvert = ?";
     this.jdbcTemplate.update(sql, idAdvert);
-    this.stopShowingInterest(idAdvert, contractor);
   }
 
   public void finalizeAdvert(Advert advert) {

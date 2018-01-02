@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Dropzone from "react-dropzone";
 import axios from 'axios';
+import {Link} from "react-router";
 
 export class UserProfile extends Component {
 
@@ -20,6 +21,24 @@ export class UserProfile extends Component {
         const img = document.getElementById('avatar');
         img.src = files[0].preview;
       });
+  };
+
+  showAdverts = adverts => {
+    return (
+      <div>
+        {
+          adverts.map(advert => {
+            return (
+              <div>
+                <Link to={`/advert/${advert.idAdvert}`} key={advert.idAdvert}>
+                  {advert.title}
+                </Link>
+              </div>
+            )
+          })
+        }
+      </div>
+    )
   };
 
   render() {
@@ -64,9 +83,13 @@ export class UserProfile extends Component {
               <h3>Transactions</h3>
               <div className="profile-view">
                 <label>Adverts I'm interested in:</label>
-                <div>{JSON.stringify(interestingAdverts)}</div>
+                <div>
+                  {this.showAdverts(interestingAdverts)}
+                </div>
                 <label>My adverts:</label>
-                <div>{JSON.stringify(createdAdverts)}</div>
+                <div>
+                  {this.showAdverts(createdAdverts)}
+                </div>
               </div>
             </div>
           </div>

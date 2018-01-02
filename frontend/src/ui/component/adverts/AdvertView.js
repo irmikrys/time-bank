@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import {dateFormatter} from "../utils";
+import Select from "react-select";
 import axios from 'axios';
+import {browserHistory} from "react-router";
 
 export default class AdvertView extends Component {
 
@@ -11,7 +13,8 @@ export default class AdvertView extends Component {
     this.state = {
       numberOfInterested: interestedList.length,
       isUserInterested: interestedList.filter(item => item.username === props.username).length === 1,
-      isUserOwner: advert.owner === props.username
+      isUserOwner: advert.owner === props.username,
+      contractor: advert.contractor
     };
   }
 
@@ -48,9 +51,33 @@ export default class AdvertView extends Component {
       });
   };
 
+  handleSelectChange = contractor => {
+    const {idAdvert} =  this.props.advert.advert;
+    axios.put(`/api/advert/chooseContractor?idAdvert=${idAdvert}&contractor=${contractor}`, null)
+      .then(result => {
+        this.setState({contractor});
+      });
+  };
+
+  clearContractor = event => {
+    const {idAdvert} =  this.props.advert.advert;
+    axios.delete(`/api/advert/deleteContractor/${idAdvert}`)
+      .then(result => {
+        this.setState({contractor: null});
+      });
+  };
+
+  finalizeTransaction = event => {
+    const {idAdvert} =  this.props.advert.advert;
+    axios.put(`/api/advert/finalize/${idAdvert}`, null)
+      .then(result => {
+        browserHistory.push('/');
+      })
+  };
+
   render() {
-    const {categories, username} = this.props;
-    const {advert, location, userEmail} =  this.props.advert;
+    const {categories} = this.props;
+    const {advert, location, userEmail, interestedList} =  this.props.advert;
     const {numberOfInterested, isUserInterested, isUserOwner} = this.state;
     const star = isUserInterested ? "glyphicon-star" : "glyphicon-star-empty";
     return (
@@ -99,7 +126,27 @@ export default class AdvertView extends Component {
                       <button type="button" onClick={this.handleOnClick.bind(this)}>
                         <span className="glyphicon glyphicon-star"/> I'm {isUserInterested ? "not " : ""}interested
                       </button>
-                    </div> : null
+                    </div> :
+                    <div className="choose-contractor">
+                      <Select simpleValue
+                              className="margin-top-2"
+                              placeholder="choose contractor"
+                              clearable={false}
+                              backspaceRemoves={false}
+                              disabled={this.state.contractor || !numberOfInterested}
+                              value={this.state.contractor}
+                              options={interestedList.map(item => {return {value: item.username, label: item.username}})}
+                              onChange={this.handleSelectChange.bind(this)}
+                      />
+                      <div className="advert-buttons">
+                        <button disabled={!this.state.contractor} type="button" onClick={this.clearContractor.bind(this)}>
+                          <span className="glyphicon glyphicon-erase"/> Clear contractor
+                        </button>
+                        <button disabled={!this.state.contractor} type="button" onClick={this.finalizeTransaction.bind(this)}>
+                          <span className="glyphicon glyphicon-briefcase"/> Finalize transaction
+                        </button>
+                      </div>
+                    </div>
                 }
               </div>
             </div>
