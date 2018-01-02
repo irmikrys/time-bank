@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import AdvertView from "../component/adverts/AdvertView";
 import {fetchAdvertById} from "../../reducers/advert";
+import {setSearchCriteria} from "../../reducers/adverts";
 
 export class AdvertViewPage extends Component {
 
@@ -19,6 +20,7 @@ export class AdvertViewPage extends Component {
                                               location={this.props.location}
                                               categories={this.props.categories}
                                               username={this.props.username}
+                                              setSearchCriteria={this.props.setSearchCriteria}
         />
         }
         { this.props.updating && <div className="loader"/> }
@@ -34,5 +36,5 @@ export default connect(
     updating: state.advert.updating,
     categories: state.categories.categories
   }),
-  {fetchAdvertById}
+  {fetchAdvertById, setSearchCriteria}
 )(AdvertViewPage);
