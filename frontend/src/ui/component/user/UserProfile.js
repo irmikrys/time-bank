@@ -23,6 +23,7 @@ export class UserProfile extends Component {
   };
 
   render() {
+    const {createdAdverts, interestingAdverts} = this.props;
     const {user, location, account} = this.props.user;
     console.log(this.props);
     return (
@@ -44,9 +45,9 @@ export class UserProfile extends Component {
                   </div>
                 </div>
                 <div className="column">
-                  <label>First Name: </label>
+                  <label>First Name:</label>
                   <div>{user.firstName}</div>
-                  <label className="margin-top-2">Last Name: </label>
+                  <label className="margin-top-2">Last Name:</label>
                   <div>{user.lastName}</div>
                   <label className="margin-top-2">Username:</label>
                   <div>{user.username}</div>
@@ -54,9 +55,18 @@ export class UserProfile extends Component {
                   <div>{user.email}</div>
                   <label className="margin-top-2">Location:</label>
                   <div>{location.description}</div>
-                  <label className="margin-top-2">Account Balance: </label>
+                  <label className="margin-top-2">Account Balance:</label>
                   <div>{account.amount}</div>
                 </div>
+              </div>
+            </div>
+            <div className="paragraph">
+              <h3>Transactions</h3>
+              <div className="profile-view">
+                <label>Adverts I'm interested in:</label>
+                <div>{JSON.stringify(interestingAdverts)}</div>
+                <label>My adverts:</label>
+                <div>{JSON.stringify(createdAdverts)}</div>
               </div>
             </div>
           </div>
