@@ -1,8 +1,18 @@
 import React, {Component} from 'react';
 import {dateFormatter} from "../utils";
-
+import axios from 'axios';
 
 export default class AdvertView extends Component {
+
+  constructor(props) {
+    super(props);
+
+    const {interestedList} = props.advert;
+    this.state = {
+      numberOfInterested: interestedList.length,
+      isUserInterested: interestedList.filter(item => item.username === props.username).length === 1
+    };
+  }
 
   componentDidMount() {
     const {latitude, longitude, description} = this.props.advert.location;
@@ -25,19 +35,31 @@ export default class AdvertView extends Component {
     });
   }
 
+  handleOnClick = event => {
+    const {idAdvert} =  this.props.advert.advert;
+    axios.put(`/api/advert/switchInterest/${idAdvert}`, null)
+      .then(result => {
+        const {numberOfInterested, isUserInterested} = this.state;
+        this.setState({
+          numberOfInterested: isUserInterested ? numberOfInterested - 1 : numberOfInterested + 1,
+          isUserInterested: !isUserInterested,
+        });
+      });
+  };
+
   render() {
     const {categories, username} = this.props;
-    const {advert, location, interestedList} =  this.props.advert;
-    const isUserInterested = interestedList.filter(item => item.username === username).length === 1;
+    const {advert, location, userEmail} =  this.props.advert;
+    const {numberOfInterested, isUserInterested} = this.state;
     const star = isUserInterested ? "glyphicon-star" : "glyphicon-star-empty";
     return (
       <div className="container">
         <div className="details">
           <div className="paragraph">
-            <p className="advert-title">
+            <div className="advert-title" onClick={this.handleOnClick.bind(this)}>
               <h3>{advert.title}</h3>
               <span className={`interested-star glyphicon ${star}`}/>
-            </p>
+            </div>
             <div className="advert-view">
               <div className="column">
                 <div className="three-column">
@@ -61,16 +83,18 @@ export default class AdvertView extends Component {
                 <label className="margin-top-2">Create Date:</label>
                 <div>{dateFormatter(new Date(advert.createDate))}</div>
                 <label className="margin-top-2">Interested:</label>
-                <div>{interestedList.length}</div>
+                <div>{numberOfInterested}</div>
               </div>
               <div className="column">
                 <div id="map"/>
                 <div className="advert-buttons">
-                  <button type="button" >
-                    <span className="glyphicon glyphicon-envelope"/> Ask about details
-                  </button>
-                  <button type="button" >
-                    <span className="glyphicon glyphicon-star"/> I'm interested
+                  <a href={`mailto:${userEmail}`}>
+                    <button type="button" >
+                      <span className="glyphicon glyphicon-envelope"/> Ask about details
+                    </button>
+                  </a>
+                  <button type="button" onClick={this.handleOnClick.bind(this)}>
+                    <span className="glyphicon glyphicon-star"/> I'm {isUserInterested ? "not " : ""}interested
                   </button>
               </div>
               </div>

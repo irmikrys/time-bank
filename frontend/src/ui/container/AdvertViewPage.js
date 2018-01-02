@@ -17,7 +17,9 @@ export class AdvertViewPage extends Component {
         <h1>Advert</h1>
         { !this.props.updating && <AdvertView advert={this.props.advert}
                                               location={this.props.location}
-                                              categories={this.props.categories}/>
+                                              categories={this.props.categories}
+                                              username={this.props.username}
+        />
         }
         { this.props.updating && <div className="loader"/> }
       </div>
