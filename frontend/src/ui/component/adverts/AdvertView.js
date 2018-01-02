@@ -26,13 +26,18 @@ export default class AdvertView extends Component {
   }
 
   render() {
-    const {categories} = this.props;
-    const {advert, location, listSize} =  this.props.advert;
+    const {categories, username} = this.props;
+    const {advert, location, interestedList} =  this.props.advert;
+    const isUserInterested = interestedList.filter(item => item.username === username).length === 1;
+    const star = isUserInterested ? "glyphicon-star" : "glyphicon-star-empty";
     return (
       <div className="container">
         <div className="details">
           <div className="paragraph">
-            <h3>{advert.title}</h3>
+            <p className="advert-title">
+              <h3>{advert.title}</h3>
+              <span className={`interested-star glyphicon ${star}`}/>
+            </p>
             <div className="advert-view">
               <div className="column">
                 <div className="three-column">
@@ -56,10 +61,18 @@ export default class AdvertView extends Component {
                 <label className="margin-top-2">Create Date:</label>
                 <div>{dateFormatter(new Date(advert.createDate))}</div>
                 <label className="margin-top-2">Interested:</label>
-                <div>{listSize}</div>
+                <div>{interestedList.length}</div>
               </div>
               <div className="column">
                 <div id="map"/>
+                <div className="advert-buttons">
+                  <button type="button" >
+                    <span className="glyphicon glyphicon-envelope"/> Ask about details
+                  </button>
+                  <button type="button" >
+                    <span className="glyphicon glyphicon-star"/> I'm interested
+                  </button>
+              </div>
               </div>
             </div>
           </div>

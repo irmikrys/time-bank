@@ -27,6 +27,7 @@ export class AdvertViewPage extends Component {
 
 export default connect(
   state => ({
+    username: state.authentication.username,
     advert: state.advert.advert,
     updating: state.advert.updating,
     categories: state.categories.categories

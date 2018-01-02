@@ -29,6 +29,7 @@ public class AdvertDetailsDTO {
   }
 
   public AdvertDetailsDTO(Advert advert, Location location, Iterable<Interested> interested, String email) {
+  public AdvertDetailsDTO(Advert advert, Location location, Iterable<Interested> interested) {
     this.advert = advert;
     this.location = location;
     this.interested = interested;
