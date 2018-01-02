@@ -7,10 +7,11 @@ export default class AdvertView extends Component {
   constructor(props) {
     super(props);
 
-    const {interestedList} = props.advert;
+    const {interestedList, advert} = props.advert;
     this.state = {
       numberOfInterested: interestedList.length,
-      isUserInterested: interestedList.filter(item => item.username === props.username).length === 1
+      isUserInterested: interestedList.filter(item => item.username === props.username).length === 1,
+      isUserOwner: advert.employer === props.username
     };
   }
 
@@ -50,15 +51,15 @@ export default class AdvertView extends Component {
   render() {
     const {categories, username} = this.props;
     const {advert, location, userEmail} =  this.props.advert;
-    const {numberOfInterested, isUserInterested} = this.state;
+    const {numberOfInterested, isUserInterested, isUserOwner} = this.state;
     const star = isUserInterested ? "glyphicon-star" : "glyphicon-star-empty";
     return (
       <div className="container">
         <div className="details">
           <div className="paragraph">
-            <div className="advert-title" onClick={this.handleOnClick.bind(this)}>
+            <div className="advert-title">
               <h3>{advert.title}</h3>
-              <span className={`interested-star glyphicon ${star}`}/>
+              {!isUserOwner ? <span onClick={this.handleOnClick.bind(this)} className={`interested-star glyphicon ${star}`}/> : ""}
             </div>
             <div className="advert-view">
               <div className="column">
@@ -87,16 +88,19 @@ export default class AdvertView extends Component {
               </div>
               <div className="column">
                 <div id="map"/>
-                <div className="advert-buttons">
-                  <a href={`mailto:${userEmail}`}>
-                    <button type="button" >
-                      <span className="glyphicon glyphicon-envelope"/> Ask about details
-                    </button>
-                  </a>
-                  <button type="button" onClick={this.handleOnClick.bind(this)}>
-                    <span className="glyphicon glyphicon-star"/> I'm {isUserInterested ? "not " : ""}interested
-                  </button>
-              </div>
+                {
+                  !isUserOwner ?
+                    <div className="advert-buttons">
+                      <a href={`mailto:${userEmail}`}>
+                        <button type="button" >
+                          <span className="glyphicon glyphicon-envelope"/> Ask about details
+                        </button>
+                      </a>
+                      <button type="button" onClick={this.handleOnClick.bind(this)}>
+                        <span className="glyphicon glyphicon-star"/> I'm {isUserInterested ? "not " : ""}interested
+                      </button>
+                    </div> : null
+                }
               </div>
             </div>
           </div>
