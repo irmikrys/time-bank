@@ -44,19 +44,43 @@ export class UserProfile extends Component {
                   </div>
                 </div>
                 <div className="column">
-                  <label>First Name: </label>
-                  <div>{user.firstName}</div>
-                  <label className="margin-top-2">Last Name: </label>
-                  <div>{user.lastName}</div>
-                  <label className="margin-top-2">Username:</label>
-                  <div>{user.username}</div>
-                  <label className="margin-top-2">Email:</label>
-                  <div>{user.email}</div>
-                  <label className="margin-top-2">Location:</label>
-                  <div>{location.description}</div>
-                  <label className="margin-top-2">Account Balance: </label>
-                  <div>{account.amount}</div>
+
+                  <table>
+                    <tr>
+                      <th>First Name:</th>
+                      <td>{user.firstName}</td>
+                    </tr>
+                    <tr>
+                      <th>Last Name:</th>
+                      <td>{user.lastName}</td>
+                    </tr>
+                    <tr>
+                      <th>Username:</th>
+                      <td>{user.username}</td>
+                    </tr>
+                    <tr>
+                      <th>Email:</th>
+                      <td>{user.email}</td>
+                    </tr>
+                    <tr>
+                      <th>Location:</th>
+                      <td>{location.description}</td>
+                    </tr>
+                  </table>
+
                 </div>
+              </div>
+            </div>
+            <div className="paragraph">
+              <h3>Account</h3>
+              <div>
+                <label>Account Balance: </label>
+                <span> {account.amount}</span>
+              </div>
+            </div>
+            <div className="paragraph">
+              <h3>Transactions</h3>
+              <div>
               </div>
             </div>
           </div>
