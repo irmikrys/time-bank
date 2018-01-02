@@ -272,9 +272,16 @@ input, textarea
   width 50%
   padding 1rem
 
-
 @media (max-width: 720px)
   .column
+    width 100%
+
+.three-column
+  float left
+  width 33%
+
+@media (max-width: 500px)
+  .three-column
     width 100%
 
 #map
@@ -285,3 +292,6 @@ input, textarea
 
   #state
     float left
+
+.margin-top-2
+  margin-top 2rem

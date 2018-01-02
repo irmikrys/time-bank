@@ -15,7 +15,10 @@ export class AdvertViewPage extends Component {
     return (
       <div className="main">
         <h1>Advert</h1>
-        { !this.props.updating && <AdvertView advert={this.props.advert} categories={this.props.categories}/> }
+        { !this.props.updating && <AdvertView advert={this.props.advert}
+                                              location={this.props.location}
+                                              categories={this.props.categories}/>
+        }
         { this.props.updating && <div className="loader"/> }
       </div>
     )
@@ -24,7 +27,8 @@ export class AdvertViewPage extends Component {
 
 export default connect(
   state => ({
-    advert: state.advert.advert,
+    advert: state.advert.advert.advert,
+    location: state.advert.advert.location,
     updating: state.advert.updating,
     categories: state.categories.categories
   }),
