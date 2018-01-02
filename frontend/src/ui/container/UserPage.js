@@ -15,7 +15,7 @@ export class UserPage extends Component {
       <div className="main">
         <h1>My Profile</h1>
         {
-          !this.props.updating ? <UserProfile user={this.props.user}/> : <div className="loader"/>
+          !this.props.updating ? <UserProfile user={this.props.user} fetchUser={fetchUserByUsername}/> : <div className="loader"/>
         }
       </div>
     )

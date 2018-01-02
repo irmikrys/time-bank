@@ -33,7 +33,7 @@ public class User implements Serializable, LocationIdHolder {
   private String role;
 
   @Column(name = "photo")
-  private Byte photo;
+  private byte[] photo;
 
   @Column(name = "idLocation")
   private long idLocation;
@@ -87,11 +87,11 @@ public class User implements Serializable, LocationIdHolder {
     this.role = role;
   }
 
-  public Byte getPhoto() {
+  public byte[] getPhoto() {
     return photo;
   }
 
-  public void setPhoto(Byte photo) {
+  public void setPhoto(byte[] photo) {
     this.photo = photo;
   }
 

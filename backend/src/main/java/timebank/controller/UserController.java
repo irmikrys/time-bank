@@ -2,6 +2,7 @@ package timebank.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import timebank.dto.UserDTO;
@@ -12,9 +13,12 @@ import timebank.model.ArchiveAdvert;
 import timebank.model.User;
 import timebank.service.ArchiveAdvertService;
 import timebank.service.UserService;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+
+import java.io.IOException;
 
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
@@ -76,6 +80,17 @@ public class UserController {
     this.userService.findByUsername(userSession.getUsername()).orElseThrow(
       () -> new UserException("getArchiveAdverts.error.userNotFound"));
     return this.archiveAdvertService.findAllByEmployerOrPerformer(userSession.getUsername());
+  }
+
+  @RequestMapping(value = "/api/uploadProfilePhoto", method = RequestMethod.PUT)
+  public @ResponseBody ResponseEntity<HttpStatus> uploadProfilePhoto(@RequestParam("file") MultipartFile file, HttpSession session) throws IOException {
+    UserSession userSession = (UserSession) session.getAttribute("user");
+    User user = this.userService.findByUsername(userSession.getUsername()).orElseThrow(
+      () -> new UserException("profile.error.userNotFound"));
+    if (!file.isEmpty()) {
+      this.userService.setProfilePhoto(user, file.getBytes());
+    }
+    return ResponseEntity.ok(HttpStatus.OK);
   }
 
 }

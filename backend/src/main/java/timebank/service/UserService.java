@@ -63,7 +63,11 @@ public class UserService {
     return this.userRepository.save(user);
   }
 
-  // TODO: Photo update
+  public User setProfilePhoto(User user, byte[] profilePhoto) {
+    user.setPhoto(profilePhoto);
+    return this.userRepository.save(user);
+  }
+
   public User updateUser(UserDTO userDTO) {
     User updatedUser = this.userRepository.findByUsername(userDTO.getUsername()).orElseThrow(
       () -> new UsernameNotFoundException("updateUser.error.usernameNotFound"));

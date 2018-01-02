@@ -15,6 +15,8 @@ import timebank.exceptions.RegisterException;
 import timebank.dto.ErrorMessage;
 import timebank.exceptions.UserException;
 
+import java.io.IOException;
+
 @ControllerAdvice(assignableTypes = UserController.class)
 public class UserControllerExceptionHandler {
 
@@ -50,6 +52,14 @@ public class UserControllerExceptionHandler {
   public ErrorMessage handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
     log.warn(e.getMessage());
     return new ErrorMessage("userData.error.badRequest");
+  }
+
+  @ExceptionHandler(IOException.class)
+  @ResponseBody
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ErrorMessage handleIOException(IOException e) {
+    log.warn(e.getMessage());
+    return new ErrorMessage("profilePhoto.error.badRequest");
   }
 
   @ExceptionHandler(Exception.class)
