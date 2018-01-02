@@ -15,7 +15,7 @@ export class UserProfile extends Component {
   onDrop = files => {
     let data = new FormData();
     data.append('file', files[0]);
-    axios.put('/api/uploadProfilePhoto', data)
+    axios.put('/api/updateUserProfilePhoto', data)
       .then(result => {
         const img = document.getElementById('avatar');
         img.src = files[0].preview;

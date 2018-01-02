@@ -21,8 +21,8 @@ public class ArchiveAdvertService {
     return this.archiveAdvertRepository.findByIdAdvert(idAdvert);
   }
 
-  public Iterable<ArchiveAdvert> findAllByEmployerOrPerformer(String username) {
-    return this.archiveAdvertRepository.findAllByEmployerOrPerformer(username, username);
+  public Iterable<ArchiveAdvert> findAllByOwnerOrContractor(String username) {
+    return this.archiveAdvertRepository.findAllByOwnerOrContractor(username, username);
   }
 
   public ArchiveAdvert createArchiveAdvert(Advert advert) {

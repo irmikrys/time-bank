@@ -90,7 +90,7 @@ public class UserController {
     return ResponseEntity.ok(HttpStatus.OK);
   }
 
-  @RequestMapping(method=PUT, path="/api/uploadProfilePhoto") //updateUserProfilePhoto
+  @RequestMapping(method=PUT, path="/api/updateUserProfilePhoto")
   public @ResponseBody ResponseEntity<HttpStatus> uploadProfilePhoto(@RequestParam("file") MultipartFile file, HttpSession session) throws IOException {
     long start = System.nanoTime();
 
@@ -149,7 +149,7 @@ public class UserController {
     long start = System.nanoTime();
 
     UserSession userSession = (UserSession) session.getAttribute("user");
-    Iterable<ArchiveAdvert> archive = this.archiveAdvertService.findAllByEmployerOrPerformer(userSession.getUsername());
+    Iterable<ArchiveAdvert> archive = this.archiveAdvertService.findAllByOwnerOrContractor(userSession.getUsername());
 
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "getArchive", (elapsedTime/Math.pow(10,9))));

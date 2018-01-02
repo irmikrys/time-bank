@@ -9,10 +9,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import timebank.dto.AdvertDTO;
 import timebank.dto.AdvertDetailsDTO;
-import timebank.exceptions.AdvertException;
 import timebank.model.Advert;
 import timebank.model.ArchiveAdvert;
 import timebank.model.Interested;
@@ -54,8 +52,8 @@ public class AdvertService {
       advert.setIdAdvert(rs.getLong("idAdvert"));
       advert.setActive(rs.getBoolean("active"));
       advert.setType(rs.getString("type"));
-      advert.setEmployer(rs.getString("employer"));
-      advert.setPerformer(rs.getString("performer"));
+      advert.setOwner(rs.getString("owner"));
+      advert.setContractor(rs.getString("contractor"));
       advert.setTitle(rs.getString("title"));
       advert.setDescription(rs.getString("description"));
       advert.setIdCategory(rs.getLong("idCategory"));
@@ -73,8 +71,8 @@ public class AdvertService {
       advert.setIdAdvert(rs.getLong("a.idAdvert"));
       advert.setActive(rs.getBoolean("a.active"));
       advert.setType(rs.getString("a.type"));
-      advert.setEmployer(rs.getString("a.employer"));
-      advert.setPerformer(rs.getString("a.performer"));
+      advert.setOwner(rs.getString("a.owner"));
+      advert.setContractor(rs.getString("a.contractor"));
       advert.setTitle(rs.getString("a.title"));
       advert.setDescription(rs.getString("a.description"));
       advert.setIdCategory(rs.getLong("a.idCategory"));
@@ -92,8 +90,8 @@ public class AdvertService {
     return this.advertRepository.findByIdAdvert(idAdvert);
   }
 
-  public Iterable<Advert> findAllByEmployer(String username) {
-    return this.advertRepository.findAllByEmployer(username);
+  public Iterable<Advert> findAllByOwner(String username) {
+    return this.advertRepository.findAllByOwner(username);
   }
 
   public Iterable<Advert> findAllInterestingAdverts(String username) {
@@ -133,7 +131,6 @@ public class AdvertService {
     return this.advertRepository.save(advert);
   }
 
-  // usuwanie wszystkich powiazanych rekordow z 'adverts', 'interested' i 'locations' powiazanych z danym advertem
   public void deleteAdvert(long idAdvert, long idLocation) {
     this.interestedService.deleteInterestedInAdvert(idAdvert);
     this.locationService.deleteLocation(idLocation);
@@ -156,35 +153,30 @@ public class AdvertService {
     this.interestedService.stopShowingInterest(idAdvert, username);
   }
 
-  public void chooseFinalPerformer(long idAdvert, String performer) {
-    final String sql = "UPDATE adverts a SET a.active = FALSE, a.performer = ? WHERE a.idAdvert = ?";
-    int result = this.jdbcTemplate.update(sql, performer, idAdvert);
+  public void chooseFinalContractor(long idAdvert, String contractor) {
+    final String sql = "UPDATE adverts a SET a.active = FALSE, a.contractor = ? WHERE a.idAdvert = ?";
+    this.jdbcTemplate.update(sql, contractor, idAdvert);
   }
 
-  public void removeFinalPerformer(long idAdvert, String performer) {
-    final String sql = "UPDATE adverts a SET a.active = TRUE, a.performer = NULL WHERE a.idAdvert = ?";
-    int result = this.jdbcTemplate.update(sql, idAdvert);
-    this.stopShowingInterest(idAdvert, performer);
+  public void removeFinalContractor(long idAdvert, String contractor) {
+    final String sql = "UPDATE adverts a SET a.active = TRUE, a.contractor = NULL WHERE a.idAdvert = ?";
+    this.jdbcTemplate.update(sql, idAdvert);
+    this.stopShowingInterest(idAdvert, contractor);
   }
 
   public void finalizeAdvert(Advert advert) {
-    // 1. stworzenie rekordu z bazy archiwum i go zapisanie
     ArchiveAdvert archiveAdvert = this.archiveAdvertService.createArchiveAdvert(advert);
-
-    // 2. zmiana stanow kont obu uczestnikow transakcji
     String plus, minus;
     if (archiveAdvert.getType().equals("SEEK")) {
-      minus = archiveAdvert.getEmployer();
-      plus = archiveAdvert.getPerformer();
+      minus = archiveAdvert.getOwner();
+      plus = archiveAdvert.getContractor();
     } else {
-      plus = archiveAdvert.getEmployer();
-      minus = archiveAdvert.getPerformer();
+      plus = archiveAdvert.getOwner();
+      minus = archiveAdvert.getContractor();
     }
     final String sql = "UPDATE accounts a SET a.balance = (a.balance + ?) WHERE a.owner = ?";
-    int resultPlus = this.jdbcTemplate.update(sql, archiveAdvert.getValue(), plus);
-    int resultMinus = this.jdbcTemplate.update(sql, -archiveAdvert.getValue(), minus);
-
-    // 3. usuwanie wszystkich niepotrzebnych rekordow
+    this.jdbcTemplate.update(sql, archiveAdvert.getValue(), plus);
+    this.jdbcTemplate.update(sql, -archiveAdvert.getValue(), minus);
     this.deleteAdvert(advert.getIdAdvert(), advert.getIdLocation());
   }
 }

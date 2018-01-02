@@ -22,11 +22,11 @@ public class Advert implements Serializable {
   @Column(name = "type")
   private String type;
 
-  @Column(name = "employer")
-  private String employer;
+  @Column(name = "owner")
+  private String owner;
 
-  @Column(name = "performer")
-  private String performer;
+  @Column(name = "contractor")
+  private String contractor;
 
   @Column(name = "title")
   private String title;
@@ -71,20 +71,20 @@ public class Advert implements Serializable {
     this.type = type;
   }
 
-  public String getEmployer() {
-    return employer;
+  public String getOwner() {
+    return owner;
   }
 
-  public void setEmployer(String employer) {
-    this.employer = employer;
+  public void setOwner(String owner) {
+    this.owner = owner;
   }
 
-  public String getPerformer() {
-    return performer;
+  public String getContractor() {
+    return contractor;
   }
 
-  public void setPerformer(String performer) {
-    this.performer = performer;
+  public void setContractor(String contractor) {
+    this.contractor = contractor;
   }
 
   public String getTitle() {
@@ -139,8 +139,8 @@ public class Advert implements Serializable {
   public ArchiveAdvert toArchiveAdvert() {
     ArchiveAdvert archiveAdvert = new ArchiveAdvert();
     archiveAdvert.setType(getType());
-    archiveAdvert.setEmployer(getEmployer());
-    archiveAdvert.setPerformer(getPerformer());
+    archiveAdvert.setOwner(getOwner());
+    archiveAdvert.setContractor(getContractor());
     archiveAdvert.setTitle(getTitle());
     archiveAdvert.setDescription(getDescription());
     archiveAdvert.setIdCategory(getIdCategory());

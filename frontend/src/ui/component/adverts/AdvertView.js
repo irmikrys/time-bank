@@ -11,7 +11,7 @@ export default class AdvertView extends Component {
     this.state = {
       numberOfInterested: interestedList.length,
       isUserInterested: interestedList.filter(item => item.username === props.username).length === 1,
-      isUserOwner: advert.employer === props.username
+      isUserOwner: advert.owner === props.username
     };
   }
 
@@ -80,7 +80,7 @@ export default class AdvertView extends Component {
                 <label className="margin-top-2">Location:</label>
                 <div>{location.description}</div>
                 <label className="margin-top-2">Created By:</label>
-                <div>{advert.employer}</div>
+                <div>{advert.owner}</div>
                 <label className="margin-top-2">Create Date:</label>
                 <div>{dateFormatter(new Date(advert.createDate))}</div>
                 <label className="margin-top-2">Interested:</label>

@@ -7,9 +7,9 @@ import java.util.Optional;
 
 @Repository("archiveAdvertRepository")
 public interface ArchiveAdvertRepository extends JpaRepository<ArchiveAdvert, Long> {
-  
+
   Optional<ArchiveAdvert> findByIdAdvert(long idAdvert);
-  
-  Iterable<ArchiveAdvert> findAllByEmployerOrPerformer(String employer, String performer);
-  
+
+  Iterable<ArchiveAdvert> findAllByOwnerOrContractor(String owner, String contractor);
+
 }

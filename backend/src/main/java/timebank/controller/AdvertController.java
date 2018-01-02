@@ -72,12 +72,12 @@ public class AdvertController {
 
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
       () -> new AdvertException("getAdvert.error.advertNotFound"));
-    User employer = this.userService.findByUsername(advert.getEmployer()).orElseThrow(
+    User owner = this.userService.findByUsername(advert.getOwner()).orElseThrow(
       () -> new AdvertException("getAdvert.error.userNotFound"));
     Location location = this.locationService.findByIdLocation(advert.getIdLocation()).orElseThrow(
       () -> new AdvertException("getAdvert.error.locationNotFound"));
     Iterable<Interested> interested = this.interestedService.findAllByIdAdvert(advert.getIdAdvert());
-    AdvertDetailsDTO advertDetails = new AdvertDetailsDTO(advert, location, interested, employer.getEmail());
+    AdvertDetailsDTO advertDetails = new AdvertDetailsDTO(advert, location, interested, owner.getEmail());
 
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "getAdvert", (elapsedTime/Math.pow(10,9))));
@@ -103,7 +103,7 @@ public class AdvertController {
     UserSession userSession = (UserSession) session.getAttribute("user");
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
       () -> new AdvertException("removeAdvert.error.advertNotFound"));
-    if (!advert.getEmployer().equals(userSession.getUsername())) {
+    if (!advert.getOwner().equals(userSession.getUsername())) {
       throw new AdvertException("removeAdvert.error.unauthorised");
     }
     this.advertService.deleteAdvert(advert.getIdAdvert(), advert.getIdLocation());
@@ -120,7 +120,7 @@ public class AdvertController {
     UserSession userSession = (UserSession) session.getAttribute("user");
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
       () -> new AdvertException("updateAdvert.error.advertNotFound"));
-    if (!userSession.getUsername().equals(advert.getEmployer()))
+    if (!userSession.getUsername().equals(advert.getOwner()))
       throw new AdvertException("updateAdvert.error.unauthorised");
     Location location = this.locationService.findByIdLocation(advert.getIdLocation()).orElseThrow(
       () -> new AdvertException("updateAdvert.error.locationNotFound"));
@@ -138,7 +138,7 @@ public class AdvertController {
     UserSession userSession = (UserSession) session.getAttribute("user");
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
       () -> new ShowInterestException("switchInterest.error.advertNotFound"));
-    if (advert.getEmployer().equals(userSession.getUsername())) {
+    if (advert.getOwner().equals(userSession.getUsername())) {
       throw new ShowInterestException("switchInterest.error.youCannotSwitchInterestInYourOwnAdvert");
     }
     Optional<Interested> interested = this.interestedService.findByIdAdvertAndInterested(idAdvert, userSession.getUsername());
@@ -152,45 +152,45 @@ public class AdvertController {
     return ResponseEntity.ok(HttpStatus.OK);
   }
 
-  @RequestMapping(method=PUT, path="/api/advert/choosePerformer")
-  public @ResponseBody ResponseEntity<HttpStatus> chooseFinalPerformer(@RequestParam(name="idAdvert") long idAdvert, @RequestParam(name="performer") String performer, HttpSession session) {
+  @RequestMapping(method=PUT, path="/api/advert/chooseContractor")
+  public @ResponseBody ResponseEntity<HttpStatus> chooseFinalContractor(@RequestParam(name="idAdvert") long idAdvert, @RequestParam(name="contractor") String contractor, HttpSession session) {
     long start = System.nanoTime();
 
     UserSession userSession = (UserSession) session.getAttribute("user");
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
-      () -> new ShowInterestException("chooseFinalPerformer.error.advertNotFound"));
+      () -> new ShowInterestException("chooseFinalContractor.error.advertNotFound"));
     if (!advert.getActive()) {
-      throw new ShowInterestException("chooseFinalPerformer.error.advertInactive");
+      throw new ShowInterestException("chooseFinalContractor.error.advertInactive");
     }
-    if (!advert.getEmployer().equals(userSession.getUsername())) {
-      throw new ShowInterestException("chooseFinalPerformer.error.unauthorised");
+    if (!advert.getOwner().equals(userSession.getUsername())) {
+      throw new ShowInterestException("chooseFinalContractor.error.unauthorised");
     }
-    this.interestedService.findByIdAdvertAndInterested(idAdvert, performer).orElseThrow(
-      () -> new ShowInterestException("chooseFinalPerformer.error.performerNotInterested"));
-    this.advertService.chooseFinalPerformer(idAdvert, performer);
+    this.interestedService.findByIdAdvertAndInterested(idAdvert, contractor).orElseThrow(
+      () -> new ShowInterestException("chooseFinalContractor.error.contractorNotInterested"));
+    this.advertService.chooseFinalContractor(idAdvert, contractor);
 
     long elapsedTime = System.nanoTime() - start;
-    log.info(format("%s: %.10f [s]", "chooseFinalPerformer", (elapsedTime/Math.pow(10,9))));
+    log.info(format("%s: %.10f [s]", "chooseFinalContractor", (elapsedTime/Math.pow(10,9))));
     return ResponseEntity.ok(HttpStatus.OK);
   }
 
-  @RequestMapping(method=RequestMethod.DELETE, path="/api/advert/deletePerformer/{id}")
-  public @ResponseBody ResponseEntity<HttpStatus> deleteFinalPerformer(@PathVariable("id") long idAdvert, HttpSession session) {
+  @RequestMapping(method=RequestMethod.DELETE, path="/api/advert/deleteContractor/{id}")
+  public @ResponseBody ResponseEntity<HttpStatus> deleteFinalContractor(@PathVariable("id") long idAdvert, HttpSession session) {
     long start = System.nanoTime();
 
     UserSession userSession = (UserSession) session.getAttribute("user");
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
-      () -> new ShowInterestException("chooseFinalPerformer.error.advertNotFound"));
-    if (!advert.getEmployer().equals(userSession.getUsername())) {
-      throw new ShowInterestException("chooseFinalPerformer.error.unauthorised");
+      () -> new ShowInterestException("deleteFinalContractor.error.advertNotFound"));
+    if (!advert.getOwner().equals(userSession.getUsername())) {
+      throw new ShowInterestException("deleteFinalContractor.error.unauthorised");
     }
     if (advert.getActive()) {
-      throw new ShowInterestException("chooseFinalPerformer.error.performerNotChosen");
+      throw new ShowInterestException("deleteFinalContractor.error.contractorNotChosen");
     }
-    this.advertService.removeFinalPerformer(idAdvert, advert.getPerformer());
+    this.advertService.removeFinalContractor(idAdvert, advert.getContractor());
 
     long elapsedTime = System.nanoTime() - start;
-    log.info(format("%s: %.10f [s]", "deleteFinalPerformer", (elapsedTime/Math.pow(10,9))));
+    log.info(format("%s: %.10f [s]", "deleteFinalContractor", (elapsedTime/Math.pow(10,9))));
     return ResponseEntity.ok(HttpStatus.OK);
   }
 
@@ -201,7 +201,7 @@ public class AdvertController {
     UserSession userSession = (UserSession) session.getAttribute("user");
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
       () -> new ShowInterestException("finalizeTransaction.error.advertNotFound"));
-    if (!advert.getEmployer().equals(userSession.getUsername())) {
+    if (!advert.getOwner().equals(userSession.getUsername())) {
       throw new ShowInterestException("finalizeTransaction.error.unauthorised");
     }
     if (advert.getActive()) {
@@ -214,20 +214,18 @@ public class AdvertController {
     return ResponseEntity.ok(HttpStatus.OK);
   }
 
-  // wystawione przez uzytkownika ogloszenia - do podgladu w profilu
   @RequestMapping(method=GET, path="/api/createdAdverts")
   public @ResponseBody Iterable<Advert> getAllCreatedAdverts(HttpSession session) {
     long start = System.nanoTime();
 
     UserSession userSession = (UserSession) session.getAttribute("user");
-    Iterable<Advert> createdAdverts = this.advertService.findAllByEmployer(userSession.getUsername());
+    Iterable<Advert> createdAdverts = this.advertService.findAllByOwner(userSession.getUsername());
 
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "getAllCreatedAdverts", (elapsedTime/Math.pow(10,9))));
     return createdAdverts;
   }
 
-  // ogloszenia ktorymi uzytkownik jest zainteresowany - do podgladu w profilu
   @RequestMapping(method=GET, path="/api/interestingAdverts")
   public @ResponseBody Iterable<Advert> getAllInterestingAdverts(HttpSession session) {
     long start = System.nanoTime();
@@ -240,9 +238,6 @@ public class AdvertController {
     return interestingAdverts;
   }
 
-
-
-  //>>>>>>>
   @RequestMapping(method=POST, path="/api/updateLocation/{id}")
   public @ResponseBody ResponseEntity<HttpStatus> updateLocation(@Valid @RequestBody LocationDTO locationDTO, @PathVariable("id") long idLocation) {
     long start = System.nanoTime();
@@ -256,6 +251,5 @@ public class AdvertController {
     log.info(format("%s: %.10f [s]", "updateLocation", (elapsedTime/Math.pow(10,9))));
     return ResponseEntity.ok(HttpStatus.OK);
   }
-  //<<<<<<<
 
 }
