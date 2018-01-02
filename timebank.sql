@@ -21,7 +21,7 @@ CREATE TABLE accounts (
   owner         VARCHAR(30)     NOT NULL,
   balance       INTEGER(11)     NOT NULL,
   PRIMARY KEY (accountNr)
-);
+) ENGINE = innodb DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS adverts;
 CREATE TABLE adverts (
@@ -38,30 +38,30 @@ CREATE TABLE adverts (
   createDate   DATETIME        NOT NULL,
   idLocation   INTEGER(30)     NOT NULL,
   PRIMARY KEY (idAdvert)
-);
+) ENGINE = innodb DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS interested;
 CREATE TABLE interested (
   idAdvert     INTEGER(30)     NOT NULL,
   interested    VARCHAR(30)     NOT NULL,
   PRIMARY KEY (idAdvert, interested)
-);
+) ENGINE = innodb DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS categories;
 CREATE TABLE categories (
   idCategory   INTEGER(30)     NOT NULL AUTO_INCREMENT,
   name          VARCHAR(60)     NOT NULL,
   PRIMARY KEY (idCategory)
-);
+) ENGINE = innodb DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS locations;
 CREATE TABLE  locations (
   idLocation   INTEGER(30)     NOT NULL AUTO_INCREMENT,
-  description   VARCHAR(60)     NOT NULL,
-  latitude      NUMERIC(10,6)   NOT NULL,
-  longitude     NUMERIC(10,6)   NOT NULL,
+  description   VARCHAR(150)     NOT NULL,
+  latitude      NUMERIC(19,16)   NOT NULL,
+  longitude     NUMERIC(19,15)   NOT NULL,
   PRIMARY KEY (idLocation)
-);
+) ENGINE = innodb DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS archive;
 CREATE TABLE archive (
@@ -76,7 +76,7 @@ CREATE TABLE archive (
   createDate   DATETIME        NOT NULL,
   closeDate    DATETIME        NOT NULL,
   PRIMARY KEY (idAdvert)
-);
+) ENGINE = innodb DEFAULT CHARSET = utf8;
 
 INSERT INTO categories (idCategory, name) VALUES
   (1, 'Pet Care'),
@@ -85,6 +85,5 @@ INSERT INTO categories (idCategory, name) VALUES
   (4, 'Tutoring'),
   (5, 'Makeup'),
   (6, 'Free Time'),
-  (7, 'People\' Care'),
-  (8, 'Amusement')
-;
+  (7, 'People Care'),
+  (8, 'Amusement');

@@ -2,7 +2,6 @@ package timebank.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.CreationTimestamp;
-import timebank.model.interfaces.LocationIdHolder;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -10,7 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "adverts")
-public class Advert implements Serializable, LocationIdHolder {
+public class Advert implements Serializable {
 
   @Id
   @GeneratedValue(strategy= GenerationType.IDENTITY)

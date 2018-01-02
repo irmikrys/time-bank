@@ -1,7 +1,6 @@
 package timebank.dto;
 
 import org.hibernate.validator.constraints.NotBlank;
-import timebank.dto.interfaces.LocationDTOHolder;
 import timebank.model.Advert;
 
 import javax.validation.Valid;
@@ -10,7 +9,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class AdvertDTO implements LocationDTOHolder {
+public class AdvertDTO {
 
   @NotBlank
   private String type;

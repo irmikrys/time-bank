@@ -140,12 +140,12 @@ public class AdvertService {
     this.advertRepository.deleteByIdAdvert(idAdvert);
   }
 
-  public Advert updateAdvert(AdvertDTO advertDTO, Advert advert) {
-    advert.setTitle(advertDTO.getTitle());
-    advert.setDescription(advertDTO.getDescription());
-    advert.setIdCategory(advertDTO.getIdCategory());
-    this.locationService.updateLocation(advertDTO, advert);
-    return advertRepository.save(advert);
+  public void updateAdvert(Advert oldAdvert, Location oldLocation, AdvertDTO newAdvert) {
+    if (!((oldAdvert.getTitle().equals(newAdvert.getTitle())) && (oldAdvert.getDescription().equals(newAdvert.getDescription())) && (oldAdvert.getIdCategory()==newAdvert.getIdCategory()))) {
+      final String sql = "UPDATE adverts a SET a.title = ?, a.description = ?, a.idCategory = ? WHERE a.idAdvert = ?";
+      this.jdbcTemplate.update(sql, newAdvert.getTitle(), newAdvert.getDescription(), newAdvert.getIdCategory(), oldAdvert.getIdAdvert());
+    }
+    this.locationService.updateLocation(oldLocation, newAdvert.getLocation());
   }
 
   public Interested showInterest(long idAdvert, String username) {

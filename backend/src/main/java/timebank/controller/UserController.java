@@ -67,14 +67,44 @@ public class UserController {
     return ResponseEntity.ok(user);
   }
 
-//  @RequestMapping(method=PUT, path="/api/users")
-//  public @ResponseBody ResponseEntity<User> updateUser(@Valid @RequestBody UserDTO userDTO, HttpSession session) throws AccessingPrivateResourcesException {
-//    UserSession userSession = (UserSession) session.getAttribute("user");
-//    if (!userSession.getUsername().equals(userDTO.getUsername()))
-//      throw new AccessingPrivateResourcesException("updateUser.error.accessDenied");
-//    User updatedUser = this.userService.updateUser(userDTO);
-//    return ResponseEntity.ok(updatedUser);
-//  }
+  @RequestMapping(method=PUT, path="/api/updateUser")
+  public @ResponseBody ResponseEntity<HttpStatus> updateUser(@Valid @RequestBody UserDTO userDTO, HttpSession session) {
+    long start = System.nanoTime();
+
+    UserSession userSession = (UserSession) session.getAttribute("user");
+    User user = this.userService.findByUsername(userSession.getUsername()).orElseThrow(
+      () -> new UserException("updateUser.error.userNotFound"));
+    if (!user.getUsername().equals(userDTO.getUsername())) {
+      throw new UserException("updateUser.error.unauthorised");
+    }
+    if (!user.getEmail().equals(userDTO.getEmail())) {
+      this.userService.findByEmail(userDTO.getEmail()).ifPresent(
+        u -> { throw new UserException("updateUser.error.emailExists"); });
+    }
+    Location location = this.locationService.findByIdLocation(user.getIdLocation()).orElseThrow(
+      () -> new UserException("updateUser.error.locationNotFound"));
+    this.userService.updateUser(user, location, userDTO);
+
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "updateUser", (elapsedTime/Math.pow(10,9))));
+    return ResponseEntity.ok(HttpStatus.OK);
+  }
+
+  @RequestMapping(method=PUT, path="/api/uploadProfilePhoto") //updateUserProfilePhoto
+  public @ResponseBody ResponseEntity<HttpStatus> uploadProfilePhoto(@RequestParam("file") MultipartFile file, HttpSession session) throws IOException {
+    long start = System.nanoTime();
+
+    UserSession userSession = (UserSession) session.getAttribute("user");
+    User user = this.userService.findByUsername(userSession.getUsername()).orElseThrow(
+      () -> new UserException("profile.error.userNotFound"));
+    if (!file.isEmpty()) {
+      this.userService.updateUserProfilePhoto(user, file.getBytes());
+    }
+
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "updateUser", (elapsedTime/Math.pow(10,9))));
+    return ResponseEntity.ok(HttpStatus.OK);
+  }
 
   @RequestMapping(method=GET, path="/api/users")
   public @ResponseBody Iterable<User> getAllUsers() {
@@ -124,17 +154,6 @@ public class UserController {
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "getArchive", (elapsedTime/Math.pow(10,9))));
     return archive;
-  }
-
-  @RequestMapping(value = "/api/uploadProfilePhoto", method = RequestMethod.PUT)
-  public @ResponseBody ResponseEntity<HttpStatus> uploadProfilePhoto(@RequestParam("file") MultipartFile file, HttpSession session) throws IOException {
-    UserSession userSession = (UserSession) session.getAttribute("user");
-    User user = this.userService.findByUsername(userSession.getUsername()).orElseThrow(
-      () -> new UserException("profile.error.userNotFound"));
-    if (!file.isEmpty()) {
-      this.userService.setProfilePhoto(user, file.getBytes());
-    }
-    return ResponseEntity.ok(HttpStatus.OK);
   }
 
 }

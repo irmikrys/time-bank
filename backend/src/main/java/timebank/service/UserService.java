@@ -13,6 +13,8 @@ import timebank.model.Account;
 import timebank.model.Location;
 import timebank.model.User;
 import timebank.repository.UserRepository;
+
+import java.util.Arrays;
 import java.util.Optional;
 
 @Service("userService")
@@ -63,19 +65,19 @@ public class UserService {
     return this.userRepository.save(user);
   }
 
-  public User setProfilePhoto(User user, byte[] profilePhoto) {
-    user.setPhoto(profilePhoto);
-    return this.userRepository.save(user);
+  public void updateUser(User oldUserData, Location oldLocation, UserDTO newUserData) {
+    if (!((oldUserData.getEmail().equals(newUserData.getEmail())) && (oldUserData.getFirstName().equals(newUserData.getFirstName())) && (oldUserData.getLastName().equals(newUserData.getLastName())))) {
+      final String sql = "UPDATE users u SET u.password = ?, u.email = ?, u.firstName = ?, u.lastName = ? WHERE u.username = ?";
+      this.jdbcTemplate.update(sql, this.bCryptPasswordEncoder.encode(newUserData.getPassword()), newUserData.getEmail(), newUserData.getFirstName(), newUserData.getLastName(), oldUserData.getUsername());
+    }
+    this.locationService.updateLocation(oldLocation, newUserData.getLocation());
   }
 
-  public User updateUser(UserDTO userDTO) {
-    User updatedUser = this.userRepository.findByUsername(userDTO.getUsername()).orElseThrow(
-      () -> new UsernameNotFoundException("updateUser.error.usernameNotFound"));
-    updatedUser.setFirstName(userDTO.getFirstName());
-    updatedUser.setLastName(userDTO.getLastName());
-    updatedUser.setEmail(userDTO.getEmail());
-    updatedUser.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
-    this.locationService.updateLocation(userDTO, updatedUser);
-    return userRepository.save(updatedUser);
+  public void updateUserProfilePhoto(User user, byte[] profilePhoto) {
+    if (!Arrays.equals(user.getPhoto(), profilePhoto)) {
+      final String sql = "UPDATE users u SET u.photo = ? WHERE u.username = ?";
+      this.jdbcTemplate.update(sql, profilePhoto, user.getUsername());
+    }
   }
+
 }

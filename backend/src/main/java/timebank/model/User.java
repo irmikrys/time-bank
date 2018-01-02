@@ -1,7 +1,6 @@
 package timebank.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import timebank.model.interfaces.LocationIdHolder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +10,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable, LocationIdHolder {
+public class User implements Serializable {
 
   @Id
   @Column(name = "username")
