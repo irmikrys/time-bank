@@ -3,6 +3,8 @@ import {dateFormatter} from "../utils";
 import Select from "react-select";
 import axios from 'axios';
 import {browserHistory} from "react-router";
+import {setSearchCriteria} from "../../../reducers/adverts";
+import {dispatch} from "redux";
 
 export default class AdvertView extends Component {
 
@@ -71,6 +73,7 @@ export default class AdvertView extends Component {
     const {idAdvert} =  this.props.advert.advert;
     axios.put(`/api/advert/finalize/${idAdvert}`, null)
       .then(result => {
+        dispatch(setSearchCriteria({}));
         browserHistory.push('/');
       })
   };

@@ -64,7 +64,6 @@ export class UserProfile extends Component {
                   </div>
                 </div>
                 <div className="column">
-
                   <table>
                     <tr>
                       <th>First Name:</th>
@@ -87,32 +86,6 @@ export class UserProfile extends Component {
                       <td>{location.description}</td>
                     </tr>
                   </table>
-
-                  <label>First Name:</label>
-                  <div>{user.firstName}</div>
-                  <label className="margin-top-2">Last Name:</label>
-                  <div>{user.lastName}</div>
-                  <label className="margin-top-2">Username:</label>
-                  <div>{user.username}</div>
-                  <label className="margin-top-2">Email:</label>
-                  <div>{user.email}</div>
-                  <label className="margin-top-2">Location:</label>
-                  <div>{location.description}</div>
-                  <label className="margin-top-2">Account Balance:</label>
-                  <div>{account.amount}</div>
-                </div>
-              </div>
-            </div>
-            <div className="paragraph">
-              <h3>Transactions</h3>
-              <div className="profile-view">
-                <label>Adverts I'm interested in:</label>
-                <div>
-                  {this.showAdverts(interestingAdverts)}
-                </div>
-                <label>My adverts:</label>
-                <div>
-                  {this.showAdverts(createdAdverts)}
                 </div>
               </div>
             </div>
@@ -126,6 +99,14 @@ export class UserProfile extends Component {
             <div className="paragraph">
               <h3>Transactions</h3>
               <div>
+                <label>Adverts I'm interested in:</label>
+                <div>
+                  {this.showAdverts(interestingAdverts)}
+                </div>
+                <label>My adverts:</label>
+                <div>
+                  {this.showAdverts(createdAdverts)}
+                </div>
               </div>
             </div>
           </div>
