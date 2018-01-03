@@ -44,7 +44,6 @@ export class UserProfile extends Component {
                   </div>
                 </div>
                 <div className="column">
-
                   <table>
                     <tr>
                       <th>First Name:</th>
@@ -67,7 +66,7 @@ export class UserProfile extends Component {
                       <td>{location.description}</td>
                     </tr>
                   </table>
-
+                  <button id="editProfile" type="button">Edit</button>
                 </div>
               </div>
             </div>
