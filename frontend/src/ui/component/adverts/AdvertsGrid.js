@@ -52,6 +52,8 @@ export default class AdvertsGrid extends Component {
                       <div>{item.advert.type}</div>
                       <label>Category:</label>
                       <div>{this.props.categories.filter(e => e.idCategory === item.advert.idCategory)[0].name}</div>
+                      <label>Hours:</label>
+                      <div>{item.advert.value}</div>
                       <label>Description:</label>
                       <div>{item.advert.description}</div>
                       <label>Create Date:</label>

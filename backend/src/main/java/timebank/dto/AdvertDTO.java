@@ -6,8 +6,6 @@ import timebank.model.Advert;
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 
 public class AdvertDTO {
 
@@ -83,7 +81,7 @@ public class AdvertDTO {
     Advert advert = new Advert();
     advert.setActive(true);
     advert.setType(getType());
-    advert.setEmployer(username);
+    advert.setOwner(username);
     advert.setTitle(getTitle());
     advert.setDescription(getDescription());
     advert.setIdCategory(getIdCategory());

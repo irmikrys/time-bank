@@ -80,6 +80,14 @@ export class UserProfile extends Component {
             <div className="paragraph">
               <h3>Transactions</h3>
               <div>
+                <label>Adverts I'm interested in:</label>
+                <div>
+                  {this.showAdverts(interestingAdverts)}
+                </div>
+                <label>My adverts:</label>
+                <div>
+                  {this.showAdverts(createdAdverts)}
+                </div>
               </div>
             </div>
           </div>

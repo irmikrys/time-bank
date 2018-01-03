@@ -3,7 +3,6 @@ package timebank.dto;
 import timebank.model.Advert;
 import timebank.model.Interested;
 import timebank.model.Location;
-import com.google.common.collect.Lists;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -64,12 +63,12 @@ public class AdvertDetailsDTO {
     this.advert.setType(type);
   }
 
-  public void setEmployer(String employer) {
-    this.advert.setEmployer(employer);
+  public void setOwner(String owner) {
+    this.advert.setOwner(owner);
   }
 
-  public void setPerformer(String performer) {
-    this.advert.setPerformer(performer);
+  public void setContractor(String contractor) {
+    this.advert.setContractor(contractor);
   }
 
   public void setTitle(String title) {

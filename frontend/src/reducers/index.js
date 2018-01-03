@@ -5,6 +5,8 @@ import register from './register';
 import { routerReducer as routing } from 'react-router-redux';
 import categories from "./categories";
 import adverts from "./adverts";
+import createdAdverts from "./createdAdverts";
+import interestingAdverts from "./interestingAdverts";
 import advert from "./advert";
 import user from "./user";
 
@@ -14,6 +16,8 @@ export default combineReducers({
   register,
   categories,
   adverts,
+  createdAdverts,
+  interestingAdverts,
   advert,
   user,
   routing

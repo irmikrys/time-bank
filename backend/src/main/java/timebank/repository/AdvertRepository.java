@@ -20,7 +20,7 @@ public interface AdvertRepository extends PagingAndSortingRepository<Advert, Int
 
   Optional<Advert> findByIdAdvert(long idAdvert);
 
-  Iterable<Advert> findAllByEmployer(String username);
+  Iterable<Advert> findAllByOwner(String username);
 
   @Transactional
   void deleteByIdAdvert(long idAdvert);

@@ -4,7 +4,7 @@ const FETCH_USER_FAIL = 'user/FETCH_USER_FAIL';
 
 const initialState = {
   updating: true,
-  user: {}
+  user: null
 };
 
 // Reducer
@@ -15,7 +15,7 @@ export default function userReducer(state = initialState, action) {
       return {
         ...state,
         updating: true,
-        user: {}
+        user: null
       };
     case FETCH_USER_SUCCESS:
       return {
