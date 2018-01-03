@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Dropzone from "react-dropzone";
 import axios from 'axios';
+import {Link} from "react-router";
 
 export class UserProfile extends Component {
 
@@ -15,14 +16,33 @@ export class UserProfile extends Component {
   onDrop = files => {
     let data = new FormData();
     data.append('file', files[0]);
-    axios.put('/api/uploadProfilePhoto', data)
+    axios.put('/api/updateUserProfilePhoto', data)
       .then(result => {
         const img = document.getElementById('avatar');
         img.src = files[0].preview;
       });
   };
 
+  showAdverts = adverts => {
+    return (
+      <div>
+        {
+          adverts.map(advert => {
+            return (
+              <div>
+                <Link to={`/advert/${advert.idAdvert}`} key={advert.idAdvert}>
+                  {advert.title}
+                </Link>
+              </div>
+            )
+          })
+        }
+      </div>
+    )
+  };
+
   render() {
+    const {createdAdverts, interestingAdverts} = this.props;
     const {user, location, account} = this.props.user;
     console.log(this.props);
     return (
@@ -66,7 +86,6 @@ export class UserProfile extends Component {
                       <td>{location.description}</td>
                     </tr>
                   </table>
-                  <button id="editProfile" type="button">Edit</button>
                 </div>
               </div>
             </div>
