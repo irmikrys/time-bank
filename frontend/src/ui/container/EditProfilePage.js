@@ -1,10 +1,36 @@
+import React, {Component} from 'react';
 import EditProfileForm from '../component/forms/EditProfileForm';
 import {connect} from 'react-redux';
 import {editProfile} from '../../reducers/editProfile';
+import {fetchUserByUsername} from "../../reducers/user";
+
+export class EditProfilePage extends Component {
+
+  constructor(props) {
+    super(props);
+    props.fetchUserByUsername(this.props.params.username);
+  }
+
+  render() {
+    console.log(this.props);
+    return (
+      <div className="main">
+        <h1>Edit profile</h1>
+        {
+          this.props.updatingUser ?
+            <div className="loader"/> :
+            <EditProfileForm user={this.props.user}/>
+        }
+      </div>
+    )
+  }
+}
 
 export default connect(
   state => ({
-    username: state.user.username
+    user: state.user.user,
+    updatingUser: state.user.updating,
+    username: state.authentication.username
   }),
-  {editProfile}
-)(EditProfileForm);
+  {editProfile, fetchUserByUsername}
+)(EditProfilePage);

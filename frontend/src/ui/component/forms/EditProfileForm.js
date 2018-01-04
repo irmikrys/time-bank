@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import {ErrorPanel} from "./ErrorPanel";
 import {
   FIRST_NAME,
   LAST_NAME,
@@ -36,13 +35,11 @@ export default class EditProfileForm extends Component {
 
   render() {
     console.log(this.props);
-    const {errorMessage} = this.props;
-    const errorPanel = errorMessage ? <ErrorPanel messageKey={errorMessage}/> : null;
+    const {user, location} = this.props.user;
     return (
       <div className="register-page">
         <div className="form-container">
           <form autoComplete="off" onSubmit={this.handleSubmit}>
-            {errorPanel}
             {
               [FIRST_NAME, LAST_NAME, EMAIL].map(fieldKey => {
                 const field = getFormField(fieldKey);
@@ -57,9 +54,11 @@ export default class EditProfileForm extends Component {
               })
             }
             <Geosuggest placeholder={LOCATION}
+                        initialValue={location.description}
+                        location={new google.maps.LatLng(location.latitude, location.longitude)}
                         onSuggestSelect={this.handleLocationSelect}
             />
-            <Link to={`/profile/${this.props.params.username}`}>
+            <Link to={`/profile/${user.username}`}>
               <button type="submit">SAVE</button>
             </Link>
           </form>
