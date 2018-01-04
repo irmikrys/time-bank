@@ -8,7 +8,7 @@ export class EditProfilePage extends Component {
 
   constructor(props) {
     super(props);
-    props.fetchUserByUsername(this.props.params.username);
+    props.fetchUserByUsername(props.username);
   }
 
   render() {

@@ -88,7 +88,7 @@ export class UserProfile extends Component {
                     </tr>
                     </tbody>
                   </table>
-                  <Link to={`/edit_profile/${user.username}`}>
+                  <Link to={`/edit_profile`}>
                     <button type="button" id="editProfile">EDIT</button>
                   </Link>
                 </div>

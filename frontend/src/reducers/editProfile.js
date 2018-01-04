@@ -34,7 +34,7 @@ export function editProfile(userInfo) {
     types: [EDIT_PROFILE, EDIT_PROFILE_SUCCESS, EDIT_PROFILE_FAIL],
     promise: (client) => client.put(`/api/updateUser`, userInfo),
     afterSuccess: (dispatch, getState, response) => {
-      browserHistory.push(`/profile/${userInfo.username}`);
+      browserHistory.push(`/profile`);
     }
   };
 }
