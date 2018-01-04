@@ -23,12 +23,12 @@ abstract class AbstractMvcSpec extends SpockMvcSpec {
   private def sessionRepository = new MapSessionRepository()
 
   @Override
-  MockMvc buildMockMvc(WebApplicationContext wac) {
+  MockMvc buildMockMvc(WebApplicationContext webApplicationContext) {
     def sessionFilter = new SessionRepositoryFilter(sessionRepository)
     sessionFilter.httpSessionStrategy = new HeaderHttpSessionStrategy()
 
     MockMvcBuilders
-      .webAppContextSetup(wac)
+      .webAppContextSetup(webApplicationContext)
       .apply(springSecurity())
       .addFilter(sessionFilter)
       .build()

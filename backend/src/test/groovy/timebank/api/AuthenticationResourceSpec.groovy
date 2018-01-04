@@ -14,50 +14,50 @@ class AuthenticationResourceSpec extends AbstractMvcSpec {
 
   def "bad authentication"() {
     given:
-    def credentials = [username: 'user', password: 'badpassword']
+    def credentials = [username: 'billgates', password: 'zy7x2DaP']
 
     when:
-    def res = post('/api/session', credentials)
+    def response = post('/api/session', credentials)
 
     then:
-    res.status == HttpStatus.UNAUTHORIZED
+    response.status == HttpStatus.UNAUTHORIZED
   }
 
   def "good authentication"() {
     given:
-    def credentials = [username: 'test', password: 'Password1']
+    def credentials = [username: 'billgates', password: '2aNJn29r']
 
     when:
-    def res = post('/api/session', credentials)
-    token = res.json.token
+    def response = post('/api/session', credentials)
+    token = response.json.token
 
     then:
-    res.status == HttpStatus.OK
-    res.json.username == 'test'
+    response.status == HttpStatus.OK
+    response.json.username == 'billgates'
     token != null
   }
 
   def "get session"() {
     when:
-    def res = get('/api/session', new RequestParams(authToken: token))
+    def response = get('/api/session', new RequestParams(authToken: token))
 
     then:
-    res.status == HttpStatus.OK
-    res.json.username == 'test'
+    response.status == HttpStatus.OK
+    response.json.username == 'billgates'
   }
 
   def "delete session"() {
     when:
-    def res = delete('/api/session', new RequestParams(authToken: token))
+    def response = delete('/api/session', new RequestParams(authToken: token))
 
     then:
-    res.status == HttpStatus.OK
+    response.status == HttpStatus.OK
 
     when:
-    res = get('/api/session', new RequestParams(authToken: token))
+    response = get('/api/session', new RequestParams(authToken: token))
 
     then:
-    res.status == HttpStatus.OK
-    res.content.isEmpty()
+    response.status == HttpStatus.OK
+    response.content.isEmpty()
   }
 }
