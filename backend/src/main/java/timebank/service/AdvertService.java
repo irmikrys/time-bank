@@ -117,6 +117,22 @@ public class AdvertService {
     return interestingAdvertsResult;
   }
 
+  public Iterable<Advert> findAllByOwnerOrContractor(String username) {
+    Iterable<ArchiveAdvert> ownerContractorList = this.archiveAdvertService.findAllByOwnerOrContractor(username);
+    List<Long> archivedAdvertsIds = new ArrayList<Long>();
+    for( ArchiveAdvert archivedAdvert : ownerContractorList ) {
+      archivedAdvertsIds.add(archivedAdvert.getIdAdvert());
+    }
+    List<Advert> archivedAdvertsResult = new ArrayList<Advert>();
+    if (!archivedAdvertsIds.isEmpty()) {
+      NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+      MapSqlParameterSource parameters = new MapSqlParameterSource();
+      parameters.addValue("advertsID", archivedAdvertsIds);
+      archivedAdvertsResult = namedParameterJdbcTemplate.query("SELECT * FROM adverts WHERE idAdvert IN (:advertsID)", parameters, new AdvertRowMapper());
+    }
+    return archivedAdvertsResult;
+  }
+
   public Page<Advert> findAll(Pageable pageable) {
     return this.advertRepository.findAll(pageable);
   }

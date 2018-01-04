@@ -9,10 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import static java.lang.String.format;
-import static org.springframework.web.bind.annotation.RequestMethod.*;
-
 import timebank.dto.AdvertDTO;
 import timebank.dto.AdvertDetailsDTO;
 import timebank.dto.LocationDTO;
@@ -25,6 +21,9 @@ import timebank.service.*;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Optional;
+
+import static java.lang.String.format;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 
 @RestController
@@ -232,6 +231,18 @@ public class AdvertController {
 
     UserSession userSession = (UserSession) session.getAttribute("user");
     Iterable<Advert> interestingAdverts = this.advertService.findAllInterestingAdverts(userSession.getUsername());
+
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "getAllInterestingAdverts", (elapsedTime/Math.pow(10,9))));
+    return interestingAdverts;
+  }
+
+  @RequestMapping(method=GET, path="/api/archivedAdverts")
+  public @ResponseBody Iterable<Advert> getAllArchivedAdverts(HttpSession session) {
+    long start = System.nanoTime();
+
+    UserSession userSession = (UserSession) session.getAttribute("user");
+    Iterable<Advert> interestingAdverts = this.advertService.findAllByOwnerOrContractor(userSession.getUsername());
 
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "getAllInterestingAdverts", (elapsedTime/Math.pow(10,9))));
