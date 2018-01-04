@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Dropzone from "react-dropzone";
 import axios from 'axios';
 import {Link} from "react-router";
+import { browserHistory } from 'react-router';
 
 export class UserProfile extends Component {
 
@@ -41,6 +42,10 @@ export class UserProfile extends Component {
     )
   };
 
+  openEditForm() {
+    browserHistory.push("/edit_profile");
+  }
+
   render() {
     const {createdAdverts, interestingAdverts} = this.props;
     const {user, location, account} = this.props.user;
@@ -50,7 +55,10 @@ export class UserProfile extends Component {
         <div className="container">
           <div className="details">
             <div className="paragraph">
-              <h3>Personal Data</h3>
+              <div className="paragraph-title">
+                <h3>Personal Data</h3>
+                <span onClick={this.openEditForm.bind(this)} className="edit-icon glyphicon glyphicon-pencil"/>
+              </div>
               <div className="profile-view">
                 <div className="column">
                   <div className="drop-down-zone">
@@ -88,9 +96,6 @@ export class UserProfile extends Component {
                     </tr>
                     </tbody>
                   </table>
-                  <Link to={`/edit_profile`}>
-                    <button type="button" id="editProfile">EDIT</button>
-                  </Link>
                 </div>
               </div>
             </div>

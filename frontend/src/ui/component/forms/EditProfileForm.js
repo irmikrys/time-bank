@@ -21,7 +21,7 @@ export default class EditProfileForm extends Component {
       [LAST_NAME]:  user.lastName,
       [EMAIL]:  user.email,
       [LOCATION]: location,
-      [PASSWORD]: "Weronika15"
+      [PASSWORD]: ""
     };
   }
 

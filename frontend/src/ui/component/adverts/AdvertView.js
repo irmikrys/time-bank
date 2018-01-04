@@ -85,7 +85,7 @@ export default class AdvertView extends Component {
       <div className="container">
         <div className="details">
           <div className="paragraph">
-            <div className="advert-title">
+            <div className="paragraph-title">
               <h3>{advert.title}</h3>
               {!isUserOwner ? <span onClick={this.handleOnClick.bind(this)} className={`interested-star glyphicon ${star}`}/> : ""}
             </div>
