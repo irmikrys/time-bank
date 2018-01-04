@@ -32,7 +32,10 @@ export default function editProfileReducer(state = initialState, action) {
 export function editProfile(userInfo) {
   return  {
     types: [EDIT_PROFILE, EDIT_PROFILE_SUCCESS, EDIT_PROFILE_FAIL],
-    promise: (client) => client.post(`/api/profile/${username}`, userInfo)
+    promise: (client) => client.put(`/api/updateUser`, userInfo),
+    afterSuccess: (dispatch, getState, response) => {
+      browserHistory.push(`/profile/${userInfo.username}`);
+    }
   };
 }
 
