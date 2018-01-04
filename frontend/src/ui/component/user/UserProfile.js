@@ -65,6 +65,11 @@ export class UserProfile extends Component {
                 </div>
                 <div className="column">
                   <table>
+                    <tbody>
+                    <tr>
+                      <th>Username:</th>
+                      <td>{user.username}</td>
+                    </tr>
                     <tr>
                       <th>First Name:</th>
                       <td>{user.firstName}</td>
@@ -74,10 +79,6 @@ export class UserProfile extends Component {
                       <td>{user.lastName}</td>
                     </tr>
                     <tr>
-                      <th>Username:</th>
-                      <td>{user.username}</td>
-                    </tr>
-                    <tr>
                       <th>Email:</th>
                       <td>{user.email}</td>
                     </tr>
@@ -85,7 +86,11 @@ export class UserProfile extends Component {
                       <th>Location:</th>
                       <td>{location.description}</td>
                     </tr>
+                    </tbody>
                   </table>
+                  <Link to={`/edit_profile/${user.username}`}>
+                    <button type="button" id="editProfile">EDIT</button>
+                  </Link>
                 </div>
               </div>
             </div>
