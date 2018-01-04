@@ -8,7 +8,7 @@ export class EditProfilePage extends Component {
 
   constructor(props) {
     super(props);
-    props.fetchUserByUsername(this.props.params.username);
+    props.fetchUserByUsername(props.username);
   }
 
   render() {
@@ -19,7 +19,7 @@ export class EditProfilePage extends Component {
         {
           this.props.updatingUser ?
             <div className="loader"/> :
-            <EditProfileForm user={this.props.user}/>
+            <EditProfileForm user={this.props.user} editProfile={this.props.editProfile}/>
         }
       </div>
     )

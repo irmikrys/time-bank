@@ -1,22 +1,29 @@
 import React, { Component } from 'react';
 import {
+  USERNAME,
   FIRST_NAME,
   LAST_NAME,
   EMAIL,
   LOCATION,
-  getFormField
+  PASSWORD,
+  getFormField,
 } from "../../constants/constants";
 import Geosuggest from "react-geosuggest";
-import {Link} from "react-router";
 
 export default class EditProfileForm extends Component {
 
-  state = {
-    [FIRST_NAME]: "",
-    [LAST_NAME]:  "",
-    [EMAIL]:  "",
-    [LOCATION]: {}
-  };
+  constructor(props) {
+    super(props);
+    const {user, location} = props.user;
+    this.state = {
+      [USERNAME]: user.username,
+      [FIRST_NAME]: user.firstName,
+      [LAST_NAME]:  user.lastName,
+      [EMAIL]:  user.email,
+      [LOCATION]: location,
+      [PASSWORD]: ""
+    };
+  }
 
   handleInputChange = event => {
     let value = event.target.value;
@@ -34,7 +41,6 @@ export default class EditProfileForm extends Component {
   };
 
   render() {
-    console.log(this.props);
     const {user, location} = this.props.user;
     return (
       <div className="edition-page">
@@ -45,6 +51,7 @@ export default class EditProfileForm extends Component {
               [FIRST_NAME, LAST_NAME, EMAIL].map(fieldKey => {
                 const field = getFormField(fieldKey);
                 return <input key={field.name}
+                              value={this.state[fieldKey]}
                               type={field.type}
                               placeholder={field.placeholder}
                               name={field.name}
@@ -59,9 +66,14 @@ export default class EditProfileForm extends Component {
                         location={new google.maps.LatLng(location.latitude, location.longitude)}
                         onSuggestSelect={this.handleLocationSelect}
             />
-            <Link to={`/profile/${user.username}`}>
-              <button type="submit">SAVE</button>
-            </Link>
+            <input type="password"
+                   placeholder="password"
+                   name={PASSWORD}
+                   pattern={getFormField(PASSWORD).pattern}
+                   onChange={this.handleInputChange}
+                   required
+            />
+            <button type="submit">SAVE</button>
           </form>
         </div>
       </div>
@@ -70,7 +82,7 @@ export default class EditProfileForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    //const { editProfile } = this.props;
-    //editProfile(this.state);
+    const { editProfile } = this.props;
+    editProfile(this.state);
   }
 }

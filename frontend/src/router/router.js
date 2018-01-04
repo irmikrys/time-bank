@@ -27,7 +27,7 @@ export default (onLogout) => (
     <Route path="about" component={AboutPage}/>
     <Route path="contact" component={ContactPage}/>
     <Route path="advert/:idAdvert" component={privateRoute(AdvertViewPage)}/>
-    <Route path="profile/:username" component={privateRoute(UserPage)}/>
-    <Route path="edit_profile/:username" component={privateRoute(EditProfilePage)}/>
+    <Route path="profile" component={privateRoute(UserPage)}/>
+    <Route path="edit_profile" component={privateRoute(EditProfilePage)}/>
   </Route>
 );

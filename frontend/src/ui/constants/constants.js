@@ -10,6 +10,14 @@ export const MENU_FOR_GUEST = [
   {label: 'Categories', link: '/categories'}
 ];
 
+export const MENU_FOR_USER = [
+  {label: 'Home', link: '/'},
+  {label: 'Logout', link: '/logout'},
+  {label: 'Profile', link: `/profile`},
+  {label: 'Add Advert', link: '/new_advert'},
+  {label: 'Categories', link: '/categories'}
+];
+
 export const FOOTER = [
   {label: 'Terms Of Use', link: '/terms'},
   {label: 'About Service', link: '/about'},
@@ -103,14 +111,4 @@ export const renderText = text => {
     text.split("\n").map(i => {
       return <p>{i}</p>;
     }))
-};
-
-export const getUserMenu = username => {
-  return([
-      {label: 'Home', link: '/'},
-      {label: 'Logout', link: '/logout'},
-      {label: 'Profile', link: `/profile/${username}`},
-      {label: 'Add Advert', link: '/new_advert'},
-      {label: 'Categories', link: '/categories'}
-    ])
 };

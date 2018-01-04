@@ -9,7 +9,7 @@ export class UserPage extends Component {
 
   constructor(props) {
     super(props);
-    props.fetchUserByUsername(props.params.username);
+    props.fetchUserByUsername(props.username);
     props.fetchCreatedAdverts();
     props.fetchInterestingAdverts();
   }
@@ -33,6 +33,7 @@ export class UserPage extends Component {
 
 export default connect(
   state => ({
+    username: state.authentication.username,
     user: state.user.user,
     createdAdverts: state.createdAdverts.adverts,
     interestingAdverts: state.interestingAdverts.adverts,
