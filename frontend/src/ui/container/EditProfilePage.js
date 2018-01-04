@@ -15,7 +15,7 @@ export class EditProfilePage extends Component {
     console.log(this.props);
     return (
       <div className="main">
-        <h1>Edit profile</h1>
+        <h1>Edit Profile</h1>
         {
           this.props.updatingUser ?
             <div className="loader"/> :

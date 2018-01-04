@@ -37,7 +37,8 @@ export default class EditProfileForm extends Component {
     console.log(this.props);
     const {user, location} = this.props.user;
     return (
-      <div className="register-page">
+      <div className="edition-page">
+        <h3>{user.username}</h3>
         <div className="form-container">
           <form autoComplete="off" onSubmit={this.handleSubmit}>
             {
