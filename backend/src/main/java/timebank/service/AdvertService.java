@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -11,6 +13,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import timebank.dto.AdvertDTO;
 import timebank.dto.AdvertDetailsDTO;
+import timebank.dto.LocalizedAdvertDTO;
 import timebank.model.Advert;
 import timebank.model.ArchiveAdvert;
 import timebank.model.Interested;
@@ -45,10 +48,10 @@ public class AdvertService {
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
-  private class AdvertRowMapper implements RowMapper<Advert> {
+  private class LocalizedAdvertRowMapper implements RowMapper<LocalizedAdvertDTO> {
     @Override
-    public Advert mapRow(ResultSet rs, int rowNum) throws SQLException {
-      Advert advert = new Advert();
+    public LocalizedAdvertDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+      LocalizedAdvertDTO advert = new LocalizedAdvertDTO();
       advert.setIdAdvert(rs.getLong("idAdvert"));
       advert.setActive(rs.getBoolean("active"));
       advert.setType(rs.getString("type"));
@@ -60,30 +63,64 @@ public class AdvertService {
       advert.setValue(rs.getInt("value"));
       advert.setCreateDate(rs.getTimestamp("createDate"));
       advert.setIdLocation(rs.getLong("idLocation"));
+      advert.setLocationDescription(rs.getString("locDescription"));
+      advert.setLatitude(rs.getDouble("latitude"));
+      advert.setLongitude(rs.getDouble("longitude"));
+      advert.setDistance(rs.getDouble("dist"));
       return advert;
     }
   }
 
-  private class AdvertDetailsRowMapper implements RowMapper<AdvertDetailsDTO> {
-    @Override
-    public AdvertDetailsDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-      AdvertDetailsDTO advert = new AdvertDetailsDTO();
-      advert.setIdAdvert(rs.getLong("a.idAdvert"));
-      advert.setActive(rs.getBoolean("a.active"));
-      advert.setType(rs.getString("a.type"));
-      advert.setOwner(rs.getString("a.owner"));
-      advert.setContractor(rs.getString("a.contractor"));
-      advert.setTitle(rs.getString("a.title"));
-      advert.setDescription(rs.getString("a.description"));
-      advert.setIdCategory(rs.getLong("a.idCategory"));
-      advert.setValue(rs.getInt("a.value"));
-      advert.setCreateDate(rs.getTimestamp("a.createDate"));
-      advert.setIdLocation(rs.getLong("a.idLocation"));
-      advert.setLocationDescription(rs.getString("l.description"));
-      advert.setLatitude(rs.getDouble("l.latitude"));
-      advert.setLongitude(rs.getDouble("l.longitude"));
-      return advert;
+
+
+  public Slice<Advert> findAllByActiveTrueOrderByCreateDateDesc(Pageable pageable) {
+    System.out.println("AdvertService: findByActiveTrueOrderByCreateDate [pageable: " + pageable);
+    return this.advertRepository.findAllByActiveTrueOrderByCreateDateDesc(pageable);
+  }
+
+  public Slice<Advert> findAllByParams(String type, String idCategory, String phrase, Pageable pageable) {
+    System.out.println("AdvertService: findAllByParms [type: >" + type + "<, idcategory: >" + idCategory + "<, phrase: >" + phrase + "<, pageable: " + pageable);
+    return this.advertRepository.findAdvertsByParams(type, idCategory, phrase, pageable);
+  }
+
+  public Slice<LocalizedAdvertDTO> findAdvertsNearMe(double lat, double lon, double r, double lastSeenDist, long lastSeenId, Pageable pageable) {
+
+    System.out.println("findAdvertsNearMe: [lat: "+lat+", lon: "+lon+", r: "+r+", lastDist: "+lastSeenDist+", lastId: "+lastSeenId+"]");
+
+    NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+    MapSqlParameterSource parameters = new MapSqlParameterSource();
+    parameters.addValue("lat", lat);
+    parameters.addValue("lon", lon);
+    parameters.addValue("r", r);
+    parameters.addValue("lastDist", lastSeenDist);
+    parameters.addValue("lastId", lastSeenId);
+    parameters.addValue("limit", pageable.getPageSize() + 1);
+    final String sql = "SELECT * FROM (SELECT " +
+      "DEGREES(ACOS(COS(RADIANS(:lat)) * COS(RADIANS(l.latitude)) * COS(RADIANS(:lon) - RADIANS(l.longitude)) + SIN(RADIANS(:lat)) * SIN(RADIANS(l.latitude)))) AS dist, " + // tmp table start
+      "a.*, l.description AS locDescription, l.latitude, l.longitude " +
+      "FROM adverts a JOIN locations l USING (idLocation) WHERE a.active = TRUE) tmp " + //tmp table finish
+      "WHERE tmp.active AND (tmp.dist <= :r) AND (tmp.dist, tmp.idAdvert) > (:lastDist, :lastId) ORDER BY dist LIMIT :limit";
+    List<LocalizedAdvertDTO> receivedAdverts = namedParameterJdbcTemplate.query(sql, parameters, new LocalizedAdvertRowMapper());
+
+    boolean hasNext = false;
+    if (receivedAdverts.size() > pageable.getPageSize()){
+      receivedAdverts.remove(pageable.getPageSize());
+      hasNext = true;
     }
+
+    Slice<LocalizedAdvertDTO> slice = new SliceImpl<>(receivedAdverts, pageable, hasNext);
+
+    //>>>>
+    System.out.println("findAdvertsNearMe:");
+    System.out.println("    zwraca elementow:           " + receivedAdverts.size());
+    System.out.println("    czy posiada kolejna strone: " + hasNext);
+    System.out.println("    Zawartosc strony: ");
+    for( LocalizedAdvertDTO advert : receivedAdverts ) {
+      System.out.println(advert.toString());
+    }
+    //<<<<
+
+    return slice;
   }
 
   public Optional<Advert> findByIdAdvert(long idAdvert) {
@@ -107,22 +144,15 @@ public class AdvertService {
 //    System.out.println(interestingAdvertsIds.toString());
 
     // lista advertow o danych id
-    List<Advert> interestingAdvertsResult = new ArrayList<Advert>();
-    if (!interestingAdvertsIds.isEmpty()) {
-      NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
-      MapSqlParameterSource parameters = new MapSqlParameterSource();
-      parameters.addValue("advertsID", interestingAdvertsIds);
-      interestingAdvertsResult = namedParameterJdbcTemplate.query("SELECT * FROM adverts WHERE idAdvert IN (:advertsID)", parameters, new AdvertRowMapper());
-    }
-    return interestingAdvertsResult;
-  }
-
-  public Page<Advert> findAll(Pageable pageable) {
-    return this.advertRepository.findAll(pageable);
-  }
-
-  public Page<Advert> findAllByParams(String type, String idCategory, String title, Pageable pageable) {
-    return this.advertRepository.findAdvertsByParams(type, idCategory, title, pageable);
+//    List<Advert> interestingAdvertsResult = new ArrayList<Advert>();
+//    if (!interestingAdvertsIds.isEmpty()) {
+//      NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+//      MapSqlParameterSource parameters = new MapSqlParameterSource();
+//      parameters.addValue("advertsID", interestingAdvertsIds);
+//      interestingAdvertsResult = namedParameterJdbcTemplate.query("SELECT * FROM adverts WHERE idAdvert IN (:advertsID)", parameters, new AdvertRowMapper());
+//    }
+//    return interestingAdvertsResult;
+    return this.advertRepository.findAllByIdAdvertIn(interestingAdvertsIds);
   }
 
   public Advert createAdvert(String username, AdvertDTO advertDTO) {

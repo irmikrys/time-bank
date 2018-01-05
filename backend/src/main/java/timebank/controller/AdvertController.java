@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import timebank.dto.AdvertDTO;
 import timebank.dto.AdvertDetailsDTO;
+import timebank.dto.LocalizedAdvertDTO;
 import timebank.dto.LocationDTO;
 import timebank.dto.session.UserSession;
 import timebank.exceptions.AdvertException;
@@ -52,17 +54,50 @@ public class AdvertController {
   private final Log log = LogFactory.getLog(getClass());
 
 
-  @RequestMapping(method=GET, path="/api/adverts")
-  public @ResponseBody Page<Advert> getAdverts(@RequestParam(name="type", required=false) String type,
-                                               @RequestParam(name="idCategory", required=false) String idCategory,
-                                               @RequestParam(name="title", required=false) String title,
-                                               Pageable pageable) {
-    return this.advertService.findAllByParams(type, idCategory, title, pageable);
-  }
-
   @RequestMapping(method=GET, path="/api/categories")
   public @ResponseBody Iterable<Category> getAllCategories() {
     return this.categoryService.findAll();
+  }
+
+  @RequestMapping(method=GET, path="/api/latestAdverts")
+  public @ResponseBody Slice<Advert> getLatestAdverts(Pageable pageable) {
+    long start = System.nanoTime();
+
+    Slice<Advert> slice = this.advertService.findAllByActiveTrueOrderByCreateDateDesc(pageable);
+
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "getLatestAdverts", (elapsedTime/Math.pow(10,9))));
+    return slice;
+  }
+
+  @RequestMapping(method=GET, path="/api/adverts") // TODO zamienic /api/adverts na /api/searchAdverts
+  public @ResponseBody Slice<Advert> getSpecificAdverts(@RequestParam(name="type", defaultValue = "%") String type,
+                                                        @RequestParam(name="idCategory", defaultValue = "%") String idCategory,
+                                                        @RequestParam(name="phrase", defaultValue = "") String phrase,
+                                                        Pageable pageable) {
+    long start = System.nanoTime();
+
+    Slice<Advert> slice = this.advertService.findAllByParams(type, idCategory, phrase, pageable);
+
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "getSpecificAdverts", (elapsedTime/Math.pow(10,9))));
+    return slice;
+  }
+
+  @RequestMapping(method=GET, path="/api/advertsNearMe")
+  public @ResponseBody Slice<LocalizedAdvertDTO> getAdvertsNearMe(@RequestParam(name="lat") double lat,
+                                                                  @RequestParam(name="lon") double lon,
+                                                                  @RequestParam(name="r") double r,
+                                                                  @RequestParam(name="lastSeenDist", defaultValue = "-1") double lastSeenDist,
+                                                                  @RequestParam(name="lastSeenId", defaultValue = "-1") long lastSeenId,
+                                                                  Pageable pageable) {
+    long start = System.nanoTime();
+
+    Slice<LocalizedAdvertDTO> slice = this.advertService.findAdvertsNearMe(lat, lon, (r/111.045), lastSeenDist, lastSeenId, pageable);
+
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "getAdvertsNearMe", (elapsedTime/Math.pow(10,9))));
+    return slice;
   }
 
   @RequestMapping(method=GET, path="/api/advert/{id}")
@@ -235,20 +270,6 @@ public class AdvertController {
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "getAllInterestingAdverts", (elapsedTime/Math.pow(10,9))));
     return interestingAdverts;
-  }
-
-  @RequestMapping(method=POST, path="/api/updateLocation/{id}")
-  public @ResponseBody ResponseEntity<HttpStatus> updateLocation(@Valid @RequestBody LocationDTO locationDTO, @PathVariable("id") long idLocation) {
-    long start = System.nanoTime();
-    System.out.println("updateLocation początek: " +locationDTO.toString());
-
-    Location oldLocation = this.locationService.findByIdLocation(idLocation).orElseThrow(
-      () -> new AdvertException("updateLocation.error.locationNotFound"));
-    this.locationService.updateLocation(oldLocation, locationDTO);
-
-    long elapsedTime = System.nanoTime() - start;
-    log.info(format("%s: %.10f [s]", "updateLocation", (elapsedTime/Math.pow(10,9))));
-    return ResponseEntity.ok(HttpStatus.OK);
   }
 
 }

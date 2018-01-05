@@ -1,22 +1,29 @@
 package timebank.repository;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import timebank.model.Advert;
 
 import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.Optional;
 
 @Repository("advertRepository")
-public interface AdvertRepository extends PagingAndSortingRepository<Advert, Integer> {
+public interface AdvertRepository extends JpaRepository<Advert, Long> {
 
-  @Query(value = "SELECT * FROM adverts WHERE (?1 IS NULL OR ?1='' OR TYPE = ?1) AND (?2 IS NULL OR ?2='' OR idCategory = ?2) AND (?3 IS NULL OR ?3='' OR title LIKE CONCAT('%', ?3 ,'%')) \n#pageable\n",
-    countQuery = "SELECT COUNT(*) FROM adverts WHERE (?1 IS NULL OR ?1='' OR TYPE = ?1) AND (?2 IS NULL OR ?2='' OR idCategory = ?2) AND (?3 IS NULL OR ?3='' OR title LIKE CONCAT('%', ?3 ,'%')) \n#pageable\n",
+  @QueryHints(forCounting = false) // <<
+  @Query(value = "SELECT * FROM adverts WHERE active AND (TYPE LIKE :ty) AND (idCategory LIKE :idC) AND (title LIKE CONCAT('%', :ph ,'%') OR description LIKE CONCAT('%', :ph ,'%')) \n#pageable\n",
     nativeQuery = true)
-  Page<Advert> findAdvertsByParams(String type, String idCategory, String title, Pageable pageable);
+  Slice<Advert> findAdvertsByParams(@Param("ty") String type, @Param("idC") String idCategory, @Param("ph") String phrase, Pageable pageable);
+
+  Slice<Advert> findAllByActiveTrueOrderByCreateDateDesc(Pageable pageable);
+
+  Iterable<Advert> findAllByIdAdvertIn(Collection<Long> idAdverts);
 
   Optional<Advert> findByIdAdvert(long idAdvert);
 
