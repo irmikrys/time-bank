@@ -237,18 +237,6 @@ public class AdvertController {
     return interestingAdverts;
   }
 
-  @RequestMapping(method=GET, path="/api/archivedAdverts")
-  public @ResponseBody Iterable<Advert> getAllArchivedAdverts(HttpSession session) {
-    long start = System.nanoTime();
-
-    UserSession userSession = (UserSession) session.getAttribute("user");
-    Iterable<Advert> interestingAdverts = this.advertService.findAllByOwnerOrContractor(userSession.getUsername());
-
-    long elapsedTime = System.nanoTime() - start;
-    log.info(format("%s: %.10f [s]", "getAllInterestingAdverts", (elapsedTime/Math.pow(10,9))));
-    return interestingAdverts;
-  }
-
   @RequestMapping(method=POST, path="/api/updateLocation/{id}")
   public @ResponseBody ResponseEntity<HttpStatus> updateLocation(@Valid @RequestBody LocationDTO locationDTO, @PathVariable("id") long idLocation) {
     long start = System.nanoTime();
