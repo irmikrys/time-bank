@@ -47,9 +47,9 @@ export class UserProfile extends Component {
   }
 
   render() {
-    const {createdAdverts, interestingAdverts} = this.props;
-    const {user, location, account} = this.props.user;
     console.log(this.props);
+    const {createdAdverts, interestingAdverts, archivedAdverts} = this.props;
+    const {user, location, account} = this.props.user;
     return (
       <div>
         <div className="container">
@@ -116,6 +116,10 @@ export class UserProfile extends Component {
                 <label>My adverts:</label>
                 <div>
                   {this.showAdverts(createdAdverts)}
+                </div>
+                <label>Archived adverts:</label>
+                <div>
+                  {this.showAdverts(archivedAdverts)}
                 </div>
               </div>
             </div>
