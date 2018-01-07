@@ -92,14 +92,15 @@ public class AdvertService {
     parameters.addValue("lat", lat);
     parameters.addValue("lon", lon);
     parameters.addValue("r", r);
+    parameters.addValue("lonRange", (r/(Math.cos(Math.toRadians(lat)))));
     parameters.addValue("lastDist", lastSeenDist);
     parameters.addValue("lastId", lastSeenId);
     parameters.addValue("limit", pageable.getPageSize() + 1);
     final String sql = "SELECT * FROM (SELECT " +
-      "DEGREES(ACOS(COS(RADIANS(:lat)) * COS(RADIANS(l.latitude)) * COS(RADIANS(:lon) - RADIANS(l.longitude)) + SIN(RADIANS(:lat)) * SIN(RADIANS(l.latitude)))) AS dist, " + // tmp table start
-      "a.*, l.description AS locDescription, l.latitude, l.longitude " +
-      "FROM adverts a JOIN locations l USING (idLocation) WHERE a.active = TRUE) tmp " + //tmp table finish
-      "WHERE tmp.active AND (tmp.dist <= :r) AND (tmp.dist, tmp.idAdvert) > (:lastDist, :lastId) ORDER BY dist LIMIT :limit";
+      "DEGREES(ACOS(COS(RADIANS(:lat)) * COS(RADIANS(l.latitude)) * COS(RADIANS(:lon) - RADIANS(l.longitude)) + SIN(RADIANS(:lat)) * SIN(RADIANS(l.latitude)))) AS dist, a.*, l.description AS locDescription, l.latitude, l.longitude " +
+      "FROM adverts a JOIN locations l USING (idLocation) " +
+      "WHERE a.active AND l.latitude BETWEEN :lat - :r AND :lat + :r AND l.longitude BETWEEN :lon - :lonRange AND :lon + :lonRange) AS tmp " +
+      "WHERE dist <= :r AND (dist, tmp.idAdvert) > (:lastDist, :lastId) ORDER BY dist, tmp.idAdvert LIMIT :limit";
     List<LocalizedAdvertDTO> receivedAdverts = namedParameterJdbcTemplate.query(sql, parameters, new LocalizedAdvertRowMapper());
 
     boolean hasNext = false;
