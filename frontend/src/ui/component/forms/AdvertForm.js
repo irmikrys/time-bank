@@ -6,7 +6,6 @@ import {ADVERT_TYPE_OFFER, ADVERT_TYPE_SEEK} from "../../constants/constants";
 export default class AdvertForm extends Component {
 
   state = {
-    username: this.props.username,
     type: ADVERT_TYPE_OFFER,
     title: "",
     description: "",

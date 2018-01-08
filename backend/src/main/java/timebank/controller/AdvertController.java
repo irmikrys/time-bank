@@ -186,7 +186,7 @@ public class AdvertController {
     if (advert.getActive()) {
       throw new ShowInterestException("deleteFinalContractor.error.contractorNotChosen");
     }
-    this.advertService.removeFinalContractor(idAdvert, advert.getContractor());
+    this.advertService.removeFinalContractor(idAdvert);
 
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "deleteFinalContractor", (elapsedTime/Math.pow(10,9))));

@@ -11,6 +11,7 @@ import advert from "./advert";
 import user from "./user";
 import editProfile from "./editProfile";
 import archivedAdverts from "./archivedAdverts";
+import editAdvert from "./editAdvert";
 
 export default combineReducers({
   users,
@@ -24,5 +25,6 @@ export default combineReducers({
   advert,
   user,
   editProfile,
+  editAdvert,
   routing
 });
