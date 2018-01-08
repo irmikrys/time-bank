@@ -6,6 +6,7 @@ import {Tabs} from "./Tabs";
 import PersonalData from "./PersonalData";
 import {ARCHIVED, INTERESTING, MY_ADVERTS} from "../../constants/constants";
 import EditProfileModal from "./EditProfileModal";
+import {dateFormatter} from "../utils";
 
 export class UserProfile extends Component {
 
@@ -38,7 +39,7 @@ export class UserProfile extends Component {
                   <tbody>
                   <tr>
                     <th id="glyph"><span className={categoryToGlyph(advert.idCategory)}/></th>
-                    <td id="date">{advertDate(advert)}</td>
+                    <td id="date">{dateFormatter(new Date(advertDate(advert)))}</td>
                     <td id="type">{advert.type}</td>
                     <td id="title">{advert.title}</td>
                     <td id="details">{advertDetails(advert)}</td>
