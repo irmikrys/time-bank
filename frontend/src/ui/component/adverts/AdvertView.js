@@ -45,7 +45,7 @@ export default class AdvertView extends Component {
 
   handleOnClick = event => {
     const {idAdvert} =  this.props.advert.advert;
-    axios.put(`/api/advert/switchInterest/${idAdvert}`, null)
+    axios.post(`/api/advert/switchInterest/${idAdvert}`, null)
       .then(result => {
         const {numberOfInterested, isUserInterested} = this.state;
         this.setState({
@@ -57,7 +57,7 @@ export default class AdvertView extends Component {
 
   handleSelectChange = contractor => {
     const {idAdvert} =  this.props.advert.advert;
-    axios.put(`/api/advert/chooseContractor?idAdvert=${idAdvert}&contractor=${contractor}`, null)
+    axios.post(`/api/advert/chooseContractor?idAdvert=${idAdvert}&contractor=${contractor}`, null)
       .then(result => {
         this.setState({contractor});
       });
@@ -73,7 +73,7 @@ export default class AdvertView extends Component {
 
   finalizeTransaction = event => {
     const {idAdvert} =  this.props.advert.advert;
-    axios.put(`/api/advert/finalize/${idAdvert}`, null)
+    axios.post(`/api/advert/finalize/${idAdvert}`, null)
       .then(result => {
         this.props.setSearchCriteria({});
         browserHistory.push('/');

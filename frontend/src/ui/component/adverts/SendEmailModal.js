@@ -47,7 +47,7 @@ export default class SendEmailModal extends Component {
                             name="content"
                             onChange={this.handleInputChange}
                             cols="40"
-                            rows="5"
+                            rows="10"
                             required
                   />
                   <button type="button" onClick={this.handleSubmit.bind(this)}>

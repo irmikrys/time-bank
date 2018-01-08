@@ -203,7 +203,7 @@ public class AdvertController {
     return ResponseEntity.ok(HttpStatus.OK);
   }
 
-  @RequestMapping(method=PUT, path="/api/advert/finalize/{id}")
+  @RequestMapping(method=POST, path="/api/advert/finalize/{id}")
   public @ResponseBody ResponseEntity<HttpStatus> finalizeTransaction(@PathVariable("id") long idAdvert, HttpSession session) {
     long start = System.nanoTime();
     UserSession userSession = (UserSession) session.getAttribute("user");
