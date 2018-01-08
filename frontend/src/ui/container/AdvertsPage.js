@@ -4,6 +4,7 @@ import Adverts from "../component/adverts/Adverts";
 
 export default connect(
   state => ({
+    isAuthenticated: state.authentication.isAuthenticated,
     adverts: state.adverts.adverts,
     updating: state.adverts.updating,
     categories: state.categories.categories,

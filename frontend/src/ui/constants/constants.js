@@ -6,8 +6,7 @@ export const PAGE_SIZE = 6;
 export const MENU_FOR_GUEST = [
   {label: 'Home', link: '/'},
   {label: 'Register', link: '/register'},
-  {label: 'Login', link: '/login'},
-  {label: 'Categories', link: '/categories'}
+  {label: 'Login', link: '/login'}
 ];
 
 export const MENU_FOR_USER = [

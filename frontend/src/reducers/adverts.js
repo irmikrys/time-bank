@@ -44,7 +44,7 @@ export function setSearchCriteria(searchCriteria) {
 }
 
 export function fetchAdverts(searchCriteria) {
-  const request = searchCriteria ? buildRequest(searchCriteria)  : "";
+  const request = searchCriteria ? buildRequest(searchCriteria)  : "&sort=createDate,desc";
   return  {
     types: [FETCH_ADVERTS, FETCH_ADVERTS_SUCCESS, FETCH_ADVERTS_FAIL],
     promise: client => client
