@@ -11,7 +11,7 @@ export default class SearchBar extends Component {
 
   handleInputChange = event => {
     let value = event.target.value;
-    let inputName = event.target.name
+    let inputName = event.target.name;
     this.setState({[inputName]: value});
   };
 
