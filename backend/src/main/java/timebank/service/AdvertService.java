@@ -138,10 +138,8 @@ public class AdvertService {
   }
 
   public void updateAdvert(Advert oldAdvert, Location oldLocation, AdvertDTO newAdvert) {
-    if (!((oldAdvert.getTitle().equals(newAdvert.getTitle())) && (oldAdvert.getDescription().equals(newAdvert.getDescription())) && (oldAdvert.getIdCategory()==newAdvert.getIdCategory()))) {
-      final String sql = "UPDATE adverts a SET a.title = ?, a.description = ?, a.idCategory = ? WHERE a.idAdvert = ?";
-      this.jdbcTemplate.update(sql, newAdvert.getTitle(), newAdvert.getDescription(), newAdvert.getIdCategory(), oldAdvert.getIdAdvert());
-    }
+    final String sql = "UPDATE adverts a SET a.type = ?, a.value = ?, a.title = ?, a.description = ?, a.idCategory = ? WHERE a.idAdvert = ?";
+    this.jdbcTemplate.update(sql, newAdvert.getType(), newAdvert.getValue(), newAdvert.getTitle(), newAdvert.getDescription(), newAdvert.getIdCategory(), oldAdvert.getIdAdvert());
     this.locationService.updateLocation(oldLocation, newAdvert.getLocation());
   }
 
@@ -158,7 +156,7 @@ public class AdvertService {
     this.jdbcTemplate.update(sql, contractor, idAdvert);
   }
 
-  public void removeFinalContractor(long idAdvert, String contractor) {
+  public void removeFinalContractor(long idAdvert) {
     final String sql = "UPDATE adverts a SET a.active = TRUE, a.contractor = NULL WHERE a.idAdvert = ?";
     this.jdbcTemplate.update(sql, idAdvert);
   }

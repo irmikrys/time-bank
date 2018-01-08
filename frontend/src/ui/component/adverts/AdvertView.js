@@ -3,6 +3,7 @@ import {dateFormatter} from "../utils";
 import Select from "react-select";
 import axios from 'axios';
 import {browserHistory} from "react-router";
+import EditAdvertModal from "./EditAdvertModal";
 
 export default class AdvertView extends Component {
 
@@ -14,7 +15,8 @@ export default class AdvertView extends Component {
       numberOfInterested: interestedList.length,
       isUserInterested: interestedList.filter(item => item.username === props.username).length === 1,
       isUserOwner: advert.owner === props.username,
-      contractor: advert.contractor
+      contractor: advert.contractor,
+      editModalVisible: false
     };
   }
 
@@ -76,6 +78,14 @@ export default class AdvertView extends Component {
       })
   };
 
+  openEditModal() {
+    this.setState({editModalVisible: true});
+  };
+
+  closeEditModal() {
+    this.setState({editModalVisible: false});
+  };
+
   render() {
     const {categories} = this.props;
     const {advert, location, userEmail, interestedList} =  this.props.advert;
@@ -87,7 +97,10 @@ export default class AdvertView extends Component {
           <div className="paragraph">
             <div className="paragraph-title">
               <h3>{advert.title}</h3>
-              {!isUserOwner ? <span onClick={this.handleOnClick.bind(this)} className={`interested-star glyphicon ${star}`}/> : ""}
+              {!isUserOwner
+                ? <span onClick={this.handleOnClick.bind(this)} className={`interested-star glyphicon ${star}`}/>
+                : <span onClick={this.openEditModal.bind(this)} className="edit-icon glyphicon glyphicon-pencil"/>
+              }
             </div>
             <div className="advert-view">
               <div className="column">
@@ -153,6 +166,12 @@ export default class AdvertView extends Component {
             </div>
           </div>
         </div>
+        {this.state.editModalVisible ? <EditAdvertModal editAdvert={this.props.editAdvert}
+                                                        advert={this.props.advert}
+                                                        closeModal={this.closeEditModal.bind(this)}
+                                                        fetchAdvert={this.props.fetchAdvert}
+                                                        categories={categories}
+        /> : null}
       </div>
     )
   }
