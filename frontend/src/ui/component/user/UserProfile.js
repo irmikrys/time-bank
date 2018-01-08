@@ -84,13 +84,28 @@ export class UserProfile extends Component {
             <div className="paragraph">
               <Tabs tabData={this.state.tabData} activeTab={this.state.activeTab} changeTab={this.handleClick} />
               {
-                this.state.activeTab === MY_ADVERTS ? <div>{this.showAdverts(createdAdverts)}</div> : null
+                this.state.activeTab === MY_ADVERTS ?
+                  <div className="transaction">
+                    {transactionHeader()}
+                    {this.showAdverts(createdAdverts)}
+                  </div>
+                  : null
               }
               {
-                this.state.activeTab === INTERESTING ? <div>{this.showAdverts(interestingAdverts)}</div> : null
+                this.state.activeTab === INTERESTING ?
+                  <div className="transaction">
+                    {transactionHeader()}
+                    {this.showAdverts(interestingAdverts)}
+                    </div>
+                  : null
               }
               {
-                this.state.activeTab === ARCHIVED ? <div>{this.showAdverts(archivedAdverts)}</div> : null
+                this.state.activeTab === ARCHIVED ?
+                  <div className="transaction">
+                    {transactionHeader()}
+                    {this.showAdverts(archivedAdverts)}
+                    </div>
+                  : null
               }
             </div>
           </div>
