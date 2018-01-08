@@ -59,51 +59,33 @@ public class AdvertController {
     return this.categoryService.findAll();
   }
 
-  @RequestMapping(method=GET, path="/api/latestAdverts")
-  public @ResponseBody Slice<Advert> getLatestAdverts(Pageable pageable) {
+
+  @RequestMapping(method=GET, path="/api/adverts")
+  public @ResponseBody Slice<Advert> getAdverts(@RequestParam(name="type", defaultValue = "%") String type,
+                                                @RequestParam(name="idCategory", defaultValue = "%") String idCategory,
+                                                @RequestParam(name="phrase", defaultValue = "") String phrase,
+                                                Pageable pageable) {
     long start = System.nanoTime();
-
-    Slice<Advert> slice = this.advertService.findAllByActiveTrueOrderByCreateDateDesc(pageable);
-
+    Slice<Advert> page = this.advertService.findAllByParams(type, idCategory, phrase, pageable);
     long elapsedTime = System.nanoTime() - start;
-    log.info(format("%s: %.10f [s]", "getLatestAdverts", (elapsedTime/Math.pow(10,9))));
-    return slice;
-  }
-
-  @RequestMapping(method=GET, path="/api/adverts") // TODO zamienic /api/adverts na /api/searchAdverts
-  public @ResponseBody Slice<Advert> getSpecificAdverts(@RequestParam(name="type", defaultValue = "%") String type,
-                                                        @RequestParam(name="idCategory", defaultValue = "%") String idCategory,
-                                                        @RequestParam(name="phrase", defaultValue = "") String phrase,
-                                                        Pageable pageable) {
-    long start = System.nanoTime();
-
-    Slice<Advert> slice = this.advertService.findAllByParams(type, idCategory, phrase, pageable);
-
-    long elapsedTime = System.nanoTime() - start;
-    log.info(format("%s: %.10f [s]", "getSpecificAdverts", (elapsedTime/Math.pow(10,9))));
-    return slice;
+    log.info(format("%s: %.10f [s]", "getAdverts", (elapsedTime/Math.pow(10,9))));
+    return page;
   }
 
   @RequestMapping(method=GET, path="/api/advertsNearMe")
-  public @ResponseBody Slice<LocalizedAdvertDTO> getAdvertsNearMe(@RequestParam(name="lat") double lat,
-                                                                  @RequestParam(name="lon") double lon,
-                                                                  @RequestParam(name="r") double r,
-                                                                  @RequestParam(name="lastSeenDist", defaultValue = "-1") double lastSeenDist,
-                                                                  @RequestParam(name="lastSeenId", defaultValue = "-1") long lastSeenId,
-                                                                  Pageable pageable) {
+  public @ResponseBody Iterable<LocalizedAdvertDTO> getAdvertsNearMe(@RequestParam(name="lat") double lat,
+                                                                     @RequestParam(name="lon") double lon,
+                                                                     @RequestParam(name="r") double r) {
     long start = System.nanoTime();
-
-    Slice<LocalizedAdvertDTO> slice = this.advertService.findAdvertsNearMe(lat, lon, (r/111.045), lastSeenDist, lastSeenId, pageable);
-
+    Iterable<LocalizedAdvertDTO> adverts = this.advertService.findAdvertsNearMe(lat, lon, (r/111.045));
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "getAdvertsNearMe", (elapsedTime/Math.pow(10,9))));
-    return slice;
+    return adverts;
   }
 
   @RequestMapping(method=GET, path="/api/advert/{id}")
   public @ResponseBody ResponseEntity<AdvertDetailsDTO> getAdvert(@PathVariable("id") long idAdvert, HttpSession session) {
     long start = System.nanoTime();
-
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
       () -> new AdvertException("getAdvert.error.advertNotFound"));
     User owner = this.userService.findByUsername(advert.getOwner()).orElseThrow(
@@ -112,7 +94,6 @@ public class AdvertController {
       () -> new AdvertException("getAdvert.error.locationNotFound"));
     Iterable<Interested> interested = this.interestedService.findAllByIdAdvert(advert.getIdAdvert());
     AdvertDetailsDTO advertDetails = new AdvertDetailsDTO(advert, location, interested, owner.getEmail());
-
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "getAdvert", (elapsedTime/Math.pow(10,9))));
     return ResponseEntity.ok(advertDetails);
@@ -165,10 +146,9 @@ public class AdvertController {
     return ResponseEntity.ok(HttpStatus.OK);
   }
 
-  @RequestMapping(method=PUT, path="/api/advert/switchInterest/{id}")
+  @RequestMapping(method=POST, path="/api/advert/switchInterest/{id}")
   public @ResponseBody ResponseEntity<HttpStatus> switchInterest(@PathVariable("id") long idAdvert, HttpSession session) {
     long start = System.nanoTime();
-
     UserSession userSession = (UserSession) session.getAttribute("user");
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
       () -> new ShowInterestException("switchInterest.error.advertNotFound"));
@@ -179,17 +159,15 @@ public class AdvertController {
     interested.ifPresent(
       intrested -> this.advertService.stopShowingInterest(idAdvert, userSession.getUsername()) );
     interested.orElseGet(
-      () -> this.advertService.showInterest(idAdvert, userSession.getUsername()) );
-
+      () -> this.advertService.showInterest(idAdvert, userSession.getUsername()));
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "switchInterest", (elapsedTime/Math.pow(10,9))));
     return ResponseEntity.ok(HttpStatus.OK);
   }
 
-  @RequestMapping(method=PUT, path="/api/advert/chooseContractor")
+  @RequestMapping(method=POST, path="/api/advert/chooseContractor")
   public @ResponseBody ResponseEntity<HttpStatus> chooseFinalContractor(@RequestParam(name="idAdvert") long idAdvert, @RequestParam(name="contractor") String contractor, HttpSession session) {
     long start = System.nanoTime();
-
     UserSession userSession = (UserSession) session.getAttribute("user");
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
       () -> new ShowInterestException("chooseFinalContractor.error.advertNotFound"));
@@ -202,7 +180,6 @@ public class AdvertController {
     this.interestedService.findByIdAdvertAndInterested(idAdvert, contractor).orElseThrow(
       () -> new ShowInterestException("chooseFinalContractor.error.contractorNotInterested"));
     this.advertService.chooseFinalContractor(idAdvert, contractor);
-
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "chooseFinalContractor", (elapsedTime/Math.pow(10,9))));
     return ResponseEntity.ok(HttpStatus.OK);
@@ -211,7 +188,6 @@ public class AdvertController {
   @RequestMapping(method=RequestMethod.DELETE, path="/api/advert/deleteContractor/{id}")
   public @ResponseBody ResponseEntity<HttpStatus> deleteFinalContractor(@PathVariable("id") long idAdvert, HttpSession session) {
     long start = System.nanoTime();
-
     UserSession userSession = (UserSession) session.getAttribute("user");
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
       () -> new ShowInterestException("deleteFinalContractor.error.advertNotFound"));
@@ -222,7 +198,6 @@ public class AdvertController {
       throw new ShowInterestException("deleteFinalContractor.error.contractorNotChosen");
     }
     this.advertService.removeFinalContractor(idAdvert);
-
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "deleteFinalContractor", (elapsedTime/Math.pow(10,9))));
     return ResponseEntity.ok(HttpStatus.OK);
@@ -231,7 +206,6 @@ public class AdvertController {
   @RequestMapping(method=PUT, path="/api/advert/finalize/{id}")
   public @ResponseBody ResponseEntity<HttpStatus> finalizeTransaction(@PathVariable("id") long idAdvert, HttpSession session) {
     long start = System.nanoTime();
-
     UserSession userSession = (UserSession) session.getAttribute("user");
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
       () -> new ShowInterestException("finalizeTransaction.error.advertNotFound"));
@@ -242,7 +216,6 @@ public class AdvertController {
       throw new ShowInterestException("finalizeTransaction.error.advertNotReadyForFinalization");
     }
     this.advertService.finalizeAdvert(advert);
-
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "finalizeTransaction", (elapsedTime/Math.pow(10,9))));
     return ResponseEntity.ok(HttpStatus.OK);
@@ -251,10 +224,8 @@ public class AdvertController {
   @RequestMapping(method=GET, path="/api/createdAdverts")
   public @ResponseBody Iterable<Advert> getAllCreatedAdverts(HttpSession session) {
     long start = System.nanoTime();
-
     UserSession userSession = (UserSession) session.getAttribute("user");
     Iterable<Advert> createdAdverts = this.advertService.findAllByOwner(userSession.getUsername());
-
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "getAllCreatedAdverts", (elapsedTime/Math.pow(10,9))));
     return createdAdverts;
@@ -263,10 +234,8 @@ public class AdvertController {
   @RequestMapping(method=GET, path="/api/interestingAdverts")
   public @ResponseBody Iterable<Advert> getAllInterestingAdverts(HttpSession session) {
     long start = System.nanoTime();
-
     UserSession userSession = (UserSession) session.getAttribute("user");
     Iterable<Advert> interestingAdverts = this.advertService.findAllInterestingAdverts(userSession.getUsername());
-
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "getAllInterestingAdverts", (elapsedTime/Math.pow(10,9))));
     return interestingAdverts;

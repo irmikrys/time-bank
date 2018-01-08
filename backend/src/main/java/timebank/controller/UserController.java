@@ -51,17 +51,14 @@ public class UserController {
 
   private final Log log = LogFactory.getLog(getClass());
 
-
   @RequestMapping(method=POST, path="/api/register")
   public @ResponseBody ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) throws RegisterException {
     long start = System.nanoTime();
-
     this.userService.findByUsername(userDTO.getUsername()).ifPresent(
       user -> { throw new RegisterException("register.error.usernameExists"); });
     this.userService.findByEmail((userDTO.getEmail())).ifPresent(
       user -> { throw new RegisterException("register.error.emailExists"); });
     User user = this.userService.createUser(userDTO);
-
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "createUser", (elapsedTime/Math.pow(10,9))));
     return ResponseEntity.ok(user);
@@ -70,7 +67,6 @@ public class UserController {
   @RequestMapping(method=PUT, path="/api/updateUser")
   public @ResponseBody ResponseEntity<HttpStatus> updateUser(@Valid @RequestBody UserDTO userDTO, HttpSession session) {
     long start = System.nanoTime();
-
     UserSession userSession = (UserSession) session.getAttribute("user");
     User user = this.userService.findByUsername(userSession.getUsername()).orElseThrow(
       () -> new UserException("updateUser.error.userNotFound"));
@@ -84,7 +80,6 @@ public class UserController {
     Location location = this.locationService.findByIdLocation(user.getIdLocation()).orElseThrow(
       () -> new UserException("updateUser.error.locationNotFound"));
     this.userService.updateUser(user, location, userDTO);
-
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "updateUser", (elapsedTime/Math.pow(10,9))));
     return ResponseEntity.ok(HttpStatus.OK);
@@ -93,14 +88,12 @@ public class UserController {
   @RequestMapping(method=PUT, path="/api/updateUserProfilePhoto")
   public @ResponseBody ResponseEntity<HttpStatus> uploadProfilePhoto(@RequestParam("file") MultipartFile file, HttpSession session) throws IOException {
     long start = System.nanoTime();
-
     UserSession userSession = (UserSession) session.getAttribute("user");
     User user = this.userService.findByUsername(userSession.getUsername()).orElseThrow(
       () -> new UserException("profile.error.userNotFound"));
     if (!file.isEmpty()) {
       this.userService.updateUserProfilePhoto(user, file.getBytes());
     }
-
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "updateUser", (elapsedTime/Math.pow(10,9))));
     return ResponseEntity.ok(HttpStatus.OK);
@@ -124,10 +117,8 @@ public class UserController {
   @RequestMapping(method=GET, path="/api/profile")
   public @ResponseBody ResponseEntity<UserDetailsDTO> getUserProfile(HttpSession session) {
     long start = System.nanoTime();
-
     UserSession userSession = (UserSession) session.getAttribute("user");
     UserDetailsDTO userDetails = this.getProfileDetails(userSession.getUsername());
-
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "getUserProfile", (elapsedTime/Math.pow(10,9))));
     return ResponseEntity.ok(userDetails);
@@ -136,9 +127,7 @@ public class UserController {
   @RequestMapping(method=GET, path="/api/profile/{username}")
   public @ResponseBody ResponseEntity<UserDetailsDTO> getUserProfile(@PathVariable("username") String username) {
     long start = System.nanoTime();
-
     UserDetailsDTO userDetails = this.getProfileDetails(username);
-
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "getUserProfile", (elapsedTime/Math.pow(10,9))));
     return ResponseEntity.ok(userDetails);
@@ -147,10 +136,8 @@ public class UserController {
   @RequestMapping(method=GET, path="/api/archive")
   public @ResponseBody Iterable<ArchiveAdvert> getArchive(HttpSession session) {
     long start = System.nanoTime();
-
     UserSession userSession = (UserSession) session.getAttribute("user");
     Iterable<ArchiveAdvert> archive = this.archiveAdvertService.findAllByOwnerOrContractor(userSession.getUsername());
-
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "getArchive", (elapsedTime/Math.pow(10,9))));
     return archive;

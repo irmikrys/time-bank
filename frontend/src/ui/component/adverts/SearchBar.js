@@ -11,11 +11,14 @@ export default class SearchBar extends Component {
 
   handleInputChange = event => {
     let value = event.target.value;
-    let inputName = event.target.name;
-    let currentSortCriteria = Object.assign({}, this.props.searchCriteria, {[inputName]: value});
-    this.props.onChange(currentSortCriteria);
+    let inputName = event.target.name
+    this.setState({[inputName]: value});
   };
 
+  handleClick = inputName => {
+    let currentSortCriteria = Object.assign({}, this.props.searchCriteria, {[inputName]: this.state[inputName]});
+    this.props.onChange(currentSortCriteria);
+  };
 
   render() {
     return (
@@ -42,10 +45,10 @@ export default class SearchBar extends Component {
           <div className="search-bar-item">
             <input placeholder="search for adverts..."
                    autoComplete="off"
-                   name="title"
+                   name="phrase"
                    onChange={this.handleInputChange.bind(this)}
             />
-            <span className="glyphicon glyphicon-search"/>
+            <span onClick={this.handleClick.bind(this, "phrase")} className="glyphicon glyphicon-search"/>
           </div>
           <div className="search-bar-item">
             <Select simpleValue

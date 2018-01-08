@@ -71,57 +71,24 @@ public class AdvertService {
     }
   }
 
-
-
-  public Slice<Advert> findAllByActiveTrueOrderByCreateDateDesc(Pageable pageable) {
-    System.out.println("AdvertService: findByActiveTrueOrderByCreateDate [pageable: " + pageable);
-    return this.advertRepository.findAllByActiveTrueOrderByCreateDateDesc(pageable);
-  }
-
   public Slice<Advert> findAllByParams(String type, String idCategory, String phrase, Pageable pageable) {
     System.out.println("AdvertService: findAllByParms [type: >" + type + "<, idcategory: >" + idCategory + "<, phrase: >" + phrase + "<, pageable: " + pageable);
     return this.advertRepository.findAdvertsByParams(type, idCategory, phrase, pageable);
   }
 
-  public Slice<LocalizedAdvertDTO> findAdvertsNearMe(double lat, double lon, double r, double lastSeenDist, long lastSeenId, Pageable pageable) {
-
-    System.out.println("findAdvertsNearMe: [lat: "+lat+", lon: "+lon+", r: "+r+", lastDist: "+lastSeenDist+", lastId: "+lastSeenId+"]");
-
+  public Iterable<LocalizedAdvertDTO> findAdvertsNearMe(double lat, double lon, double r) {
     NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     MapSqlParameterSource parameters = new MapSqlParameterSource();
     parameters.addValue("lat", lat);
     parameters.addValue("lon", lon);
     parameters.addValue("r", r);
     parameters.addValue("lonRange", (r/(Math.cos(Math.toRadians(lat)))));
-    parameters.addValue("lastDist", lastSeenDist);
-    parameters.addValue("lastId", lastSeenId);
-    parameters.addValue("limit", pageable.getPageSize() + 1);
     final String sql = "SELECT * FROM (SELECT " +
       "DEGREES(ACOS(COS(RADIANS(:lat)) * COS(RADIANS(l.latitude)) * COS(RADIANS(:lon) - RADIANS(l.longitude)) + SIN(RADIANS(:lat)) * SIN(RADIANS(l.latitude)))) AS dist, a.*, l.description AS locDescription, l.latitude, l.longitude " +
       "FROM adverts a JOIN locations l USING (idLocation) " +
       "WHERE a.active AND l.latitude BETWEEN :lat - :r AND :lat + :r AND l.longitude BETWEEN :lon - :lonRange AND :lon + :lonRange) AS tmp " +
-      "WHERE dist <= :r AND (dist, tmp.idAdvert) > (:lastDist, :lastId) ORDER BY dist, tmp.idAdvert LIMIT :limit";
-    List<LocalizedAdvertDTO> receivedAdverts = namedParameterJdbcTemplate.query(sql, parameters, new LocalizedAdvertRowMapper());
-
-    boolean hasNext = false;
-    if (receivedAdverts.size() > pageable.getPageSize()){
-      receivedAdverts.remove(pageable.getPageSize());
-      hasNext = true;
-    }
-
-    Slice<LocalizedAdvertDTO> slice = new SliceImpl<>(receivedAdverts, pageable, hasNext);
-
-    //>>>>
-    System.out.println("findAdvertsNearMe:");
-    System.out.println("    zwraca elementow:           " + receivedAdverts.size());
-    System.out.println("    czy posiada kolejna strone: " + hasNext);
-    System.out.println("    Zawartosc strony: ");
-    for( LocalizedAdvertDTO advert : receivedAdverts ) {
-      System.out.println(advert.toString());
-    }
-    //<<<<
-
-    return slice;
+      "WHERE dist <= :r ORDER BY dist";
+    return namedParameterJdbcTemplate.query(sql, parameters, new LocalizedAdvertRowMapper());
   }
 
   public Optional<Advert> findByIdAdvert(long idAdvert) {
@@ -133,26 +100,11 @@ public class AdvertService {
   }
 
   public Iterable<Advert> findAllInterestingAdverts(String username) {
-    // lista obiektow Intrested ktorymi user jest zainteresowany
     Iterable<Interested> interestingList = this.interestedService.findAllByInterested(username);
-
-    // lista id advertow ktorymi user jest zainteresowany (przejscie z listy Interested na long)
-    List<Long> interestingAdvertsIds = new ArrayList<Long>();
+    List<Long> interestingAdvertsIds = new ArrayList<>();
     for( Interested interestingAdvert : interestingList ) {
       interestingAdvertsIds.add(interestingAdvert.getIdAdvert());
     }
-
-//    System.out.println(interestingAdvertsIds.toString());
-
-    // lista advertow o danych id
-//    List<Advert> interestingAdvertsResult = new ArrayList<Advert>();
-//    if (!interestingAdvertsIds.isEmpty()) {
-//      NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
-//      MapSqlParameterSource parameters = new MapSqlParameterSource();
-//      parameters.addValue("advertsID", interestingAdvertsIds);
-//      interestingAdvertsResult = namedParameterJdbcTemplate.query("SELECT * FROM adverts WHERE idAdvert IN (:advertsID)", parameters, new AdvertRowMapper());
-//    }
-//    return interestingAdvertsResult;
     return this.advertRepository.findAllByIdAdvertIn(interestingAdvertsIds);
   }
 
