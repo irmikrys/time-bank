@@ -59,7 +59,7 @@ CREATE TABLE categories (
 DROP TABLE IF EXISTS locations;
 CREATE TABLE  locations (
   idLocation    INTEGER(30)      NOT NULL AUTO_INCREMENT,
-  description   VARCHAR(150)     NOT NULL,
+  description   VARCHAR(300)     NOT NULL,
   latitude      NUMERIC(19,16)   NOT NULL,
   longitude     NUMERIC(19,15)   NOT NULL,
   PRIMARY KEY (idLocation)

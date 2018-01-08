@@ -1,4 +1,5 @@
 import {PAGE_SIZE} from "../ui/constants/constants";
+import * as _ from "lodash";
 
 const FETCH_ADVERTS = 'adverts/FETCH_ADVERTS';
 const FETCH_ADVERTS_SUCCESS = 'adverts/FETCH_ADVERTS_SUCCESS';
@@ -44,7 +45,7 @@ export function setSearchCriteria(searchCriteria) {
 }
 
 export function fetchAdverts(searchCriteria) {
-  const request = searchCriteria ? buildRequest(searchCriteria)  : "&sort=createDate,desc";
+  const request = buildRequest(searchCriteria);
   return  {
     types: [FETCH_ADVERTS, FETCH_ADVERTS_SUCCESS, FETCH_ADVERTS_FAIL],
     promise: client => client
@@ -53,5 +54,7 @@ export function fetchAdverts(searchCriteria) {
 }
 
 export const buildRequest = searchCriteria => {
-  return Object.keys(searchCriteria).reduce((previous, current) => `${previous}&${current}=${searchCriteria[current]}`, "");
+  return _.isEmpty(searchCriteria)
+    ? "&sort=createDate,desc"
+    : Object.keys(searchCriteria).reduce((previous, current) => `${previous}&${current}=${searchCriteria[current]}`, "");
 };
