@@ -1,5 +1,6 @@
 import { FormFieldBuilder } from "../component/forms/FormFieldBuilder";
 import React from 'react'
+import { Link } from "react-router";
 
 export const PAGE_SIZE = 6;
 
@@ -111,4 +112,59 @@ export const renderText = text => {
     text.split("\n").map(i => {
       return <p>{i}</p>;
     }))
+};
+
+export const PET_CARE = 1;
+export const COOKING = 2;
+export const HOUSEKEEPING = 3;
+export const TUTORING = 4;
+export const MAKEUP = 5;
+export const FREE_TIME = 6;
+export const PEOPLE_CARE = 7;
+export const AMUSEMENT = 8;
+
+export const categoryToGlyph = category => {
+  switch (category) {
+    case PET_CARE: return "glyphicon glyphicon-grain";
+    case COOKING: return "glyphicon glyphicon-cutlery";
+    case HOUSEKEEPING: return "glyphicon glyphicon-home";
+    case TUTORING: return "glyphicon glyphicon-education";
+    case MAKEUP: return "glyphicon glyphicon-eye-open";
+    case FREE_TIME: return "glyphicon glyphicon-sunglasses";
+    case PEOPLE_CARE: return "glyphicon glyphicon-user";
+    case AMUSEMENT: return "glyphicon glyphicon-glass";
+  }
+};
+
+export const advertDate = advert => {
+  return (
+    advert.closeDate === undefined ? advert.createDate : advert.closeDate
+  )
+};
+
+export const advertDetails = advert => {
+  return (
+    advert.closeDate === undefined ?
+      <Link to={`/advert/${advert.idAdvert}`} key={advert.idAdvert}>
+        Details
+      </Link>
+      :
+      advert.value
+  )
+};
+
+export const transactionHeader = () => {
+  return (
+    <table>
+      <tbody>
+      <tr>
+        <th id="glyph"/>
+        <th id="date">Date</th>
+        <th id="type">Type</th>
+        <th id="title">Title</th>
+        <th id="details">Details</th>
+      </tr>
+      </tbody>
+    </table>
+  )
 };

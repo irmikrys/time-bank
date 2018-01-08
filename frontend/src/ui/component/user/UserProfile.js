@@ -3,6 +3,7 @@ import Dropzone from "react-dropzone";
 import axios from 'axios';
 import {Link} from "react-router";
 import { browserHistory } from 'react-router';
+import {advertDate, advertDetails, categoryToGlyph, transactionHeader} from "../../constants/constants";
 
 export class UserProfile extends Component {
 
@@ -31,9 +32,17 @@ export class UserProfile extends Component {
           adverts.map(advert => {
             return (
               <div>
-                <Link to={`/advert/${advert.idAdvert}`} key={advert.idAdvert}>
-                  {advert.title}
-                </Link>
+                <table>
+                  <tbody>
+                  <tr>
+                    <th id="glyph"><span className={categoryToGlyph(advert.idCategory)}/></th>
+                    <td id="date">{advertDate(advert)}</td>
+                    <td id="type">{advert.type}</td>
+                    <td id="title">{advert.title}</td>
+                    <td id="details">{advertDetails(advert)}</td>
+                  </tr>
+                  </tbody>
+                </table>
               </div>
             )
           })
@@ -111,6 +120,7 @@ export class UserProfile extends Component {
               <div>
                 <label>Adverts I'm interested in:</label>
                 <div>
+                  {transactionHeader()}
                   {this.showAdverts(interestingAdverts)}
                 </div>
                 <label>My adverts:</label>
