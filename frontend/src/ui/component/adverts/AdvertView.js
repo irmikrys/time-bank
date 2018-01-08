@@ -4,6 +4,7 @@ import Select from "react-select";
 import axios from 'axios';
 import {browserHistory} from "react-router";
 import EditAdvertModal from "./EditAdvertModal";
+import SendEmailModal from "./SendEmailModal";
 
 export default class AdvertView extends Component {
 
@@ -16,7 +17,8 @@ export default class AdvertView extends Component {
       isUserInterested: interestedList.filter(item => item.username === props.username).length === 1,
       isUserOwner: advert.owner === props.username,
       contractor: advert.contractor,
-      editModalVisible: false
+      editModalVisible: false,
+      sendEmailModalVisible: false
     };
   }
 
@@ -86,6 +88,14 @@ export default class AdvertView extends Component {
     this.setState({editModalVisible: false});
   };
 
+  openSendEmailModal() {
+    this.setState({sendEmailModalVisible: true});
+  };
+
+  closeSendEmailModal() {
+    this.setState({sendEmailModalVisible: false});
+  };
+
   render() {
     const {categories} = this.props;
     const {advert, location, userEmail, interestedList} =  this.props.advert;
@@ -132,11 +142,9 @@ export default class AdvertView extends Component {
                 {
                   !isUserOwner ?
                     <div className="advert-buttons">
-                      <a href={`mailto:${userEmail}`}>
-                        <button type="button" >
-                          <span className="glyphicon glyphicon-envelope"/> Ask about details
-                        </button>
-                      </a>
+                      <button type="button" onClick={this.openSendEmailModal.bind(this)} >
+                        <span className="glyphicon glyphicon-envelope"/> Ask about details
+                      </button>
                       <button type="button" onClick={this.handleOnClick.bind(this)}>
                         <span className="glyphicon glyphicon-star"/> I'm {isUserInterested ? "not " : ""}interested
                       </button>
@@ -171,6 +179,10 @@ export default class AdvertView extends Component {
                                                         closeModal={this.closeEditModal.bind(this)}
                                                         fetchAdvert={this.props.fetchAdvert}
                                                         categories={categories}
+        /> : null}
+        {this.state.sendEmailModalVisible ? <SendEmailModal sendEmail={this.props.sendEmail}
+                                                            userEmail={userEmail}
+                                                            closeModal={this.closeSendEmailModal.bind(this)}
         /> : null}
       </div>
     )

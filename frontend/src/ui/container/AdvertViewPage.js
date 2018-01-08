@@ -4,6 +4,7 @@ import AdvertView from "../component/adverts/AdvertView";
 import {fetchAdvertById} from "../../reducers/advert";
 import {setSearchCriteria} from "../../reducers/adverts";
 import {editAdvert} from "../../reducers/editAdvert";
+import {sendEmail} from "../../reducers/sendEmail";
 
 export class AdvertViewPage extends Component {
 
@@ -24,6 +25,7 @@ export class AdvertViewPage extends Component {
                                               setSearchCriteria={this.props.setSearchCriteria}
                                               fetchAdvert={this.props.fetchAdvertById}
                                               editAdvert={this.props.editAdvert}
+                                              sendEmail={this.props.sendEmail}
         />
         }
         { this.props.updating && <div className="loader"/> }
@@ -39,5 +41,5 @@ export default connect(
     updating: state.advert.updating,
     categories: state.categories.categories
   }),
-  {fetchAdvertById, setSearchCriteria, editAdvert}
+  {fetchAdvertById, setSearchCriteria, editAdvert, sendEmail}
 )(AdvertViewPage);

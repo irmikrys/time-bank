@@ -12,6 +12,7 @@ import user from "./user";
 import editProfile from "./editProfile";
 import archivedAdverts from "./archivedAdverts";
 import editAdvert from "./editAdvert";
+import sendEmail from "./sendEmail";
 
 export default combineReducers({
   users,
@@ -26,5 +27,6 @@ export default combineReducers({
   user,
   editProfile,
   editAdvert,
+  sendEmail,
   routing
 });
