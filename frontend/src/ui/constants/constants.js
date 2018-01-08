@@ -149,7 +149,7 @@ export const advertDetails = advert => {
   return (
     advert.closeDate === undefined ?
       <Link to={`/advert/${advert.idAdvert}`} key={advert.idAdvert}>
-        Details
+        <span className="glyphicon glyphicon-link"/>
       </Link>
       :
       advert.value
