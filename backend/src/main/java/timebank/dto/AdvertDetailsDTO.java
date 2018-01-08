@@ -4,7 +4,6 @@ import timebank.model.Advert;
 import timebank.model.Interested;
 import timebank.model.Location;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class AdvertDetailsDTO {
@@ -47,65 +46,9 @@ public class AdvertDetailsDTO {
     return userEmail;
   }
 
-  public void setInterested(Iterable<Interested> interested) {
-    this.interested = interested;
+  @Override
+  public String toString() {
+    return "A_" + advert.getIdAdvert() +
+      "_L_" + location.getIdLocation() + "[" + location.getDescription() + ", lat = " + location.getLatitude() + ", lon = " + location.getLongitude() + "]";
   }
-
-  public void setActive(boolean active) {
-    this.advert.setActive(active);
-  }
-
-  public void setIdAdvert(long idAdvert) {
-    this.advert.setIdAdvert(idAdvert);
-  }
-
-  public void setType(String type) {
-    this.advert.setType(type);
-  }
-
-  public void setOwner(String owner) {
-    this.advert.setOwner(owner);
-  }
-
-  public void setContractor(String contractor) {
-    this.advert.setContractor(contractor);
-  }
-
-  public void setTitle(String title) {
-    this.advert.setTitle(title);
-  }
-
-  public void setDescription(String description) {
-    this.advert.setDescription(description);
-  }
-
-  public void setIdCategory(long idCategory) {
-    this.advert.setIdCategory(idCategory);
-  }
-
-  public void setValue(int value) {
-    this.advert.setValue(value);
-  }
-
-  public void setCreateDate(Timestamp createDate) {
-    this.advert.setCreateDate(createDate);
-  }
-
-  public void setIdLocation(long idLocation) {
-    this.advert.setIdLocation(idLocation);
-    this.location.setIdLocation(idLocation);
-  }
-
-  public void setLocationDescription(String locationDescription) {
-    this.location.setDescription(locationDescription);
-  }
-
-  public void setLatitude(Double latitude) {
-    this.location.setLatitude(latitude);
-  }
-
-  public void setLongitude(Double longitude) {
-    this.location.setLongitude(longitude);
-  }
-
 }
