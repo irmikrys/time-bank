@@ -138,36 +138,3 @@ export const categoryToGlyph = category => {
     case AMUSEMENT: return "glyphicon glyphicon-glass";
   }
 };
-
-export const advertDate = advert => {
-  return (
-    advert.closeDate === undefined ? advert.createDate : advert.closeDate
-  )
-};
-
-export const advertDetails = advert => {
-  return (
-    advert.closeDate === undefined ?
-      <Link to={`/advert/${advert.idAdvert}`} key={advert.idAdvert}>
-        <span className="glyphicon glyphicon-link"/>
-      </Link>
-      :
-      advert.value
-  )
-};
-
-export const transactionHeader = () => {
-  return (
-    <table>
-      <tbody>
-      <tr>
-        <th id="glyph"/>
-        <th id="date">Date</th>
-        <th id="type">Type</th>
-        <th id="title">Title</th>
-        <th id="details">Details</th>
-      </tr>
-      </tbody>
-    </table>
-  )
-};

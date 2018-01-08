@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Link} from "react-router";
-import { browserHistory } from 'react-router';
-import {advertDate, advertDetails, categoryToGlyph, transactionHeader} from "../../constants/constants";
+import {categoryToGlyph} from "../../constants/constants";
 import {Tabs} from "./Tabs";
 import PersonalData from "./PersonalData";
 import {ARCHIVED, INTERESTING, MY_ADVERTS} from "../../constants/constants";
@@ -28,6 +27,33 @@ export class UserProfile extends Component {
     }
   }
 
+  advertDate = advert => !advert.closeDate ? advert.createDate : advert.closeDate;
+
+  advertDetails = advert => {
+    return (
+      !advert.closeDate ?
+        <Link to={`/advert/${advert.idAdvert}`} key={advert.idAdvert}>
+          <span className="glyphicon glyphicon-link"/>
+        </Link>
+        :
+        `${advert.value}h`
+    )
+  };
+
+   transactionHeader = () => (
+     <table>
+       <tbody>
+       <tr>
+         <th id="glyph"/>
+         <th id="date">Date</th>
+         <th id="type">Type</th>
+         <th id="title">Title</th>
+         <th id="details">Details</th>
+       </tr>
+       </tbody>
+     </table>
+   );
+
   showAdverts = adverts => {
     return (
       <div>
@@ -39,10 +65,10 @@ export class UserProfile extends Component {
                   <tbody>
                   <tr>
                     <th id="glyph"><span className={categoryToGlyph(advert.idCategory)}/></th>
-                    <td id="date">{dateFormatter(new Date(advertDate(advert)))}</td>
+                    <td id="date">{dateFormatter(new Date(this.advertDate(advert)))}</td>
                     <td id="type">{advert.type}</td>
                     <td id="title">{advert.title}</td>
-                    <td id="details">{advertDetails(advert)}</td>
+                    <td id="details">{this.advertDetails(advert)}</td>
                   </tr>
                   </tbody>
                 </table>
@@ -58,11 +84,11 @@ export class UserProfile extends Component {
     this.setState({activeTab});
   };
 
-  openEditModal() {
+  openEditModal = () => {
     this.setState({editModalVisible: true});
   };
 
-  closeEditModal() {
+  closeEditModal = () => {
     this.setState({editModalVisible: false});
   };
 
@@ -87,7 +113,7 @@ export class UserProfile extends Component {
               {
                 this.state.activeTab === MY_ADVERTS ?
                   <div className="transaction">
-                    {transactionHeader()}
+                    {this.transactionHeader()}
                     {this.showAdverts(createdAdverts)}
                   </div>
                   : null
@@ -95,7 +121,7 @@ export class UserProfile extends Component {
               {
                 this.state.activeTab === INTERESTING ?
                   <div className="transaction">
-                    {transactionHeader()}
+                    {this.transactionHeader()}
                     {this.showAdverts(interestingAdverts)}
                     </div>
                   : null
@@ -103,7 +129,7 @@ export class UserProfile extends Component {
               {
                 this.state.activeTab === ARCHIVED ?
                   <div className="transaction">
-                    {transactionHeader()}
+                    {this.transactionHeader()}
                     {this.showAdverts(archivedAdverts)}
                     </div>
                   : null
