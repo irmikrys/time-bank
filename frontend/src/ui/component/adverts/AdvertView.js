@@ -141,7 +141,7 @@ export default class AdvertView extends Component {
                       />
                       <div className="advert-buttons">
                         <button disabled={!this.state.contractor} type="button" onClick={this.clearContractor.bind(this)}>
-                          <span className="glyphicon glyphicon-erase"/> Clear contractor
+                          <span className="glyphicon glyphicon-erase"/> Remove contractor
                         </button>
                         <button disabled={!this.state.contractor} type="button" onClick={this.finalizeTransaction.bind(this)}>
                           <span className="glyphicon glyphicon-briefcase"/> Finalize transaction

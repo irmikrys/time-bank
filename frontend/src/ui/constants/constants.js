@@ -7,8 +7,7 @@ export const PAGE_SIZE = 6;
 export const MENU_FOR_GUEST = [
   {label: 'Home', link: '/'},
   {label: 'Register', link: '/register'},
-  {label: 'Login', link: '/login'},
-  {label: 'Categories', link: '/categories'}
+  {label: 'Login', link: '/login'}
 ];
 
 export const MENU_FOR_USER = [
@@ -24,6 +23,10 @@ export const FOOTER = [
   {label: 'About Service', link: '/about'},
   {label: 'Contact', link: '/contact'}
 ];
+
+export const MY_ADVERTS = 'My Adverts';
+export const INTERESTING = 'Interesting';
+export const ARCHIVED = 'Archived';
 
 export const USERNAME = "username";
 export const PASSWORD = "password";

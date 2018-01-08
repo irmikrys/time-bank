@@ -30,10 +30,13 @@ export default class Adverts extends Component {
   render() {
     return (
       <div>
-        <SearchBar categories={this.props.categories}
-                   searchCriteria={this.state.searchCriteria}
-                   onChange={this.handleSearchBarChange.bind(this)}
-        />
+        {
+          this.props.isAuthenticated
+            ? <SearchBar categories={this.props.categories}
+                         searchCriteria={this.state.searchCriteria}
+                         onChange={this.handleSearchBarChange.bind(this)}/>
+            : <h1 className="margin-bottom-3">Adverts</h1>
+        }
         {
           !this.props.updating && <AdvertsGrid adverts={this.props.adverts.content}
                                                lastPage={this.props.adverts.last}

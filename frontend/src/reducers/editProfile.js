@@ -1,4 +1,3 @@
-import { browserHistory } from 'react-router';
 
 const EDIT_PROFILE = 'edit_profile/EDIT_PROFILE';
 const EDIT_PROFILE_SUCCESS = 'edit_profile/EDIT_PROFILE_SUCCESS';
@@ -29,12 +28,13 @@ export default function editProfileReducer(state = initialState, action) {
 
 // Actions
 
-export function editProfile(userInfo) {
+export function editProfile(userInfo, closeModal, fetchUser) {
   return  {
     types: [EDIT_PROFILE, EDIT_PROFILE_SUCCESS, EDIT_PROFILE_FAIL],
     promise: (client) => client.put(`/api/updateUser`, userInfo),
     afterSuccess: (dispatch, getState, response) => {
-      browserHistory.push(`/profile`);
+      closeModal();
+      fetchUser();
     }
   };
 }

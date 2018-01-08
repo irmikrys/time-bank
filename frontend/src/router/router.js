@@ -13,7 +13,6 @@ import AboutPage from "../ui/container/AboutPage";
 import ContactPage from "../ui/container/ContactPage";
 import AdvertViewPage from "../ui/container/AdvertViewPage";
 import UserPage from "../ui/container/UserPage";
-import EditProfilePage from "../ui/container/EditProfilePage";
 
 export default (onLogout) => (
   <Route path="/" name="app" component={App}>
@@ -28,6 +27,5 @@ export default (onLogout) => (
     <Route path="contact" component={ContactPage}/>
     <Route path="advert/:idAdvert" component={privateRoute(AdvertViewPage)}/>
     <Route path="profile" component={privateRoute(UserPage)}/>
-    <Route path="edit_profile" component={privateRoute(EditProfilePage)}/>
   </Route>
 );
