@@ -24,6 +24,10 @@ export const FOOTER = [
   {label: 'Contact', link: '/contact'}
 ];
 
+export const MY_ADVERTS = 'My Adverts';
+export const INTERESTING = 'Interesting';
+export const ARCHIVED = 'Archived';
+
 export const USERNAME = "username";
 export const PASSWORD = "password";
 export const FIRST_NAME = "firstName";

@@ -5,6 +5,7 @@ import {fetchUserByUsername} from "../../reducers/user";
 import {fetchCreatedAdverts} from "../../reducers/createdAdverts";
 import {fetchInterestingAdverts} from "../../reducers/interestingAdverts";
 import {fetchArchivedAdverts} from "../../reducers/archivedAdverts";
+import {editProfile} from "../../reducers/editProfile";
 
 export class UserPage extends Component {
 
@@ -21,13 +22,18 @@ export class UserPage extends Component {
       <div className="main">
         <h1>My Profile</h1>
         {
-          this.props.updatingUser || this.props.updatingCreatedAdverts || this.props.updatingInterestingAdverts || this.props.updatingArchivedAdverts
+          this.props.updatingUser ||
+          this.props.updatingCreatedAdverts ||
+          this.props.updatingInterestingAdverts ||
+          this.props.updatingArchivedAdverts
             ?
             <div className="loader"/> :
             <UserProfile user={this.props.user}
                          createdAdverts={this.props.createdAdverts}
                          interestingAdverts={this.props.interestingAdverts}
                          archivedAdverts={this.props.archivedAdverts}
+                         editProfile={this.props.editProfile}
+                         fetchUser={this.props.fetchUserByUsername.bind(this, this.props.username)}
             />
         }
       </div>
@@ -47,5 +53,5 @@ export default connect(
     updatingInterestingAdverts: state.interestingAdverts.updating,
     updatingArchivedAdverts: state.archivedAdverts.updating
   }),
-  {fetchUserByUsername, fetchCreatedAdverts, fetchInterestingAdverts, fetchArchivedAdverts}
+  {fetchUserByUsername, fetchCreatedAdverts, fetchInterestingAdverts, fetchArchivedAdverts, editProfile}
 )(UserPage);
