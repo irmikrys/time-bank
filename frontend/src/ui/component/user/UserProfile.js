@@ -36,11 +36,51 @@ export class UserProfile extends Component {
           <span className="glyphicon glyphicon-link"/>
         </Link>
         :
-        `${advert.value}h`
+        this.accountDiff(advert)
     )
   };
 
-   transactionHeader = () => (
+  accountDiff = advert => {
+    if(advert.owner === this.props.user.user.username) {
+      console.log();
+      return (
+        advert.type === 'OFFER' ?
+          `+${advert.value}h` :
+          `-${advert.value}h`
+      )
+    } else {
+      return (
+        advert.type === 'OFFER' ?
+          `-${advert.value}h` :
+          `+${advert.value}h`
+      )
+    }
+  };
+
+  advertUser = (advert, TYPE) => {
+    switch (TYPE) {
+      case MY_ADVERTS:
+        return (
+          advert.contractor === null ? '-' : advert.contractor
+        ); break;
+      case INTERESTING:
+        return (
+          advert.owner
+        ); break;
+      case ARCHIVED:
+        return (
+          this.props.user.user.username === advert.owner ?
+            advert.contractor :
+            advert.owner
+        );
+      default:
+        return (
+          advert.title
+        )
+    }
+  };
+
+   transactionHeader = TYPE => (
      <table>
        <tbody>
        <tr>
@@ -48,13 +88,14 @@ export class UserProfile extends Component {
          <th id="date">Date</th>
          <th id="type">Type</th>
          <th id="title">Title</th>
+         <th id="user">User</th>
          <th id="details">Details</th>
        </tr>
        </tbody>
      </table>
    );
 
-  showAdverts = adverts => {
+  showAdverts = (adverts, TYPE) => {
     return (
       <div>
         {
@@ -68,7 +109,8 @@ export class UserProfile extends Component {
                     <td id="date">{dateFormatter(new Date(this.advertDate(advert)))}</td>
                     <td id="type">{advert.type}</td>
                     <td id="title">{advert.title}</td>
-                    <td id="details">{this.advertDetails(advert)}</td>
+                    <td id="user">{this.advertUser(advert, TYPE)}</td>
+                    <td id="details" className="big-font">{this.advertDetails(advert)}</td>
                   </tr>
                   </tbody>
                 </table>
@@ -113,24 +155,24 @@ export class UserProfile extends Component {
               {
                 this.state.activeTab === MY_ADVERTS ?
                   <div className="transaction">
-                    {this.transactionHeader()}
-                    {this.showAdverts(createdAdverts)}
+                    {this.transactionHeader(MY_ADVERTS)}
+                    {this.showAdverts(createdAdverts, MY_ADVERTS)}
                   </div>
                   : null
               }
               {
                 this.state.activeTab === INTERESTING ?
                   <div className="transaction">
-                    {this.transactionHeader()}
-                    {this.showAdverts(interestingAdverts)}
+                    {this.transactionHeader(INTERESTING)}
+                    {this.showAdverts(interestingAdverts, INTERESTING)}
                     </div>
                   : null
               }
               {
                 this.state.activeTab === ARCHIVED ?
                   <div className="transaction">
-                    {this.transactionHeader()}
-                    {this.showAdverts(archivedAdverts)}
+                    {this.transactionHeader(ARCHIVED)}
+                    {this.showAdverts(archivedAdverts, ARCHIVED)}
                     </div>
                   : null
               }
