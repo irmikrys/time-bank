@@ -69,14 +69,25 @@ export class UserProfile extends Component {
         ); break;
       case ARCHIVED:
         return (
-          this.props.user.user.username === advert.owner ?
-            advert.contractor :
-            advert.owner
+          advert.owner
         );
-      default:
+    }
+  };
+
+  advertUserHeader = (TYPE) => {
+    switch (TYPE) {
+      case MY_ADVERTS:
         return (
-          advert.title
-        )
+          'Contractor'
+        ); break;
+      case INTERESTING:
+        return (
+          'Owner'
+        ); break;
+      case ARCHIVED:
+        return (
+          'Owner'
+        );
     }
   };
 
@@ -88,7 +99,7 @@ export class UserProfile extends Component {
          <th id="date">Date</th>
          <th id="type">Type</th>
          <th id="title">Title</th>
-         <th id="user">User</th>
+         <th id="user">{this.advertUserHeader(TYPE)}</th>
          <th id="details">Details</th>
        </tr>
        </tbody>
