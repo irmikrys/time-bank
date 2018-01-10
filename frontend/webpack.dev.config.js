@@ -24,7 +24,7 @@ module.exports = {
       }
     }),
     new HtmlWebpackPlugin({
-      title: 'Boot React',
+      title: 'Time Bank',
       template: path.join(__dirname, 'assets/index-template.html')
     })
   ],
@@ -43,6 +43,8 @@ module.exports = {
     }, {
       test: /\.json/,
       loaders: ['json-loader']
+    }, {
+      test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192'
     }]
   },
   stylus: {

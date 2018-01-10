@@ -5,7 +5,7 @@ import {login} from '../../reducers/authentication';
 export default connect(
   state => ({
     errorMessage: state.authentication.errorMessage,
-    registerSuccess: state.register.registerSuccess
+    registerSuccess: state.authentication.registerSuccess
   }),
   {login}
 )(LoginForm);

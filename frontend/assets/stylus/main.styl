@@ -1,7 +1,12 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:300)
+@import 'select.styl'
+@import 'geosuggest.styl'
+@import 'theme.styl'
+@import 'footerpages.styl'
+@import 'profile.styl'
 
-theme_dark = #0a4f7d
-theme_light = #41799c
+html
+  height 100vh
 
 body
   background theme_dark
@@ -10,12 +15,24 @@ body
   background -o-linear-gradient(right, theme_dark, theme_light)
   background linear-gradient(to left, theme_dark, theme_light)
   font-family "Roboto", sans-serif
+  font-weight 300
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
-  padding 0 1rem 1rem 1rem
+  min-height 100%
+  position relative
+
+h1, h3
+  color #fff
+  text-align center
+  font-weight 300
 
 nav a
   color #ffffff
+  text-align center
+  right 0
+
+nav li
+  min-width 100px
 
 button
   font-family "Roboto", sans-serif
@@ -28,10 +45,25 @@ button
   font-size 14px
   -webkit-transition all 0.3 ease
   transition all 0.3 ease
-  cursor: pointer
+  cursor pointer
+
+input, textarea
+  font-family "Roboto", sans-serif
+  outline 0
+  background #f2f2f2
+  width 100%
+  border 0
+  margin 0 0 15px
+  padding 15px
+  box-sizing border-box
+  font-size 14px
+  resize none
+
+#application > div
+  padding-bottom 5rem
 
 .login-page
-  padding 8% 0 0
+  padding 10% 0 0
 
 .register-page
   padding 4% 0 0
@@ -41,24 +73,14 @@ button
   z-index 1
   background #ffffff
   max-width: 360px
-  margin 0 auto 100px
+  margin 0 auto 0
   padding 45px
   text-align center
-  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)
-
-  input
-    font-family "Roboto", sans-serif
-    outline 0
-    background #f2f2f2
-    width 100%
-    border 0
-    margin 0 0 15px
-    padding 15px
-    box-sizing border-box
-    font-size 14px
+  box-shadow 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)
 
   button
     width 100%
+    border-radius 0
 
   button:hover,
   button:active,
@@ -78,3 +100,273 @@ button
 
   .success-message
     color #4f8a10
+
+.advert-form
+  padding 4% 0 0
+
+  .form-container
+    max-width: 600px
+
+  .toggle
+    width 100%
+    margin-bottom 15px
+
+    .toggle-btn
+      width 50%
+      border 2px solid transparent
+      border-radius 0
+      background-color #f2f2f2
+      color #333
+
+    .toggle-btn.active
+      background-color theme_dark
+      color #fff
+      box-shadow 0 0 15px rgba(0, 0, 0, 0.2), 0 0 8px rgba(0, 0, 0, 0.24)
+
+  .geosuggest
+    top -5px
+
+
+.advert-grid
+  margin-bottom 2rem
+
+  a
+    display inline-block
+    text-decoration none
+
+  .container
+    margin-top 2rem
+
+    .masonry
+      margin 0 auto
+
+      .card
+        width 350px
+        box-shadow 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)
+        justify-content center
+        align-items center
+        background-color #fff
+
+        h2
+          color #fff
+          text-align center
+          padding-top 15px
+          padding-bottom 10px
+          width 100%
+          margin-top 0
+          font-weight 300
+
+        .advert-details
+          width 100%
+          text-align center
+          padding-left 20px
+          padding-right 20px
+
+          label
+            margin-top 10px
+            font-weight 700
+
+.checkbox-register
+  text-align left
+
+  input
+    width auto
+
+  .checkbox-label
+    font-size 12px
+    padding 0 5px
+    font-weight 500
+
+  a
+    text-decoration none
+
+
+.categories-grid
+  text-align center
+
+  a
+    display inline-block
+    color #fff
+    margin 50px
+    text-decoration none
+
+  .tile
+    display flex
+    width 200px
+    height 200px
+    box-shadow 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24)
+    justify-content center
+    align-items center
+
+    p
+      font-size 25px
+
+.footer
+  position absolute
+  bottom 0
+  width 100%
+
+  .nav
+    float left
+    margin 0
+    min-width 400px
+
+  li
+    float left
+
+  .container-fluid
+    padding 0
+
+.search-bar-container
+  text-align center
+  margin-top 1rem
+
+  .search-bar
+    width 96%
+    display inline-flex
+
+    div.search-bar-item:first-child
+      margin-right 3px
+      width 15%
+
+    div.search-bar-item:nth-child(2)
+      margin-right 3px
+      width 15%
+
+    div.search-bar-item:nth-child(3)
+      width 55%
+      margin-right 3px
+      position relative
+
+      .glyphicon-search
+        cursor pointer
+        position absolute
+        font-size 20px
+        top 15px
+        right 15px
+        z-index 1
+        color #757575
+
+    div.search-bar-item:nth-child(4)
+      width 15%
+
+.loader
+  margin 2rem auto 2rem
+  border 10px solid #f3f3f3
+  border-top 10px solid theme_light
+  border-radius 50%
+  width 50px
+  height 50px
+  animation spin 1s linear infinite
+  padding 0
+
+@keyframes spin
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+
+.advert-view
+  min-height 400px
+  overflow hidden
+
+  .advert-buttons
+    text-align center
+
+    button
+      width 100%
+      margin-top 2rem
+
+.glyphicon-star
+  color #ffdc00
+
+.paragraph-title
+  color #fff
+  position relative
+  padding 0!important
+
+  span
+    cursor pointer
+
+.interested-star, .edit-icon, .remove-icon
+  position absolute
+  font-size 24px
+  top 1rem
+  right 1rem
+
+.column
+  float left
+  width 50%
+  padding 1rem
+
+@media (max-width: 720px)
+  .column
+    width 100%
+
+.three-column
+  float left
+  width 33%
+
+@media (max-width: 500px)
+  .three-column
+    width 100%
+
+#map
+  height 250px
+
+  div
+    padding 0
+
+  #state
+    float left
+
+.margin-top-2
+  margin-top 2rem
+
+.margin-bottom-3
+  margin-bottom 3rem
+
+.choose-contractor .Select
+  margin-bottom 0
+
+.nav-tabs
+  color #fff
+  background-color theme_dark
+  text-align center
+  font-size 24px
+  cursor pointer
+
+  li
+    padding 10px
+    width 33.3%
+    margin-bottom 0
+    float none
+    display inline-block
+
+  li.active
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.24)
+
+.edit-advert-modal
+  padding-top 1%
+
+  input, textarea
+    color #333
+
+  button
+    width 100%
+
+.paragraph-title.advert-form > div
+  padding 4% 10% 4%
+
+.send-email-modal
+  position fixed
+  padding-top 6%
+  top 0
+  left 0
+  right 0
+  max-width 860px
+  z-index 10
+
+  input, textarea
+    color #333
+
+  button
+    width 100%

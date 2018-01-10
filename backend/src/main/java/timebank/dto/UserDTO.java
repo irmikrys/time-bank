@@ -3,6 +3,7 @@ package timebank.dto;
 import org.hibernate.validator.constraints.Email;
 import timebank.model.User;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -15,6 +16,9 @@ public class UserDTO {
   @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?!.*\\s).{6,30}")
   private String password;
 
+  @Email
+  private String email;
+
   @Pattern(regexp = "^([a-zA-Z]+\\s?)*[a-zA-Z]+$")
   @Size(min=3, max=30)
   private String firstName;
@@ -23,8 +27,8 @@ public class UserDTO {
   @Size(min=3, max=30)
   private String lastName;
 
-  @Email
-  private String email;
+  @Valid
+  private LocationDTO location;
 
   public String getUsername() {
     return username;
@@ -42,27 +46,58 @@ public class UserDTO {
     this.password = password;
   }
 
-  public String getFirstName() { return firstName; }
+  public String getEmail() {
+    return email;
+  }
 
-  public void setFirstName(String firstName) { this.firstName = firstName; }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-  public String getLastName() { return lastName; }
+  public String getFirstName() {
+    return firstName;
+  }
 
-  public void setLastName(String lastName) { this.lastName = lastName; }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-  public String getEmail() { return email; }
+  public String getLastName() {
+    return lastName;
+  }
 
-  public void setEmail(String email) { this.email = email; }
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-  public User toUserInfo(String password, String role) {
+  public LocationDTO getLocation() {
+    return location;
+  }
+
+  public void setLocation(LocationDTO locationDTO) {
+    this.location = locationDTO;
+  }
+
+  public User toUser(String password, String role, long idLocation) {
     User user = new User();
     user.setUsername(getUsername());
+    user.setPassword(password);
+    user.setEmail(getEmail());
     user.setFirstName(getFirstName());
     user.setLastName(getLastName());
-    user.setEmail(getEmail());
-    user.setPassword(password);
     user.setRole(role);
+    user.setIdLocation(idLocation);
     return user;
   }
 
+  @Override
+  public String toString() {
+    return "UserDTO{" +
+      "username='" + username + '\'' +
+      ", password='" + password + '\'' +
+      ", firstName='" + firstName + '\'' +
+      ", lastName='" + lastName + '\'' +
+      ", email='" + email + '\'' +
+      '}';
+  }
 }

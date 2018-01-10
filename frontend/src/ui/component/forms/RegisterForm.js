@@ -6,8 +6,12 @@ import {
   EMAIL,
   USERNAME,
   PASSWORD,
+  LOCATION,
   getFormField
 } from "../../constants/constants";
+import Geosuggest from "react-geosuggest";
+import {Link} from "react-router";
+import Checkbox from "./Checkbox";
 
 export default class RegisterForm extends Component {
 
@@ -16,7 +20,9 @@ export default class RegisterForm extends Component {
     [LAST_NAME]:  "",
     [EMAIL]:  "",
     [USERNAME]: "",
-    [PASSWORD]: ""
+    [PASSWORD]: "",
+    [LOCATION]: {},
+    termsAccepted: false
   };
 
   handleInputChange = event => {
@@ -25,13 +31,26 @@ export default class RegisterForm extends Component {
     this.setState({[inputName]: value});
   };
 
+  handleLocationSelect = value => {
+    const location = {
+      description : value.label,
+      latitude : value.location.lat,
+      longitude: value.location.lng
+    };
+    this.setState({location: location})
+  };
+
+  toggleCheckbox = () => {
+    this.state.termsAccepted = !this.state.termsAccepted;
+  };
+
   render() {
     const {errorMessage} = this.props;
     const errorPanel = errorMessage ? <ErrorPanel messageKey={errorMessage}/> : null;
     return (
       <div className="register-page">
         <div className="form-container">
-          <form onSubmit={this.handleSubmit}>
+          <form autoComplete="off" onSubmit={this.handleSubmit}>
             {errorPanel}
             {
               [FIRST_NAME, LAST_NAME, EMAIL, USERNAME, PASSWORD].map(fieldKey => {
@@ -46,6 +65,18 @@ export default class RegisterForm extends Component {
                 />
               })
             }
+            <Geosuggest placeholder={LOCATION}
+                        onSuggestSelect={this.handleLocationSelect}
+            />
+            <Checkbox
+              label={
+                <div className="checkbox-label">
+                  <span>I accept the </span>
+                  <Link to={'/terms'} target="_blank">Terms of Use</Link>
+                </div>
+              }
+              handleCheckboxChange={this.toggleCheckbox}
+            />
             <button type="submit">Register</button>
           </form>
         </div>
@@ -55,7 +86,12 @@ export default class RegisterForm extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    const { register } = this.props;
-    register(this.state);
+    if(this.state.termsAccepted){
+      const { register } = this.props;
+      register(this.state);
+    }
+    else {
+      console.log('You have to accept terms first.') //todo: move to error label
+    }
   }
 }

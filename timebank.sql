@@ -4,60 +4,88 @@ USE timebank;
 
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
-  username VARCHAR(30) NOT NULL,
-  first_name VARCHAR(30) NOT NULL,
-  last_name VARCHAR(30) NOT NULL,
-  role VARCHAR(30) NOT NULL,
-  password VARCHAR(60) NOT NULL,
-  id_location INT(30) NOT NULL,
-  email VARCHAR(50) NOT NULL,
-  photo GEOMETRY,
+  username      VARCHAR(30)     NOT NULL,
+  password      VARCHAR(60)     NOT NULL,
+  email         VARCHAR(50)     NOT NULL,
+  firstName     VARCHAR(30)     NOT NULL,
+  lastName      VARCHAR(30)     NOT NULL,
+  role          VARCHAR(30)     NOT NULL,
+  photo         MEDIUMBLOB      DEFAULT NULL,
+  idLocation    INTEGER(30)     NOT NULL,
   PRIMARY KEY (username)
-);
+) ENGINE = innodb DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS accounts;
 CREATE TABLE accounts (
-  account_nr INT(30),
-  username VARCHAR(30),
-  amount INT(30),
-  PRIMARY KEY (account_nr)
-);
+  accountNr     BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  owner         VARCHAR(30)     NOT NULL,
+  balance       INTEGER(11)     NOT NULL,
+  PRIMARY KEY (accountNr)
+) ENGINE = innodb DEFAULT CHARSET = utf8;
+
+ALTER TABLE accounts AUTO_INCREMENT=10000000000000;
 
 DROP TABLE IF EXISTS adverts;
 CREATE TABLE adverts (
-  id_advert INT(30) NOT NULL AUTO_INCREMENT,
-  username VARCHAR(30) NOT NULL,
-  type VARCHAR(10) NOT NULL,
-  id_category INT(30) NOT NULL,
-  title VARCHAR(80) NOT NULL,
-  description VARCHAR(270) NOT NULL,
-  value INT(30),
-  id_location INT(30) NOT NULL,
-  create_date DATETIME NOT NULL,
-  performer VARCHAR(30),
-  active BOOLEAN,
-  PRIMARY KEY (id_advert)
-);
+  idAdvert      INTEGER(30)     NOT NULL AUTO_INCREMENT,
+  active        BOOLEAN         NOT NULL,
+# type : {"SEEK", "OFFER"} <- dostepne opcje
+  type          VARCHAR(5)      NOT NULL,
+  owner         VARCHAR(30)     NOT NULL,
+  contractor    VARCHAR(30)     DEFAULT NULL,
+  title         VARCHAR(80)     NOT NULL,
+  description   VARCHAR(270)    NOT NULL,
+  idCategory    INTEGER(30)     NOT NULL,
+  value         INTEGER(11)     NOT NULL,
+  createDate    DATETIME        NOT NULL,
+  idLocation    INTEGER(30)     NOT NULL,
+  PRIMARY KEY (idAdvert)
+) ENGINE = innodb DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS interested;
 CREATE TABLE interested (
-  id_advert INT(30),
-  interested VARCHAR(30),
-  PRIMARY KEY (id_advert, interested)
-);
+  idAdvert      INTEGER(30)     NOT NULL,
+  interested    VARCHAR(30)     NOT NULL,
+  PRIMARY KEY (idAdvert, interested)
+) ENGINE = innodb DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS categories;
 CREATE TABLE categories (
-  id_category INT(30),
-  name VARCHAR(60),
-  PRIMARY KEY (id_category)
-);
+  idCategory    INTEGER(30)     NOT NULL AUTO_INCREMENT,
+  name          VARCHAR(60)     NOT NULL,
+  PRIMARY KEY (idCategory)
+) ENGINE = innodb DEFAULT CHARSET = utf8;
 
 DROP TABLE IF EXISTS locations;
 CREATE TABLE  locations (
-  id_location INT(30),
-  description VARCHAR(60),
-  latitude NUMERIC(18,14),
-  longitude NUMERIC(18,14),
-  PRIMARY KEY (id_location)
-);
+  idLocation    INTEGER(30)      NOT NULL AUTO_INCREMENT,
+  description   VARCHAR(300)     NOT NULL,
+  latitude      NUMERIC(19,16)   NOT NULL,
+  longitude     NUMERIC(19,15)   NOT NULL,
+  PRIMARY KEY (idLocation)
+) ENGINE = innodb DEFAULT CHARSET = utf8;
+
+DROP TABLE IF EXISTS archive;
+CREATE TABLE archive (
+  idAdvert      INTEGER(30)     NOT NULL AUTO_INCREMENT,
+  type          VARCHAR(5)      NOT NULL,
+  owner         VARCHAR(30)     NOT NULL,
+  contractor    VARCHAR(30)     NOT NULL,
+  title         VARCHAR(80)     NOT NULL,
+  description   VARCHAR(270)    NOT NULL,
+  idCategory    INTEGER(30)     NOT NULL,
+  value         INTEGER(11)     NOT NULL,
+  createDate    DATETIME        NOT NULL,
+  closeDate     DATETIME        NOT NULL,
+  PRIMARY KEY (idAdvert)
+) ENGINE = innodb DEFAULT CHARSET = utf8;
+
+INSERT INTO categories (idCategory, name) VALUES
+  (1, 'Pet Care'),
+  (2, 'Cooking'),
+  (3, 'Housekeeping'),
+  (4, 'Tutoring'),
+  (5, 'Makeup'),
+  (6, 'Free Time'),
+  (7, 'People Care'),
+  (8, 'Amusement');

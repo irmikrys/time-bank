@@ -1,4 +1,4 @@
-package timebank.auth
+package timebank.authentication
 
 import org.springframework.http.HttpStatus
 import org.springframework.security.test.context.support.WithMockUser

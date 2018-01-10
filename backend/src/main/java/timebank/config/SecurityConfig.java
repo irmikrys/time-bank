@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,7 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http
       .authorizeRequests()
-      .antMatchers("/api/session", "/api/register").permitAll()
+      .antMatchers("/api/session", "/api/register", "/api/categories","/api/adverts","/api/latestAdverts").permitAll() //TODO usunąc /api/adverts z dostepu dla kazdego
       .antMatchers("/api/**").authenticated()
       .and()
       .requestCache()
