@@ -45,14 +45,14 @@ export class UserProfile extends Component {
       console.log();
       return (
         advert.type === 'OFFER' ?
-          `+${advert.value}h` :
-          `-${advert.value}h`
+          `+${advert.value} h` :
+          `-${advert.value} h`
       )
     } else {
       return (
         advert.type === 'OFFER' ?
-          `-${advert.value}h` :
-          `+${advert.value}h`
+          `-${advert.value} h` :
+          `+${advert.value} h`
       )
     }
   };
@@ -158,7 +158,7 @@ export class UserProfile extends Component {
               <h3>Account</h3>
               <div>
                 <label>Account Balance: </label>
-                <span> {account.amount}</span>
+                <span> {account.amount} h</span>
               </div>
             </div>
             <div className="paragraph">
