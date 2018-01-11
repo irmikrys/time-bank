@@ -11,6 +11,8 @@ INSERT INTO locations (idLocation, description, latitude, longitude) VALUES (1, 
 # username:: markzuckerberg
 # password: Zqq37aDT
 
-INSERT INTO `users` (username, password, email, firstName, lastName, role, idLocation) VALUES ('billgates', '$2a$10$tjZR0.Hj4DExo1X81K0rf.RpD7e.bLSuMwoej5z8jAB6iB751TbcS','billgates@test.com', 'Bill', 'Gates', 'USER', 1), ('stevejobs', '$2a$10$s4Fsgj.U6Cql.3i7BD90VuDNWHwRW6G.gf3N781B47FrEcmXGk2NO','stevejobs@test.com', 'Steve', 'Jobs', 'USER', 2), ('markzuckerberg', '$2a$10$tgIejFFdFbHBL4yj/XMBu.Cy1yF0b5d0bcffY22SvOia8h60gEUWe','markzuckerberg@test.com', 'Mark', 'Zuckerberg', 'USER', 3);
+INSERT INTO users (username, password, email, firstName, lastName, role, idLocation) VALUES ('billgates', '$2a$10$tjZR0.Hj4DExo1X81K0rf.RpD7e.bLSuMwoej5z8jAB6iB751TbcS','billgates@test.com', 'Bill', 'Gates', 'USER', 1), ('stevejobs', '$2a$10$s4Fsgj.U6Cql.3i7BD90VuDNWHwRW6G.gf3N781B47FrEcmXGk2NO','stevejobs@test.com', 'Steve', 'Jobs', 'USER', 2), ('markzuckerberg', '$2a$10$tgIejFFdFbHBL4yj/XMBu.Cy1yF0b5d0bcffY22SvOia8h60gEUWe','markzuckerberg@test.com', 'Mark', 'Zuckerberg', 'USER', 3);
 
-INSERT INTO adverts VALUES (1, true, 'SEEK', 'stevejobs', null, 'Cake baking', 'I look for someone who could help me bake a birthday cake for my wife', 2, 4, (SELECT current_date), 2);
+INSERT INTO adverts (idAdvert, active, type, owner, contractor, title, description, idCategory, value, idLocation) VALUES (2, true, 'SEEK', 'stevejobs', null, 'Cake baking', 'I look for someone who could help me bake a birthday cake for my wife', 2, 4, 2);
+
+INSERT INTO adverts (idAdvert, active, type, owner, contractor, title, description, idCategory, value, idLocation) VALUES (3, true, 'SEEK', 'billgates', null, 'Java', 'I look for someone who could help me learn Java', 2, 4, 1);

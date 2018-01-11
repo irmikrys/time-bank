@@ -2,17 +2,14 @@ package timebank.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.domain.SliceImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 import timebank.dto.AdvertDTO;
-import timebank.dto.AdvertDetailsDTO;
 import timebank.dto.LocalizedAdvertDTO;
 import timebank.model.Advert;
 import timebank.model.ArchiveAdvert;
@@ -121,8 +118,8 @@ public class AdvertService {
   }
 
   public void updateAdvert(Advert oldAdvert, Location oldLocation, AdvertDTO newAdvert) {
-    final String sql = "UPDATE adverts a SET a.type = ?, a.value = ?, a.title = ?, a.description = ?, a.idCategory = ? WHERE a.idAdvert = ?";
-    this.jdbcTemplate.update(sql, newAdvert.getType(), newAdvert.getValue(), newAdvert.getTitle(), newAdvert.getDescription(), newAdvert.getIdCategory(), oldAdvert.getIdAdvert());
+    final String sql = "UPDATE adverts a SET a.title = ?, a.description = ?, a.idCategory = ? WHERE a.idAdvert = ?";
+    this.jdbcTemplate.update(sql, newAdvert.getTitle(), newAdvert.getDescription(), newAdvert.getIdCategory(), oldAdvert.getIdAdvert());
     this.locationService.updateLocation(oldLocation, newAdvert.getLocation());
   }
 
