@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import timebank.dto.AdvertDetailsDTO;
 import timebank.dto.UserDTO;
 import timebank.dto.UserDetailsDTO;
+import timebank.exceptions.UserException;
 import timebank.model.Account;
 import timebank.model.Location;
 import timebank.model.User;
@@ -66,8 +67,11 @@ public class UserService {
   }
 
   public void updateUser(User oldUserData, Location oldLocation, UserDTO newUserData) {
+    if (!this.bCryptPasswordEncoder.matches(newUserData.getPassword(), oldUserData.getPassword())) {
+      throw new UserException("updateUser.error.incorrectPassword");
+    }
     if (!((oldUserData.getEmail().equals(newUserData.getEmail())) && (oldUserData.getFirstName().equals(newUserData.getFirstName())) && (oldUserData.getLastName().equals(newUserData.getLastName())))) {
-      final String sql = "UPDATE users u SET u.password = ?, u.email = ?, u.firstName = ?, u.lastName = ? WHERE u.username = ?";
+      final String sql = "UPDATE users u SET u.email = ?, u.firstName = ?, u.lastName = ? WHERE u.username = ?";
       this.jdbcTemplate.update(sql, this.bCryptPasswordEncoder.encode(newUserData.getPassword()), newUserData.getEmail(), newUserData.getFirstName(), newUserData.getLastName(), oldUserData.getUsername());
     }
     this.locationService.updateLocation(oldLocation, newUserData.getLocation());
