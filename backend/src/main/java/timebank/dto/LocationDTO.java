@@ -1,10 +1,10 @@
 package timebank.dto;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.beans.factory.annotation.Value;
 import timebank.model.Location;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+
+import javax.validation.constraints.*;
+import java.math.BigDecimal;
 
 public class LocationDTO {
 
@@ -12,10 +12,12 @@ public class LocationDTO {
   @Size(min=3, max=60)
   private String description;
 
-  @NotNull
+  @DecimalMin(value = "-90.0")
+  @DecimalMax(value = "90.0")
   private double latitude;
 
-  @NotNull
+  @DecimalMin(value = "-180.0")
+  @DecimalMax(value = "180.0")
   private double longitude;
 
   public String getDescription() {

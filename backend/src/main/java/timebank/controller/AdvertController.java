@@ -1,28 +1,31 @@
 package timebank.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 import timebank.dto.AdvertDTO;
+import timebank.dto.AdvertDetailsDTO;
+import timebank.dto.LocalizedAdvertDTO;
+import timebank.dto.LocationDTO;
 import timebank.dto.session.UserSession;
-import timebank.exceptions.AccessingPrivateResourcesException;
 import timebank.exceptions.AdvertException;
 import timebank.exceptions.ShowInterestException;
-import timebank.model.Advert;
-import timebank.model.Category;
-import timebank.service.AdvertService;
-import timebank.service.CategoryService;
-import timebank.service.InterestedService;
-import timebank.service.UserService;
+import timebank.model.*;
+import timebank.service.*;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Optional;
+
+import static java.lang.String.format;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 
 @RestController
@@ -37,112 +40,205 @@ public class AdvertController {
   private AdvertService advertService;
 
   @Autowired
-  @Qualifier("categoryService")
-  private CategoryService categoryService;
+  @Qualifier("locationService")
+  private LocationService locationService;
 
   @Autowired
   @Qualifier("interestedService")
   private InterestedService interestedService;
 
+  @Autowired
+  @Qualifier("categoryService")
+  private CategoryService categoryService;
 
-  @RequestMapping(method=POST, path="/api/advert")
-  public @ResponseBody ResponseEntity<Advert> createAdvert(@Valid @RequestBody AdvertDTO advertDTO, HttpSession session) {
-    UserSession userSession = (UserSession) session.getAttribute("user");
-    this.userService.findByUsername(userSession.getUsername()).orElseThrow(
-      () -> new AdvertException("createAdvert.error.userNotFound"));
-    Advert advert = this.advertService.createAdvert(userSession.getUsername(), advertDTO);
-    return ResponseEntity.ok(advert);
-  }
+  private final Log log = LogFactory.getLog(getClass());
 
-  @RequestMapping(method=PUT, path="/api/advert/{id}")
-  public @ResponseBody ResponseEntity<Advert> updateAdvert(@PathVariable("id") long idAdvert, @Valid @RequestBody AdvertDTO advertDTO, HttpSession session) throws AccessingPrivateResourcesException, AdvertException {
-    UserSession userSession = (UserSession) session.getAttribute("user");
-    Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
-      () -> new AdvertException("updateAdvert.error.advertNotFound"));
-    if (!userSession.getUsername().equals(advert.getEmployer()))
-      throw new AccessingPrivateResourcesException("updateAdvert.error.unauthorised");
-    Advert updatedAdvert = this.advertService.updateAdvert(advertDTO, advert);
-    return ResponseEntity.ok(updatedAdvert);
-  }
-
-  @RequestMapping(method=GET, path="/api/adverts")
-  public @ResponseBody Page<Advert> getAdverts(Pageable pageable) {
-    return this.advertService.findAll(pageable);
-  }
 
   @RequestMapping(method=GET, path="/api/categories")
   public @ResponseBody Iterable<Category> getAllCategories() {
     return this.categoryService.findAll();
   }
 
-  @RequestMapping(method=PUT, path="/api/advert/showInterest/{id}")
-  public void showInterest(@PathVariable("id") long idAdvert, HttpSession session) {
-    UserSession userSession = (UserSession) session.getAttribute("user");
-    this.userService.findByUsername(userSession.getUsername()).orElseThrow(
-      () -> new ShowInterestException("showInterest.error.userNotFound"));
+
+  @RequestMapping(method=GET, path="/api/adverts")
+  public @ResponseBody Slice<Advert> getAdverts(@RequestParam(name="type", defaultValue = "%") String type,
+                                                @RequestParam(name="idCategory", defaultValue = "%") String idCategory,
+                                                @RequestParam(name="phrase", defaultValue = "") String phrase,
+                                                Pageable pageable) {
+    long start = System.nanoTime();
+    Slice<Advert> page = this.advertService.findAllByParams(type, idCategory, phrase, pageable);
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "getAdverts", (elapsedTime/Math.pow(10,9))));
+    return page;
+  }
+
+  @RequestMapping(method=GET, path="/api/advertsNearMe")
+  public @ResponseBody Iterable<LocalizedAdvertDTO> getAdvertsNearMe(@RequestParam(name="lat") double lat,
+                                                                     @RequestParam(name="lon") double lon,
+                                                                     @RequestParam(name="r") double r) {
+    long start = System.nanoTime();
+    Iterable<LocalizedAdvertDTO> adverts = this.advertService.findAdvertsNearMe(lat, lon, (r/111.045));
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "getAdvertsNearMe", (elapsedTime/Math.pow(10,9))));
+    return adverts;
+  }
+
+  @RequestMapping(method=GET, path="/api/advert/{id}")
+  public @ResponseBody ResponseEntity<AdvertDetailsDTO> getAdvert(@PathVariable("id") long idAdvert, HttpSession session) {
+    long start = System.nanoTime();
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
-      () -> new ShowInterestException("showInterest.error.advertNotFound"));
-    this.interestedService.findByIdAdvertAndInterested(idAdvert, userSession.getUsername()).ifPresent(
-      intrested -> { throw new ShowInterestException("showInterest.error.alreadyInterested"); });
-    if (advert.getEmployer().equals(userSession.getUsername())) {
-      throw new ShowInterestException("showInterest.error.youCannotShowInterestInYourOwnAdvert");
+      () -> new AdvertException("getAdvert.error.advertNotFound"));
+    User owner = this.userService.findByUsername(advert.getOwner()).orElseThrow(
+      () -> new AdvertException("getAdvert.error.userNotFound"));
+    Location location = this.locationService.findByIdLocation(advert.getIdLocation()).orElseThrow(
+      () -> new AdvertException("getAdvert.error.locationNotFound"));
+    Iterable<Interested> interested = this.interestedService.findAllByIdAdvert(advert.getIdAdvert());
+    AdvertDetailsDTO advertDetails = new AdvertDetailsDTO(advert, location, interested, owner.getEmail());
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "getAdvert", (elapsedTime/Math.pow(10,9))));
+    return ResponseEntity.ok(advertDetails);
+  }
+
+  @RequestMapping(method=POST, path="/api/advert")
+  public @ResponseBody ResponseEntity<Advert> createAdvert(@Valid @RequestBody AdvertDTO advertDTO, HttpSession session) {
+    long start = System.nanoTime();
+
+    UserSession userSession = (UserSession) session.getAttribute("user");
+    Advert advert = this.advertService.createAdvert(userSession.getUsername(), advertDTO);
+
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "createAdvert", (elapsedTime/Math.pow(10,9))));
+    return ResponseEntity.ok(advert);
+  }
+
+  @RequestMapping(method=RequestMethod.DELETE, path="/api/deleteAdvert/{id}")
+  public @ResponseBody ResponseEntity<HttpStatus> deleteAdvert(@PathVariable("id") long idAdvert, HttpSession session) {
+    long start = System.nanoTime();
+
+    UserSession userSession = (UserSession) session.getAttribute("user");
+    Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
+      () -> new AdvertException("removeAdvert.error.advertNotFound"));
+    if (!advert.getOwner().equals(userSession.getUsername())) {
+      throw new AdvertException("removeAdvert.error.unauthorised");
     }
-    this.advertService.showInterest(idAdvert, userSession.getUsername());
+    this.advertService.deleteAdvert(advert.getIdAdvert(), advert.getIdLocation());
+
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "deleteAdvert", (elapsedTime/Math.pow(10,9))));
+    return ResponseEntity.ok(HttpStatus.OK);
   }
 
-  @RequestMapping(method=PUT, path="/api/advert/removeInterest/{id}")
-  public void stopShowingInterest(@PathVariable("id") long idAdvert, HttpSession session) {
-    UserSession userSession = (UserSession) session.getAttribute("user");
-    this.userService.findByUsername(userSession.getUsername()).orElseThrow(
-      () -> new ShowInterestException("stopShowingInterest.error.userNotFound"));
-    this.advertService.findByIdAdvert(idAdvert).orElseThrow(
-      () -> new ShowInterestException("stopShowingInterest.error.advertNotFound"));
-    this.advertService.stopShowingInterest(idAdvert, userSession.getUsername());
-  }
+  @RequestMapping(method=PUT, path="/api/updateAdvert/{id}")
+  public @ResponseBody ResponseEntity<HttpStatus> updateAdvert(@PathVariable("id") long idAdvert, @Valid @RequestBody AdvertDTO advertDTO, HttpSession session) {
+    long start = System.nanoTime();
 
-  @RequestMapping(method=PUT, path="/api/advert/{id}/{performer}")
-  public void chooseFinalPerformer(@PathVariable("id") long idAdvert, @PathVariable("performer") String performer, HttpSession session) {
     UserSession userSession = (UserSession) session.getAttribute("user");
-    this.userService.findByUsername(userSession.getUsername()).orElseThrow(
-      () -> new ShowInterestException("chooseFinalPerformer.error.userNotFound"));
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
-      () -> new ShowInterestException("chooseFinalPerformer.error.advertNotFound"));
+      () -> new AdvertException("updateAdvert.error.advertNotFound"));
+    if (!userSession.getUsername().equals(advert.getOwner()))
+      throw new AdvertException("updateAdvert.error.unauthorised");
+    Location location = this.locationService.findByIdLocation(advert.getIdLocation()).orElseThrow(
+      () -> new AdvertException("updateAdvert.error.locationNotFound"));
+    this.advertService.updateAdvert(advert, location, advertDTO);
+
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "updateAdvert", (elapsedTime/Math.pow(10,9))));
+    return ResponseEntity.ok(HttpStatus.OK);
+  }
+
+  @RequestMapping(method=POST, path="/api/advert/switchInterest/{id}")
+  public @ResponseBody ResponseEntity<HttpStatus> switchInterest(@PathVariable("id") long idAdvert, HttpSession session) {
+    long start = System.nanoTime();
+    UserSession userSession = (UserSession) session.getAttribute("user");
+    Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
+      () -> new ShowInterestException("switchInterest.error.advertNotFound"));
+    if (advert.getOwner().equals(userSession.getUsername())) {
+      throw new ShowInterestException("switchInterest.error.youCannotSwitchInterestInYourOwnAdvert");
+    }
+    Optional<Interested> interested = this.interestedService.findByIdAdvertAndInterested(idAdvert, userSession.getUsername());
+    interested.ifPresent(
+      intrested -> this.advertService.stopShowingInterest(idAdvert, userSession.getUsername()) );
+    interested.orElseGet(
+      () -> this.advertService.showInterest(idAdvert, userSession.getUsername()));
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "switchInterest", (elapsedTime/Math.pow(10,9))));
+    return ResponseEntity.ok(HttpStatus.OK);
+  }
+
+  @RequestMapping(method=POST, path="/api/advert/chooseContractor")
+  public @ResponseBody ResponseEntity<HttpStatus> chooseFinalContractor(@RequestParam(name="idAdvert") long idAdvert, @RequestParam(name="contractor") String contractor, HttpSession session) {
+    long start = System.nanoTime();
+    UserSession userSession = (UserSession) session.getAttribute("user");
+    Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
+      () -> new ShowInterestException("chooseFinalContractor.error.advertNotFound"));
     if (!advert.getActive()) {
-      throw new ShowInterestException("chooseFinalPerformer.error.advertInactive");
+      throw new ShowInterestException("chooseFinalContractor.error.advertInactive");
     }
-    if (!advert.getEmployer().equals(userSession.getUsername())) {
-      throw new ShowInterestException("chooseFinalPerformer.error.unauthorised");
+    if (!advert.getOwner().equals(userSession.getUsername())) {
+      throw new ShowInterestException("chooseFinalContractor.error.unauthorised");
     }
-    this.advertService.chooseFinalPerformer(idAdvert, performer);
+    this.interestedService.findByIdAdvertAndInterested(idAdvert, contractor).orElseThrow(
+      () -> new ShowInterestException("chooseFinalContractor.error.contractorNotInterested"));
+    this.advertService.chooseFinalContractor(idAdvert, contractor);
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "chooseFinalContractor", (elapsedTime/Math.pow(10,9))));
+    return ResponseEntity.ok(HttpStatus.OK);
   }
 
-  @RequestMapping(method=PUT, path="/api/advert/removePerformer/{id}")
-  public void removeFinalPerformer(@PathVariable("id") long idAdvert, HttpSession session) {
+  @RequestMapping(method=RequestMethod.DELETE, path="/api/advert/deleteContractor/{id}")
+  public @ResponseBody ResponseEntity<HttpStatus> deleteFinalContractor(@PathVariable("id") long idAdvert, HttpSession session) {
+    long start = System.nanoTime();
     UserSession userSession = (UserSession) session.getAttribute("user");
-    this.userService.findByUsername(userSession.getUsername()).orElseThrow(
-      () -> new ShowInterestException("chooseFinalPerformer.error.userNotFound"));
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
-      () -> new ShowInterestException("chooseFinalPerformer.error.advertNotFound"));
-    if (!advert.getEmployer().equals(userSession.getUsername())) {
-      throw new ShowInterestException("chooseFinalPerformer.error.unauthorised");
+      () -> new ShowInterestException("deleteFinalContractor.error.advertNotFound"));
+    if (!advert.getOwner().equals(userSession.getUsername())) {
+      throw new ShowInterestException("deleteFinalContractor.error.unauthorised");
     }
-    this.advertService.removeFinalPerformer(idAdvert, advert.getPerformer());
+    if (advert.getActive()) {
+      throw new ShowInterestException("deleteFinalContractor.error.contractorNotChosen");
+    }
+    this.advertService.removeFinalContractor(idAdvert);
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "deleteFinalContractor", (elapsedTime/Math.pow(10,9))));
+    return ResponseEntity.ok(HttpStatus.OK);
   }
 
-  @RequestMapping(method=PUT, path="/api/advert/finalize/{id}")
-  public void finalizeTransaction(@PathVariable("id") long idAdvert, HttpSession session) {
+  @RequestMapping(method=POST, path="/api/advert/finalize/{id}")
+  public @ResponseBody ResponseEntity<HttpStatus> finalizeTransaction(@PathVariable("id") long idAdvert, HttpSession session) {
+    long start = System.nanoTime();
     UserSession userSession = (UserSession) session.getAttribute("user");
-    this.userService.findByUsername(userSession.getUsername()).orElseThrow(
-      () -> new ShowInterestException("finalizeTransaction.error.userNotFound"));
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
       () -> new ShowInterestException("finalizeTransaction.error.advertNotFound"));
-    if (!advert.getEmployer().equals(userSession.getUsername())) {
+    if (!advert.getOwner().equals(userSession.getUsername())) {
       throw new ShowInterestException("finalizeTransaction.error.unauthorised");
     }
     if (advert.getActive()) {
       throw new ShowInterestException("finalizeTransaction.error.advertNotReadyForFinalization");
     }
     this.advertService.finalizeAdvert(advert);
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "finalizeTransaction", (elapsedTime/Math.pow(10,9))));
+    return ResponseEntity.ok(HttpStatus.OK);
+  }
+
+  @RequestMapping(method=GET, path="/api/createdAdverts")
+  public @ResponseBody Iterable<Advert> getAllCreatedAdverts(HttpSession session) {
+    long start = System.nanoTime();
+    UserSession userSession = (UserSession) session.getAttribute("user");
+    Iterable<Advert> createdAdverts = this.advertService.findAllByOwner(userSession.getUsername());
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "getAllCreatedAdverts", (elapsedTime/Math.pow(10,9))));
+    return createdAdverts;
+  }
+
+  @RequestMapping(method=GET, path="/api/interestingAdverts")
+  public @ResponseBody Iterable<Advert> getAllInterestingAdverts(HttpSession session) {
+    long start = System.nanoTime();
+    UserSession userSession = (UserSession) session.getAttribute("user");
+    Iterable<Advert> interestingAdverts = this.advertService.findAllInterestingAdverts(userSession.getUsername());
+    long elapsedTime = System.nanoTime() - start;
+    log.info(format("%s: %.10f [s]", "getAllInterestingAdverts", (elapsedTime/Math.pow(10,9))));
+    return interestingAdverts;
   }
 
 }

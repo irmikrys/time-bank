@@ -1,5 +1,7 @@
 package timebank.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -9,13 +11,14 @@ import java.io.Serializable;
 public class Interested implements Serializable {
 
   @Id
-  @Column(name = "id_advert")
+  @Column(name = "idAdvert")
   private long idAdvert;
 
   @Id
   @Column(name = "interested")
   private String interested;
 
+  @JsonIgnore
   public long getIdAdvert() {
     return idAdvert;
   }
@@ -77,4 +80,11 @@ public class Interested implements Serializable {
     }
   }
 
+  @Override
+  public String toString() {
+    return "Interested{" +
+      "idAdvert=" + idAdvert +
+      ", interested='" + interested + '\'' +
+      '}';
+  }
 }

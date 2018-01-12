@@ -61,17 +61,11 @@ const CHANGES_PARAGRAPGH =
   "What constitutes a material change will be determined at our sole discretion.\n" +
   "\n";
 
-const CONTACT_PARAGRAPGH_HEADER = "Contact Us";
-
-const CONTACT_PARAGRAPGH =
-  "If you have any questions about these Terms, please contact us.\n";
-
 export const TERMS = [
   {header: TERMS_PARAGRAPGH_HEADER, content: TERMS_PARAGRAPGH},
   {header: PURCHASES_PARAGRAPGH_HEADER, content: PURCHASES_PARAGRAPGH},
   {header: TERMINATION_PARAGRAPGH_HEADER, content: TERMINATION_PARAGRAPGH},
   {header: CONTENT_PARAGRAPGH_HEADER, content: CONTENT_PARAGRAPGH},
   {header: LINKS_PARAGRAPGH_HEADER, content: LINKS_PARAGRAPGH},
-  {header: CHANGES_PARAGRAPGH_HEADER, content: CHANGES_PARAGRAPGH},
-  {header: CONTACT_PARAGRAPGH_HEADER, content: CONTACT_PARAGRAPGH},
+  {header: CHANGES_PARAGRAPGH_HEADER, content: CHANGES_PARAGRAPGH}
 ];

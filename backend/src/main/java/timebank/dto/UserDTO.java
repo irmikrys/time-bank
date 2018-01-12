@@ -1,14 +1,13 @@
 package timebank.dto;
 
 import org.hibernate.validator.constraints.Email;
-import timebank.dto.interfaces.LocationDTOHolder;
 import timebank.model.User;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-public class UserDTO implements LocationDTOHolder {
+public class UserDTO {
 
   @Pattern(regexp = "^([a-zA-Z0-9]+[-_.]?)*[a-zA-Z0-9]+$")
   @Size(min=3, max=30)

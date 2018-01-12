@@ -2,12 +2,10 @@ package timebank.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import timebank.dto.LocationDTO;
-import timebank.dto.interfaces.LocationDTOHolder;
 import timebank.model.Location;
-import timebank.model.interfaces.LocationIdHolder;
 import timebank.repository.LocationRepository;
 
 import java.util.Optional;
@@ -19,6 +17,9 @@ public class LocationService {
   @Qualifier("locationRepository")
   private LocationRepository locationRepository;
 
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
+
 
   public Optional<Location> findByIdLocation(long idLocation) {
     return this.locationRepository.findByIdLocation(idLocation);
@@ -29,20 +30,14 @@ public class LocationService {
     return this.locationRepository.save(location);
   }
 
-  @Transactional
   public void deleteLocation(long idLocation) {
     this.locationRepository.deleteByIdLocation(idLocation);
   }
 
-  public void updateLocation(LocationDTOHolder itemDTO, LocationIdHolder item) {
-    this.findByIdLocation(item.getIdLocation()).ifPresent(
-      location -> {
-        if (!location.getDescription().equals(itemDTO.getLocation().getDescription())) {
-          Location newLocation = this.createLocation(itemDTO.getLocation());
-          item.setIdLocation(newLocation.getIdLocation());
-          this.deleteLocation(location.getIdLocation());
-        }
-      }
-    );
+  public void updateLocation(Location oldLocation, LocationDTO newLocation) {
+    if (!oldLocation.getDescription().equals(newLocation.getDescription())) {
+      final String sql = "UPDATE locations l SET l.description = ?, l.latitude = ?, l.longitude = ? WHERE l.idLocation = ?";
+      this.jdbcTemplate.update(sql, newLocation.getDescription(), newLocation.getLatitude(), newLocation.getLongitude(), oldLocation.getIdLocation());
+    }
   }
 }

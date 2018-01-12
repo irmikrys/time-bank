@@ -1,5 +1,7 @@
 package timebank.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -9,7 +11,7 @@ public class Location implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "id_location")
+  @Column(name = "idLocation")
   private long idLocation;
 
   @Column(name = "description")
@@ -21,6 +23,7 @@ public class Location implements Serializable {
   @Column(name = "longitude")
   private double longitude;
 
+  @JsonIgnore
   public long getIdLocation() {
     return idLocation;
   }

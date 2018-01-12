@@ -11,7 +11,7 @@ import {
 } from "../../constants/constants";
 import Geosuggest from "react-geosuggest";
 import {Link} from "react-router";
-import Checkbox from "../../component/Checkbox";
+import Checkbox from "./Checkbox";
 
 export default class RegisterForm extends Component {
 
@@ -50,7 +50,7 @@ export default class RegisterForm extends Component {
     return (
       <div className="register-page">
         <div className="form-container">
-          <form onSubmit={this.handleSubmit}>
+          <form autoComplete="off" onSubmit={this.handleSubmit}>
             {errorPanel}
             {
               [FIRST_NAME, LAST_NAME, EMAIL, USERNAME, PASSWORD].map(fieldKey => {

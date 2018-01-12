@@ -1,8 +1,10 @@
 import React, {Component} from "react";
 import Masonry from 'react-masonry-infinite';
 import axios from 'axios';
-import {addColorAndHeight} from "../../constants/constants";
+import {addColorAndHeight, PAGE_SIZE} from "../../constants/constants";
 import {dateFormatter} from "../utils";
+import {Link} from "react-router";
+import {buildRequest} from "../../../reducers/adverts";
 
 export default class AdvertsGrid extends Component {
 
@@ -10,13 +12,13 @@ export default class AdvertsGrid extends Component {
     super(props);
 
     this.state = {
-      hasMore: true,
-      elements: this.props.adverts.map(addColorAndHeight)
+      hasMore: !this.props.lastPage,
+      elements: this.props.adverts.map(addColorAndHeight),
     };
   }
 
   loadMore = page => {
-    axios.get(`/api/adverts?page=${page}&size=6`)
+    axios.get(`/api/adverts?page=${page}&size=${PAGE_SIZE}${buildRequest(this.props.searchCriteria)}`)
       .then(response => {
         setTimeout(() => {
           this.setState({
@@ -31,41 +33,38 @@ export default class AdvertsGrid extends Component {
   render() {
     return (
       <div className="advert-grid">
-        <h1>Adverts</h1>
         <div className="container">
           <Masonry
             className="masonry"
+            elementType="a"
             hasMore={this.state.hasMore}
-            loader={
-              <div className="sk-folding-cube">
-                <div className="sk-cube1 sk-cube" />
-                <div className="sk-cube2 sk-cube" />
-                <div className="sk-cube4 sk-cube" />
-                <div className="sk-cube3 sk-cube" />
-              </div>
-            }
-            loadMore={this.loadMore}
+            loader={<div className="loader"/>}
+            loadMore={this.loadMore.bind(this)}
+            threshold={10}
           >
             {
               this.state.elements.map((item, i) => (
-                <div key={item.advert.idAdvert} className="card" style={{ height: item.height }}>
-                  <h2 style={{ background: item.color }}>{item.advert.title}</h2>
-                  <div className="advert-details">
-                    <label>Type:</label>
-                    <div>{item.advert.type}</div>
-                    <label>Category:</label>
-                    <div>{this.props.categories.filter(e => e.idCategory === item.advert.idCategory)[0].name}</div>
-                    <label>Description:</label>
-                    <div>{item.advert.description}</div>
-                    <label>Hours</label>
-                    <div>{item.advert.value}</div>
-                    <label>Create Date:</label>
-                    <div>{dateFormatter(new Date(item.advert.creationDate))}</div>
+                <Link to={`/advert/${item.advert.idAdvert}`} key={item.advert.idAdvert}>
+                  <div className="card" style={{ height: item.height }}>
+                    <h2 style={{ background: item.color }}>{item.advert.title}</h2>
+                    <div className="advert-details">
+                      <label>Type:</label>
+                      <div>{item.advert.type}</div>
+                      <label>Category:</label>
+                      <div>{this.props.categories.filter(e => e.idCategory === item.advert.idCategory)[0].name}</div>
+                      <label>Hours:</label>
+                      <div>{item.advert.value}</div>
+                      <label>Description:</label>
+                      <div>{item.advert.description}</div>
+                      <label>Create Date:</label>
+                      <div>{dateFormatter(new Date(item.advert.createDate))}</div>
+                    </div>
                   </div>
-                </div>
+                </Link>
               ))
             }
           </Masonry>
+          { !this.state.hasMore && !this.state.elements.length ? <h3>No matching adverts</h3> : null }
         </div>
       </div>
 

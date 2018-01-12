@@ -2,17 +2,25 @@ package timebank.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import timebank.dto.AdvertDTO;
+import timebank.dto.LocalizedAdvertDTO;
 import timebank.model.Advert;
 import timebank.model.ArchiveAdvert;
+import timebank.model.Interested;
 import timebank.model.Location;
 import timebank.repository.AdvertRepository;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service("advertService")
@@ -37,17 +45,64 @@ public class AdvertService {
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
+  private class LocalizedAdvertRowMapper implements RowMapper<LocalizedAdvertDTO> {
+    @Override
+    public LocalizedAdvertDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+      LocalizedAdvertDTO advert = new LocalizedAdvertDTO();
+      advert.setIdAdvert(rs.getLong("idAdvert"));
+      advert.setActive(rs.getBoolean("active"));
+      advert.setType(rs.getString("type"));
+      advert.setOwner(rs.getString("owner"));
+      advert.setContractor(rs.getString("contractor"));
+      advert.setTitle(rs.getString("title"));
+      advert.setDescription(rs.getString("description"));
+      advert.setIdCategory(rs.getLong("idCategory"));
+      advert.setValue(rs.getInt("value"));
+      advert.setCreateDate(rs.getTimestamp("createDate"));
+      advert.setIdLocation(rs.getLong("idLocation"));
+      advert.setLocationDescription(rs.getString("locDescription"));
+      advert.setLatitude(rs.getDouble("latitude"));
+      advert.setLongitude(rs.getDouble("longitude"));
+      advert.setDistance(rs.getDouble("dist"));
+      return advert;
+    }
+  }
+
+  public Slice<Advert> findAllByParams(String type, String idCategory, String phrase, Pageable pageable) {
+    System.out.println("AdvertService: findAllByParms [type: >" + type + "<, idcategory: >" + idCategory + "<, phrase: >" + phrase + "<, pageable: " + pageable);
+    return this.advertRepository.findAdvertsByParams(type, idCategory, phrase, pageable);
+  }
+
+  public Iterable<LocalizedAdvertDTO> findAdvertsNearMe(double lat, double lon, double r) {
+    NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
+    MapSqlParameterSource parameters = new MapSqlParameterSource();
+    parameters.addValue("lat", lat);
+    parameters.addValue("lon", lon);
+    parameters.addValue("r", r);
+    parameters.addValue("lonRange", (r/(Math.cos(Math.toRadians(lat)))));
+    final String sql = "SELECT * FROM (SELECT " +
+      "DEGREES(ACOS(COS(RADIANS(:lat)) * COS(RADIANS(l.latitude)) * COS(RADIANS(:lon) - RADIANS(l.longitude)) + SIN(RADIANS(:lat)) * SIN(RADIANS(l.latitude)))) AS dist, a.*, l.description AS locDescription, l.latitude, l.longitude " +
+      "FROM adverts a JOIN locations l USING (idLocation) " +
+      "WHERE a.active AND l.latitude BETWEEN :lat - :r AND :lat + :r AND l.longitude BETWEEN :lon - :lonRange AND :lon + :lonRange) AS tmp " +
+      "WHERE dist <= :r ORDER BY dist";
+    return namedParameterJdbcTemplate.query(sql, parameters, new LocalizedAdvertRowMapper());
+  }
 
   public Optional<Advert> findByIdAdvert(long idAdvert) {
     return this.advertRepository.findByIdAdvert(idAdvert);
   }
 
-  public Iterable<Advert> findAllByEmployer(String username) {
-    return this.advertRepository.findAllByEmployer(username);
+  public Iterable<Advert> findAllByOwner(String username) {
+    return this.advertRepository.findAllByOwner(username);
   }
 
-  public Page<Advert> findAll(Pageable pageable) {
-    return this.advertRepository.findAll(pageable);
+  public Iterable<Advert> findAllInterestingAdverts(String username) {
+    Iterable<Interested> interestingList = this.interestedService.findAllByInterested(username);
+    List<Long> interestingAdvertsIds = new ArrayList<>();
+    for( Interested interestingAdvert : interestingList ) {
+      interestingAdvertsIds.add(interestingAdvert.getIdAdvert());
+    }
+    return this.advertRepository.findAllByIdAdvertIn(interestingAdvertsIds);
   }
 
   public Advert createAdvert(String username, AdvertDTO advertDTO) {
@@ -56,64 +111,49 @@ public class AdvertService {
     return this.advertRepository.save(advert);
   }
 
-  @Transactional
-  void deleteAdvert(long idAdvert) {
+  public void deleteAdvert(long idAdvert, long idLocation) {
+    this.interestedService.deleteInterestedInAdvert(idAdvert);
+    this.locationService.deleteLocation(idLocation);
     this.advertRepository.deleteByIdAdvert(idAdvert);
   }
 
-  public Advert updateAdvert(AdvertDTO advertDTO, Advert advert) {
-    advert.setTitle(advertDTO.getTitle());
-    advert.setDescription(advertDTO.getDescription());
-    advert.setIdCategory(advertDTO.getIdCategory());
-    this.locationService.updateLocation(advertDTO, advert);
-    return advertRepository.save(advert);
+  public void updateAdvert(Advert oldAdvert, Location oldLocation, AdvertDTO newAdvert) {
+    final String sql = "UPDATE adverts a SET a.title = ?, a.description = ?, a.idCategory = ? WHERE a.idAdvert = ?";
+    this.jdbcTemplate.update(sql, newAdvert.getTitle(), newAdvert.getDescription(), newAdvert.getIdCategory(), oldAdvert.getIdAdvert());
+    this.locationService.updateLocation(oldLocation, newAdvert.getLocation());
   }
 
-  public void showInterest(long idAdvert, String username) {
-    this.interestedService.showInterest(idAdvert, username);
+  public Interested showInterest(long idAdvert, String username) {
+    return this.interestedService.showInterest(idAdvert, username);
   }
 
   public void stopShowingInterest(long idAdvert, String username) {
     this.interestedService.stopShowingInterest(idAdvert, username);
   }
 
-  public void chooseFinalPerformer(long idAdvert, String performer) {
-    final String sql = "UPDATE adverts a SET a.active = FALSE, a.performer = ? WHERE a.id_advert = ?";
-    int result = this.jdbcTemplate.update(sql, performer, idAdvert);
-    System.out.println("->-> chooseFinalPerformer: " + result);
+  public void chooseFinalContractor(long idAdvert, String contractor) {
+    final String sql = "UPDATE adverts a SET a.active = FALSE, a.contractor = ? WHERE a.idAdvert = ?";
+    this.jdbcTemplate.update(sql, contractor, idAdvert);
   }
 
-  public void removeFinalPerformer(long idAdvert, String performer) {
-    final String sql = "UPDATE adverts a SET a.active = TRUE, a.performer = NULL WHERE a.id_advert = ?";
-    int result = this.jdbcTemplate.update(sql, idAdvert);
-    this.stopShowingInterest(idAdvert, performer);
-    System.out.println("->-> removeFinalPerformer: " + result);
+  public void removeFinalContractor(long idAdvert) {
+    final String sql = "UPDATE adverts a SET a.active = TRUE, a.contractor = NULL WHERE a.idAdvert = ?";
+    this.jdbcTemplate.update(sql, idAdvert);
   }
 
-  @Transactional
   public void finalizeAdvert(Advert advert) {
-    // 1. stworzenie rekordu z bazy archiwum i go zapisanie
     ArchiveAdvert archiveAdvert = this.archiveAdvertService.createArchiveAdvert(advert);
-
-    // 2. zmiana stanow kont obu uczestnikow transakcji
     String plus, minus;
     if (archiveAdvert.getType().equals("SEEK")) {
-      minus = archiveAdvert.getEmployer();
-      plus = archiveAdvert.getPerformer();
+      minus = archiveAdvert.getOwner();
+      plus = archiveAdvert.getContractor();
     } else {
-      plus = archiveAdvert.getEmployer();
-      minus = archiveAdvert.getPerformer();
+      plus = archiveAdvert.getOwner();
+      minus = archiveAdvert.getContractor();
     }
     final String sql = "UPDATE accounts a SET a.balance = (a.balance + ?) WHERE a.owner = ?";
-    int resultPlus = this.jdbcTemplate.update(sql, archiveAdvert.getValue(), plus);
-    int resultMinus = this.jdbcTemplate.update(sql, -archiveAdvert.getValue(), minus);
-    System.out.println("->-> wynikPlus: " + resultPlus);
-    System.out.println("->-> wynikMinus: " + resultMinus);
-    System.out.println("->-> spokojnie to nie jest ostateczna wersja :C ");
-
-    // 3. usuwanie wszystkich niepotrzebnych rekordow z 'adverts', 'interested' i 'locations'
-    this.locationService.deleteLocation(advert.getIdLocation());
-    this.interestedService.deleteInterestedInAdvert(advert.getIdAdvert());
-    this.deleteAdvert(advert.getIdAdvert());
+    this.jdbcTemplate.update(sql, archiveAdvert.getValue(), plus);
+    this.jdbcTemplate.update(sql, -archiveAdvert.getValue(), minus);
+    this.deleteAdvert(advert.getIdAdvert(), advert.getIdLocation());
   }
 }

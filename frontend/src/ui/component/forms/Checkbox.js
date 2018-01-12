@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 class Checkbox extends Component {
+
   state = {
     isChecked: false,
   };

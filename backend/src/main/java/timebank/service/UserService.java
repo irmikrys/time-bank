@@ -3,13 +3,17 @@ package timebank.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import timebank.dto.UserDTO;
+import timebank.dto.UserDetailsDTO;
+import timebank.exceptions.UserException;
+import timebank.model.Account;
 import timebank.model.Location;
 import timebank.model.User;
 import timebank.repository.UserRepository;
+
+import java.util.Arrays;
 import java.util.Optional;
 
 @Service("userService")
@@ -38,6 +42,13 @@ public class UserService {
     return this.userRepository.findByUsername(username);
   }
 
+  public UserDetailsDTO findByUsernameUserDetails(String username) {
+    User user = this.userRepository.findByUsername(username).get();
+    Location location = this.locationService.findByIdLocation(user.getIdLocation()).get();
+    Account account = this.accountService.findByOwner(username).get();
+    return new UserDetailsDTO(user, location, account);
+  }
+
   public Optional<User> findByEmail(String email) {
     return this.userRepository.findByEmail(email);
   }
@@ -53,15 +64,22 @@ public class UserService {
     return this.userRepository.save(user);
   }
 
-  // TODO: Photo update
-  public User updateUser(UserDTO userDTO) {
-    User updatedUser = this.userRepository.findByUsername(userDTO.getUsername()).orElseThrow(
-      () -> new UsernameNotFoundException("updateUser.error.usernameNotFound"));
-    updatedUser.setFirstName(userDTO.getFirstName());
-    updatedUser.setLastName(userDTO.getLastName());
-    updatedUser.setEmail(userDTO.getEmail());
-    updatedUser.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
-    this.locationService.updateLocation(userDTO, updatedUser);
-    return userRepository.save(updatedUser);
+  public void updateUser(User oldUserData, Location oldLocation, UserDTO newUserData) {
+    if (!this.bCryptPasswordEncoder.matches(newUserData.getPassword(), oldUserData.getPassword())) {
+      throw new UserException("updateUser.error.incorrectPassword");
+    }
+    if (!((oldUserData.getEmail().equals(newUserData.getEmail())) && (oldUserData.getFirstName().equals(newUserData.getFirstName())) && (oldUserData.getLastName().equals(newUserData.getLastName())))) {
+      final String sql = "UPDATE users u SET u.email = ?, u.firstName = ?, u.lastName = ? WHERE u.username = ?";
+      this.jdbcTemplate.update(sql, newUserData.getEmail(), newUserData.getFirstName(), newUserData.getLastName(), oldUserData.getUsername());
+    }
+    this.locationService.updateLocation(oldLocation, newUserData.getLocation());
   }
+
+  public void updateUserProfilePhoto(User user, byte[] profilePhoto) {
+    if (!Arrays.equals(user.getPhoto(), profilePhoto)) {
+      final String sql = "UPDATE users u SET u.photo = ? WHERE u.username = ?";
+      this.jdbcTemplate.update(sql, profilePhoto, user.getUsername());
+    }
+  }
+
 }

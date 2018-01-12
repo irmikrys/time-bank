@@ -1,6 +1,6 @@
 package timebank.model;
 
-import timebank.model.interfaces.LocationIdHolder;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable, LocationIdHolder {
+public class User implements Serializable {
 
   @Id
   @Column(name = "username")
@@ -22,19 +22,19 @@ public class User implements Serializable, LocationIdHolder {
   @Column(name = "email")
   private String email;
 
-  @Column(name = "first_name")
+  @Column(name = "firstName")
   private String firstName;
 
-  @Column(name = "last_name")
+  @Column(name = "lastName")
   private String lastName;
 
   @Column(name = "role")
   private String role;
 
   @Column(name = "photo")
-  private Byte photo;
+  private byte[] photo;
 
-  @Column(name = "id_location")
+  @Column(name = "idLocation")
   private long idLocation;
 
   public String getUsername() {
@@ -45,6 +45,7 @@ public class User implements Serializable, LocationIdHolder {
     this.username = username;
   }
 
+  @JsonIgnore
   public String getPassword() {
     return password;
   }
@@ -85,14 +86,15 @@ public class User implements Serializable, LocationIdHolder {
     this.role = role;
   }
 
-  public Byte getPhoto() {
+  public byte[] getPhoto() {
     return photo;
   }
 
-  public void setPhoto(Byte photo) {
+  public void setPhoto(byte[] photo) {
     this.photo = photo;
   }
 
+  @JsonIgnore
   public long getIdLocation() {
     return idLocation;
   }

@@ -4,6 +4,11 @@ import {Link} from "react-router";
 
 export default class CategoriesGrid extends Component {
 
+  setSearchCriteriaAndFetch = idCategory => {
+    this.props.setSearchCriteria({idCategory});
+    this.props.fetchAdverts({idCategory});
+  };
+
   render() {
     return (
       <div className="categories-grid">
@@ -11,9 +16,8 @@ export default class CategoriesGrid extends Component {
         <div className="wrapper">
           {
             this.props.categories.map(addColor).map((item, i) => (
-              <Link to={'/'}>
-                <div key={item.category.idCategory}
-                     className="tile"
+              <Link to={'/'} key={item.category.idCategory} onClick={this.setSearchCriteriaAndFetch.bind(this, item.category.idCategory)}>
+                <div className="tile"
                      style={{ background: item.color }}
                 >
                   <p>
