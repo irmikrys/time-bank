@@ -3,10 +3,8 @@ package timebank.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import timebank.dto.AdvertDetailsDTO;
 import timebank.dto.UserDTO;
 import timebank.dto.UserDetailsDTO;
 import timebank.exceptions.UserException;
@@ -72,7 +70,7 @@ public class UserService {
     }
     if (!((oldUserData.getEmail().equals(newUserData.getEmail())) && (oldUserData.getFirstName().equals(newUserData.getFirstName())) && (oldUserData.getLastName().equals(newUserData.getLastName())))) {
       final String sql = "UPDATE users u SET u.email = ?, u.firstName = ?, u.lastName = ? WHERE u.username = ?";
-      this.jdbcTemplate.update(sql, this.bCryptPasswordEncoder.encode(newUserData.getPassword()), newUserData.getEmail(), newUserData.getFirstName(), newUserData.getLastName(), oldUserData.getUsername());
+      this.jdbcTemplate.update(sql, newUserData.getEmail(), newUserData.getFirstName(), newUserData.getLastName(), oldUserData.getUsername());
     }
     this.locationService.updateLocation(oldLocation, newUserData.getLocation());
   }

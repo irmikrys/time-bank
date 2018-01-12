@@ -158,7 +158,7 @@ export class UserProfile extends Component {
               <h3>Account</h3>
               <div>
                 <label>Account Balance: </label>
-                <span> {account.amount} h</span>
+                <span className="big-font"> {account.amount} h</span>
               </div>
             </div>
             <div className="paragraph">
