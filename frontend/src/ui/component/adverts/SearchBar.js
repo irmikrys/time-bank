@@ -20,6 +20,11 @@ export default class SearchBar extends Component {
     this.props.onChange(currentSortCriteria);
   };
 
+  handleKeyDown = event => {
+    if (event.keyCode === 13) this.handleClick("phrase")
+  };
+
+
   render() {
     return (
       <div className="search-bar-container container">
@@ -47,6 +52,7 @@ export default class SearchBar extends Component {
                    autoComplete="off"
                    name="phrase"
                    onChange={this.handleInputChange.bind(this)}
+                   onKeyDown={this.handleKeyDown.bind(this)}
             />
             <span onClick={this.handleClick.bind(this, "phrase")} className="glyphicon glyphicon-search"/>
           </div>
