@@ -12,6 +12,7 @@ export const MENU_FOR_GUEST = [
 
 export const MENU_FOR_USER = [
   {label: 'Home', link: '/'},
+  {label: 'GeoSearch', link: '/geosearch'},
   {label: 'Logout', link: '/logout'},
   {label: 'Profile', link: `/profile`},
   {label: 'Add Advert', link: '/new_advert'},

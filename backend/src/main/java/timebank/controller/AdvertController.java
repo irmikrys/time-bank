@@ -74,10 +74,10 @@ public class AdvertController {
 
   @RequestMapping(method=GET, path="/api/advertsNearMe")
   public @ResponseBody Iterable<LocalizedAdvertDTO> getAdvertsNearMe(@RequestParam(name="lat") double lat,
-                                                                     @RequestParam(name="lon") double lon,
+                                                                     @RequestParam(name="lng") double lng,
                                                                      @RequestParam(name="r") double r) {
     long start = System.nanoTime();
-    Iterable<LocalizedAdvertDTO> adverts = this.advertService.findAdvertsNearMe(lat, lon, (r/111.045));
+    Iterable<LocalizedAdvertDTO> adverts = this.advertService.findAdvertsNearMe(lat, lng, (r/111.045));
     long elapsedTime = System.nanoTime() - start;
     log.info(format("%s: %.10f [s]", "getAdvertsNearMe", (elapsedTime/Math.pow(10,9))));
     return adverts;

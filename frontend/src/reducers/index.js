@@ -8,6 +8,7 @@ import adverts from "./adverts";
 import createdAdverts from "./createdAdverts";
 import interestingAdverts from "./interestingAdverts";
 import advert from "./advert";
+import geoAdverts from "./geoAdverts";
 import user from "./user";
 import editProfile from "./editProfile";
 import archivedAdverts from "./archivedAdverts";
@@ -23,6 +24,7 @@ export default combineReducers({
   createdAdverts,
   interestingAdverts,
   archivedAdverts,
+  geoAdverts,
   advert,
   user,
   editProfile,

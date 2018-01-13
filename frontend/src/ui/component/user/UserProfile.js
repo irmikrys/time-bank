@@ -146,7 +146,6 @@ export class UserProfile extends Component {
   };
 
   render() {
-    console.log(this.props);
     const {createdAdverts, interestingAdverts, archivedAdverts} = this.props;
     const {account} = this.props.user;
     return (

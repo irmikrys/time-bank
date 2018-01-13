@@ -73,17 +73,17 @@ public class AdvertService {
     return this.advertRepository.findAdvertsByParams(type, idCategory, phrase, pageable);
   }
 
-  public Iterable<LocalizedAdvertDTO> findAdvertsNearMe(double lat, double lon, double r) {
+  public Iterable<LocalizedAdvertDTO> findAdvertsNearMe(double lat, double lng, double r) {
     NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(jdbcTemplate);
     MapSqlParameterSource parameters = new MapSqlParameterSource();
     parameters.addValue("lat", lat);
-    parameters.addValue("lon", lon);
+    parameters.addValue("lng", lng);
     parameters.addValue("r", r);
-    parameters.addValue("lonRange", (r/(Math.cos(Math.toRadians(lat)))));
+    parameters.addValue("lngRange", (r/(Math.cos(Math.toRadians(lat)))));
     final String sql = "SELECT * FROM (SELECT " +
-      "DEGREES(ACOS(COS(RADIANS(:lat)) * COS(RADIANS(l.latitude)) * COS(RADIANS(:lon) - RADIANS(l.longitude)) + SIN(RADIANS(:lat)) * SIN(RADIANS(l.latitude)))) AS dist, a.*, l.description AS locDescription, l.latitude, l.longitude " +
+      "DEGREES(ACOS(COS(RADIANS(:lat)) * COS(RADIANS(l.latitude)) * COS(RADIANS(:lng) - RADIANS(l.longitude)) + SIN(RADIANS(:lat)) * SIN(RADIANS(l.latitude)))) AS dist, a.*, l.description AS locDescription, l.latitude, l.longitude " +
       "FROM adverts a JOIN locations l USING (idLocation) " +
-      "WHERE a.active AND l.latitude BETWEEN :lat - :r AND :lat + :r AND l.longitude BETWEEN :lon - :lonRange AND :lon + :lonRange) AS tmp " +
+      "WHERE a.active AND l.latitude BETWEEN :lat - :r AND :lat + :r AND l.longitude BETWEEN :lng - :lngRange AND :lng + :lngRange) AS tmp " +
       "WHERE dist <= :r ORDER BY dist";
     return namedParameterJdbcTemplate.query(sql, parameters, new LocalizedAdvertRowMapper());
   }
