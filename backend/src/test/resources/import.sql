@@ -18,3 +18,5 @@ INSERT INTO adverts (idAdvert, active, type, owner, contractor, title, descripti
 INSERT INTO adverts (idAdvert, active, type, owner, contractor, title, description, idCategory, value, idLocation) VALUES (2, true, 'SEEK', 'stevejobs', null, 'Cake baking', 'I look for someone who could help me bake a birthday cake for my wife', 2, 4, 2);
 
 INSERT INTO adverts (idAdvert, active, type, owner, contractor, title, description, idCategory, value, idLocation) VALUES (3, true, 'SEEK', 'billgates', null, 'Java', 'I look for someone who could help me learn Java', 2, 4, 1);
+
+INSERT INTO adverts (idAdvert, active, type, owner, contractor, title, description, idCategory, value, idLocation) VALUES (4, true, 'SEEK', null, null, 'Some title', 'Some description', 2, 4, 0);

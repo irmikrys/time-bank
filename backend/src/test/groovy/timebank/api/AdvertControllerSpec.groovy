@@ -68,6 +68,22 @@ class AdvertControllerSpec extends AbstractMvcSpec {
     result.status == HttpStatus.BAD_REQUEST
   }
 
+  def "see advert with non-existing location"() {
+    when:
+    def result = get('/api/advert/1', new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.BAD_REQUEST
+  }
+
+  def "see advert with non-existing owner"() {
+    when:
+    def result = get('/api/advert/4', new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.BAD_REQUEST
+  }
+
   def "see existing advert"() {
     when:
     def result = get('/api/advert/2', new RequestParams(authToken: token))
