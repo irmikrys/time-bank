@@ -325,6 +325,15 @@ class AdvertControllerSpec extends AbstractMvcSpec {
     result.status == HttpStatus.OK
   }
 
+  def "choose contractor not interested with advert"() {
+    when:
+    def result = post('/api/advert/chooseContractor?idAdvert=1&contractor=markzuckerberg', null,
+      new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.BAD_REQUEST
+  }
+
   def "choose contractor of inactive advert"() {
     when:
     def result = post('/api/advert/chooseContractor?idAdvert=3&contractor=stevejobs', null,
@@ -346,15 +355,6 @@ class AdvertControllerSpec extends AbstractMvcSpec {
   def "choose contractor of not owned advert"() {
     when:
     def result = post('/api/advert/chooseContractor?idAdvert=2&contractor=stevejobs', null,
-      new RequestParams(authToken: token))
-
-    then:
-    result.status == HttpStatus.BAD_REQUEST
-  }
-
-  def "choose contractor not interested with advert"() {
-    when:
-    def result = post('/api/advert/chooseContractor?idAdvert=3&contractor=markzuckerberg', null,
       new RequestParams(authToken: token))
 
     then:
