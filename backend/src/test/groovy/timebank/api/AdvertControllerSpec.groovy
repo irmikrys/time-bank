@@ -180,6 +180,15 @@ class AdvertControllerSpec extends AbstractMvcSpec {
     result.status == HttpStatus.BAD_REQUEST
   }
 
+  def "see created adverts"() {
+    when:
+    def result = get('/api/createdAdverts', new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.OK
+    result.json.size == 3
+  }
+
   def "update advert with correct data"() {
     given:
     def request = [
@@ -308,6 +317,15 @@ class AdvertControllerSpec extends AbstractMvcSpec {
     result.status == HttpStatus.BAD_REQUEST
   }
 
+  def "see interesting adverts"() {
+    when:
+    def result = get('/api/interestingAdverts', new RequestParams(authToken: token2))
+
+    then:
+    result.status == HttpStatus.OK
+    result.json.size == 1
+  }
+
   def "delete final contractor when one is undefined"() {
     when:
     def result = delete('/api/advert/deleteContractor/3', new RequestParams(authToken: token))
@@ -424,6 +442,15 @@ class AdvertControllerSpec extends AbstractMvcSpec {
 
     then:
     result.status == HttpStatus.BAD_REQUEST
+  }
+
+  def "see archived adverts"() {
+    when:
+    def result = get('/api/archive', new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.OK
+    result.json.size == 1
   }
 
   def "delete non-existing advert"() {
