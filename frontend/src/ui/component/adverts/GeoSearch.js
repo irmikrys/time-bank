@@ -2,24 +2,31 @@ import React, {Component} from "react";
 import Select from "react-select";
 import Geosuggest from "react-geosuggest";
 import { browserHistory } from 'react-router';
+import * as _ from "underscore";
 
 export default class GeoSearch extends Component {
 
   constructor(props) {
     super(props);
 
+    this.initalCriteria = {
+      r: 0,
+      lat: props.userLocation.latitude,
+      lng: props.userLocation.longitude,
+    };
+
     this.state = {
-      locationCriteria: {
-        r: 0,
-        lat: props.userLocation.latitude,
-        lng: props.userLocation.longitude,
-      },
+      locationCriteria: this.initalCriteria,
       map: null,
       markers: []
     }
   }
 
   componentDidMount() {
+    this.initializeMap();
+  }
+
+  initializeMap() {
     const {lat, lng} = this.state.locationCriteria;
     let map = new window.google.maps.Map(document.getElementById('map'), {
       center: {
@@ -69,12 +76,14 @@ export default class GeoSearch extends Component {
   }
 
   handleLocationChange = value => {
-    const locationCriteria = {
-      r: this.state.locationCriteria.r,
-      lat: value.location.lat,
-      lng: value.location.lng
-    };
+    const locationCriteria = value ?
+      {
+        r: this.state.locationCriteria.r,
+        lat: value.location.lat,
+        lng: value.location.lng
+      } : this.initalCriteria;
     this.setState({locationCriteria});
+    this.initializeMap();
     this.props.fetchGeoAdverts(locationCriteria);
   };
 
@@ -99,7 +108,7 @@ export default class GeoSearch extends Component {
                 clearable={false}
                 value={this.state.locationCriteria.r}
                 onChange={this.handleDistanceChange.bind(this)}
-                options={[5, 10, 15, 20, 25, 30].map(item => { return {value: item, label: item} })}
+                options={_.range(5, 51, 5).map(item => { return {value: item, label: item} })}
         />
         {
           this.props.updatingAdverts ? <div className="loader position-fixed"/> : null
