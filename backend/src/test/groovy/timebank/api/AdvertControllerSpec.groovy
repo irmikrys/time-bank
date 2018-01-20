@@ -43,18 +43,20 @@ class AdvertControllerSpec extends AbstractMvcSpec {
     token2 != null
   }
 
+
+
   def "create advert with correct data"() {
     given:
     def request = [
-      type: 'SEEK',
-      title: 'Zabawa z chomikiem',
+      type       : 'SEEK',
+      title      : 'Zabawa z chomikiem',
       description: 'Szukam kogos kto pobawi sie chwile z moim chomikiem, uwielbia zabawe!',
-      idCategory: '1',
-      value: '4',
-      location : [
-        description : 'Seattle, Waszyngton, Stany Zjednoczone',
-        latitude : '47.6062095',
-        longitude : '-122.3320708'
+      idCategory : '1',
+      value      : '4',
+      location   : [
+        description: 'Seattle, Waszyngton, Stany Zjednoczone',
+        latitude   : '47.6062095',
+        longitude  : '-122.3320708'
       ]
     ]
 
@@ -68,15 +70,15 @@ class AdvertControllerSpec extends AbstractMvcSpec {
   def "create advert with negative value"() {
     given:
     def request = [
-      type: 'SEEK',
-      title: 'Zabawa z chomikiem',
+      type       : 'SEEK',
+      title      : 'Zabawa z chomikiem',
       description: 'Szukam kogos kto pobawi sie chwile z moim chomikiem, uwielbia zabawe!',
-      idCategory: '1',
-      value: '-4',
-      location : [
-        description : 'Seattle, Waszyngton, Stany Zjednoczone',
-        latitude : '47.6062095',
-        longitude : '-122.3320708'
+      idCategory : '1',
+      value      : '-4',
+      location   : [
+        description: 'Seattle, Waszyngton, Stany Zjednoczone',
+        latitude   : '47.6062095',
+        longitude  : '-122.3320708'
       ]
     ]
 
@@ -90,15 +92,15 @@ class AdvertControllerSpec extends AbstractMvcSpec {
   def "create advert with too big value"() {
     given:
     def request = [
-      type: 'SEEK',
-      title: 'Zabawa z chomikiem',
+      type       : 'SEEK',
+      title      : 'Zabawa z chomikiem',
       description: 'Szukam kogos kto pobawi sie chwile z moim chomikiem, uwielbia zabawe!',
-      idCategory: '1',
-      value: '1001',
-      location : [
-        description : 'Seattle, Waszyngton, Stany Zjednoczone',
-        latitude : '47.6062095',
-        longitude : '-122.3320708'
+      idCategory : '1',
+      value      : '1001',
+      location   : [
+        description: 'Seattle, Waszyngton, Stany Zjednoczone',
+        latitude   : '47.6062095',
+        longitude  : '-122.3320708'
       ]
     ]
 
@@ -112,14 +114,14 @@ class AdvertControllerSpec extends AbstractMvcSpec {
   def "create advert without required fields"() {
     given:
     def request = [
-      type: 'SEEK',
+      type       : 'SEEK',
       description: 'Szukam kogos kto pobawi sie chwile z moim chomikiem, uwielbia zabawe!',
-      idCategory: '1',
-      value: '1001',
-      location : [
-        description : 'Seattle, Waszyngton, Stany Zjednoczone',
-        latitude : '47.6062095',
-        longitude : '-122.3320708'
+      idCategory : '1',
+      value      : '1001',
+      location   : [
+        description: 'Seattle, Waszyngton, Stany Zjednoczone',
+        latitude   : '47.6062095',
+        longitude  : '-122.3320708'
       ]
     ]
 
@@ -149,6 +151,14 @@ class AdvertControllerSpec extends AbstractMvcSpec {
   def "switch interest of owned advert"() {
     when:
     def result = post('/api/advert/switchInterest/3', null, new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.BAD_REQUEST
+  }
+
+  def "delete final contractor when one is undefined"() {
+    when:
+    def result = delete('/api/advert/deleteContractor/3', new RequestParams(authToken: token))
 
     then:
     result.status == HttpStatus.BAD_REQUEST
@@ -194,6 +204,22 @@ class AdvertControllerSpec extends AbstractMvcSpec {
     when:
     def result = post('/api/advert/chooseContractor?idAdvert=3&contractor=markzuckerberg', null,
       new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.BAD_REQUEST
+  }
+
+  def "delete final contractor of non-existing advert"() {
+    when:
+    def result = delete('/api/advert/deleteContractor/30', new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.BAD_REQUEST
+  }
+
+  def "delete final contractor of not owned advert"() {
+    when:
+    def result = delete('/api/advert/deleteContractor/2', new RequestParams(authToken: token))
 
     then:
     result.status == HttpStatus.BAD_REQUEST

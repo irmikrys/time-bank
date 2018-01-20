@@ -8,8 +8,6 @@ public class UserSession {
 
   private boolean authenticated;
 
-  public UserSession() {}
-
   public UserSession(String username, String token, boolean authenticated) {
     this.username = username;
     this.token = token;
