@@ -43,6 +43,38 @@ class AdvertControllerSpec extends AbstractMvcSpec {
     token2 != null
   }
 
+  def "see categories"() {
+    when:
+    def result = get('/api/categories')
+
+    then:
+    result.status == HttpStatus.OK
+    result.json.size == 8
+  }
+
+  def "see existing adverts"() {
+    when:
+    def result = get('/api/adverts')
+
+    then:
+    result.status == HttpStatus.OK
+  }
+
+  def "see non-existing advert"() {
+    when:
+    def result = get('/api/advert/30', new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.BAD_REQUEST
+  }
+
+  def "see existing advert"() {
+    when:
+    def result = get('/api/advert/2', new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.OK
+  }
 
 
   def "create advert with correct data"() {
@@ -132,7 +164,111 @@ class AdvertControllerSpec extends AbstractMvcSpec {
     result.status == HttpStatus.BAD_REQUEST
   }
 
-  def "switch interest of someone's advert"() {
+  def "update advert with correct data"() {
+    given:
+    def request = [
+      type       : 'SEEK',
+      title      : 'Zabawa z chomiczkiem',
+      description: 'Szukam kogos kto pobawi sie chwile z moim chomikiem, uwielbia zabawe!',
+      idCategory : '1',
+      value      : '4',
+      location   : [
+        description: 'Seattle, Waszyngton, Stany Zjednoczone',
+        latitude   : '47.6062095',
+        longitude  : '-122.3320708'
+      ]
+    ]
+
+    when:
+    def result = put('/api/updateAdvert/3', request, new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.OK
+  }
+
+  def "update not owned advert"() {
+    given:
+    def request = [
+      type       : 'SEEK',
+      title      : 'Zabawa z chomiczkiem',
+      description: 'Szukam kogos kto pobawi sie chwile z moim chomikiem, uwielbia zabawe!',
+      idCategory : '1',
+      value      : '4',
+      location   : [
+        description: 'Seattle, Waszyngton, Stany Zjednoczone',
+        latitude   : '47.6062095',
+        longitude  : '-122.3320708'
+      ]
+    ]
+
+    when:
+    def result = put('/api/updateAdvert/3', request, new RequestParams(authToken: token2))
+
+    then:
+    result.status == HttpStatus.BAD_REQUEST
+  }
+
+  def "update non-existing advert"() {
+    given:
+    def request = [
+      type       : 'SEEK',
+      title      : 'Zabawa z chomiczkiem',
+      description: 'Szukam kogos kto pobawi sie chwile z moim chomikiem, uwielbia zabawe!',
+      idCategory : '1',
+      value      : '4',
+      location   : [
+        description: 'Seattle, Waszyngton, Stany Zjednoczone',
+        latitude   : '47.6062095',
+        longitude  : '-122.3320708'
+      ]
+    ]
+
+    when:
+    def result = put('/api/updateAdvert/30', request, new RequestParams(authToken: token2))
+
+    then:
+    result.status == HttpStatus.BAD_REQUEST
+  }
+
+  def "update advert with non-existing location"() {
+    given:
+    def request = [
+      type       : 'SEEK',
+      title      : 'Zabawa z chomiczkiem',
+      description: 'Szukam kogos kto pobawi sie chwile z moim chomikiem, uwielbia zabawe!',
+      idCategory : '1',
+      value      : '4',
+      location   : [
+        description: 'Seattle, Waszyngton, Stany Zjednoczone',
+        latitude   : '47.6062095',
+        longitude  : '-122.3320708'
+      ]
+    ]
+
+    when:
+    def result = put('/api/updateAdvert/1', request, new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.BAD_REQUEST
+  }
+
+  def "switch interest of someone's advert to interested"() {
+    when:
+    def result = post('/api/advert/switchInterest/3', null, new RequestParams(authToken: token2))
+
+    then:
+    result.status == HttpStatus.OK
+  }
+
+  def "switch interest of someone's advert to non-interested"() {
+    when:
+    def result = post('/api/advert/switchInterest/3', null, new RequestParams(authToken: token2))
+
+    then:
+    result.status == HttpStatus.OK
+  }
+
+  def "switch interest of someone's advert to interested again"() {
     when:
     def result = post('/api/advert/switchInterest/3', null, new RequestParams(authToken: token2))
 
