@@ -103,7 +103,7 @@ class UserControllerSpec extends AbstractMvcSpec {
 
     then:
     result.status == HttpStatus.OK
-    result.json.size == 4
+    result.json.size == 6
 
   }
 
@@ -125,6 +125,28 @@ class UserControllerSpec extends AbstractMvcSpec {
     result.json.location.latitude == 40.93815439999999
     result.json.location.longitude == -73.8320784
     result.json.account.amount == 0
+
+  }
+
+  @WithMockUser
+  def "get information about user profile with non-existing username"() {
+
+    when:
+    def result = get('/api/profile/nonexisting')
+
+    then:
+    result.status == HttpStatus.BAD_REQUEST
+
+  }
+
+  @WithMockUser
+  def "get information about user profile with non-existing location"() {
+
+    when:
+    def result = get('/api/profile/usernolocation')
+
+    then:
+    result.status == HttpStatus.BAD_REQUEST
 
   }
 
@@ -151,6 +173,117 @@ class UserControllerSpec extends AbstractMvcSpec {
     result.json.account.amount == 0
   }
 
+  def "get information about user with no account profile by username from session"() {
+    given:
+    def credentials = [username: 'usernoaccount', password: '2aNJn29r']
+    def response = post('/api/session', credentials)
+    def token = response.json.token
 
+    when:
+    def result = get('/api/profile', new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.BAD_REQUEST
+  }
+
+  def "update user correctly"() {
+    given:
+    def credentials = [username: 'dennisritchie', password: 'TWkJb8ZB']
+    def response = post('/api/session', credentials)
+    def token = response.json.token
+    def request = [
+      firstName       : 'Denniss',
+      lastName      : 'Ritchiee',
+      email: 'denniss@ritchiee.com',
+      username : 'dennisritchie',
+      password      : 'TWkJb8ZB',
+      location   : [
+        description: 'Seattle, Waszyngton, Stany Zjednoczone',
+        latitude   : '47.6062095',
+        longitude  : '-122.3320708'
+      ]
+    ]
+
+    when:
+    def result = put('/api/updateUser', request, new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.OK
+  }
+
+  def "update user with wrong username"() {
+    given:
+    def credentials = [username: 'dennisritchie', password: 'TWkJb8ZB']
+    def response = post('/api/session', credentials)
+    def token = response.json.token
+    def request = [
+      firstName       : 'Denniss',
+      lastName      : 'Ritchiee',
+      email: 'denniss@ritchiee.com',
+      username : 'dennisritchiee',
+      password      : 'TWkJb8ZB',
+      location   : [
+        description: 'Seattle, Waszyngton, Stany Zjednoczone',
+        latitude   : '47.6062095',
+        longitude  : '-122.3320708'
+      ]
+    ]
+
+    when:
+    def result = put('/api/updateUser', request, new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.BAD_REQUEST
+  }
+
+  def "update user with existing email"() {
+    given:
+    def credentials = [username: 'dennisritchie', password: 'TWkJb8ZB']
+    def response = post('/api/session', credentials)
+    def token = response.json.token
+    def request = [
+      firstName       : 'Denniss',
+      lastName      : 'Ritchiee',
+      email: 'billgates@test.com',
+      username : 'dennisritchie',
+      password      : 'TWkJb8ZB',
+      location   : [
+        description: 'Seattle, Waszyngton, Stany Zjednoczone',
+        latitude   : '47.6062095',
+        longitude  : '-122.3320708'
+      ]
+    ]
+
+    when:
+    def result = put('/api/updateUser', request, new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.BAD_REQUEST
+  }
+
+  def "update user that has non-existing location"() {
+    given:
+    def credentials = [username: 'usernolocation', password: '2aNJn29r']
+    def response = post('/api/session', credentials)
+    def token = response.json.token
+    def request = [
+      firstName       : 'Location',
+      lastName      : 'None',
+      email: 'location@test.com',
+      username : 'usernolocation',
+      password      : 'TWkJb8ZB',
+      location   : [
+        description: 'Seattle, Waszyngton, Stany Zjednoczone',
+        latitude   : '47.6062095',
+        longitude  : '-122.3320708'
+      ]
+    ]
+
+    when:
+    def result = put('/api/updateUser', request, new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.BAD_REQUEST
+  }
 
 }
