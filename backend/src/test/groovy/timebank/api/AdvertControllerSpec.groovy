@@ -92,7 +92,6 @@ class AdvertControllerSpec extends AbstractMvcSpec {
     result.status == HttpStatus.OK
   }
 
-
   def "create advert with correct data"() {
     given:
     def request = [
@@ -186,13 +185,22 @@ class AdvertControllerSpec extends AbstractMvcSpec {
     result.status == HttpStatus.BAD_REQUEST
   }
 
+  def "see adverts near me"() {
+    when:
+    def result = get('/api/advertsNearMe?size=2&lat=47.6062095&lng=-122.3320708&r=10', new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.OK
+    result.json.content.size == 3
+  }
+
   def "see created adverts"() {
     when:
     def result = get('/api/createdAdverts', new RequestParams(authToken: token))
 
     then:
     result.status == HttpStatus.OK
-    result.json.size == 3
+    result.json.size == 4
   }
 
   def "update advert with correct data"() {
@@ -261,6 +269,28 @@ class AdvertControllerSpec extends AbstractMvcSpec {
     result.status == HttpStatus.BAD_REQUEST
   }
 
+  def "update advert with unknown id"() {
+    given:
+    def request = [
+      type       : 'SEEK',
+      title      : 'Zabawa z chomiczkiem',
+      description: 'Szukam kogos kto pobawi sie chwile z moim chomikiem, uwielbia zabawe!',
+      idCategory : '1',
+      value      : '4',
+      location   : [
+        description: 'Seattle, Waszyngton, Stany Zjednoczone',
+        latitude   : '47.6062095',
+        longitude  : '-122.3320708'
+      ]
+    ]
+
+    when:
+    def result = put('/api/updateAdvert/3df', request, new RequestParams(authToken: token2))
+
+    then:
+    result.status == HttpStatus.INTERNAL_SERVER_ERROR
+  }
+
   def "update advert with non-existing location"() {
     given:
     def request = [
@@ -283,9 +313,17 @@ class AdvertControllerSpec extends AbstractMvcSpec {
     result.status == HttpStatus.BAD_REQUEST
   }
 
-  def "switch interest of someone's advert to interested"() {
+  def "switch interest of someone's seek advert to interested"() {
     when:
     def result = post('/api/advert/switchInterest/3', null, new RequestParams(authToken: token2))
+
+    then:
+    result.status == HttpStatus.OK
+  }
+
+  def "switch interest of someone's offer advert to interested"() {
+    when:
+    def result = post('/api/advert/switchInterest/5', null, new RequestParams(authToken: token2))
 
     then:
     result.status == HttpStatus.OK
@@ -299,7 +337,7 @@ class AdvertControllerSpec extends AbstractMvcSpec {
     result.status == HttpStatus.OK
   }
 
-  def "switch interest of someone's advert to interested again"() {
+  def "switch interest of someone's seek advert to interested again"() {
     when:
     def result = post('/api/advert/switchInterest/3', null, new RequestParams(authToken: token2))
 
@@ -329,7 +367,7 @@ class AdvertControllerSpec extends AbstractMvcSpec {
 
     then:
     result.status == HttpStatus.OK
-    result.json.size == 1
+    result.json.size == 2
   }
 
   def "delete final contractor when one is undefined"() {
@@ -340,9 +378,18 @@ class AdvertControllerSpec extends AbstractMvcSpec {
     result.status == HttpStatus.BAD_REQUEST
   }
 
-  def "choose correct contractor"() {
+  def "choose correct contractor to seek advert"() {
     when:
     def result = post('/api/advert/chooseContractor?idAdvert=3&contractor=stevejobs', null,
+      new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.OK
+  }
+
+  def "choose correct contractor to offer advert"() {
+    when:
+    def result = post('/api/advert/chooseContractor?idAdvert=5&contractor=stevejobs', null,
       new RequestParams(authToken: token))
 
     then:
@@ -426,9 +473,17 @@ class AdvertControllerSpec extends AbstractMvcSpec {
     result.status == HttpStatus.OK
   }
 
-  def "finalize transaction correctly"() {
+  def "finalize seek transaction correctly"() {
     when:
     def result = post('/api/advert/finalize/3', null, new RequestParams(authToken: token))
+
+    then:
+    result.status == HttpStatus.OK
+  }
+
+  def "finalize offer transaction correctly"() {
+    when:
+    def result = post('/api/advert/finalize/5', null, new RequestParams(authToken: token))
 
     then:
     result.status == HttpStatus.OK
@@ -456,7 +511,7 @@ class AdvertControllerSpec extends AbstractMvcSpec {
 
     then:
     result.status == HttpStatus.OK
-    result.json.size == 1
+    result.json.size == 2
   }
 
   def "delete non-existing advert"() {

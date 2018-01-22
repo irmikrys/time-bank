@@ -27,4 +27,6 @@ INSERT INTO adverts (idAdvert, active, type, owner, contractor, title, descripti
 
 INSERT INTO adverts (idAdvert, active, type, owner, contractor, title, description, idCategory, value, idLocation) VALUES (4, true, 'SEEK', null, null, 'Some title', 'Some description', 2, 4, 0);
 
+INSERT INTO adverts (idAdvert, active, type, owner, contractor, title, description, idCategory, value, idLocation) VALUES (5, true, 'OFFER', 'billgates', null, 'Some title', 'Some description', 2, 4, 1);
+
 INSERT INTO users (username, password, email, firstName, lastName, role, idLocation) VALUES ('usernolocation', '$2a$10$tjZR0.Hj4DExo1X81K0rf.RpD7e.bLSuMwoej5z8jAB6iB751TbcS','location@test.com', 'Location', 'None', 'USER', 0);
