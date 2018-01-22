@@ -3,8 +3,9 @@ package timebank.dto;
 import org.hibernate.validator.constraints.NotBlank;
 import timebank.model.Location;
 
-import javax.validation.constraints.*;
-import java.math.BigDecimal;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Size;
 
 public class LocationDTO {
 
@@ -52,12 +53,4 @@ public class LocationDTO {
     return location;
   }
 
-  @Override
-  public String toString() {
-    return "LocationDTO{" +
-      "description='" + description + '\'' +
-      ", latitude=" + latitude +
-      ", longitude=" + longitude +
-      '}';
-  }
 }

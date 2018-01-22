@@ -90,14 +90,4 @@ public class UserDTO {
     return user;
   }
 
-  @Override
-  public String toString() {
-    return "UserDTO{" +
-      "username='" + username + '\'' +
-      ", password='" + password + '\'' +
-      ", firstName='" + firstName + '\'' +
-      ", lastName='" + lastName + '\'' +
-      ", email='" + email + '\'' +
-      '}';
-  }
 }

@@ -4,8 +4,6 @@ import timebank.model.Advert;
 import timebank.model.Interested;
 import timebank.model.Location;
 
-import java.util.ArrayList;
-
 public class AdvertDetailsDTO {
 
   private Advert advert;
@@ -15,13 +13,6 @@ public class AdvertDetailsDTO {
   private Iterable<Interested> interested;
 
   private String userEmail;
-
-
-  public AdvertDetailsDTO() {
-    this.advert = new Advert();
-    this.location = new Location();
-    this.interested = new ArrayList<>();
-  }
 
   public AdvertDetailsDTO(Advert advert, Location location, Iterable<Interested> interested, String email) {
     this.advert = advert;
@@ -46,9 +37,4 @@ public class AdvertDetailsDTO {
     return userEmail;
   }
 
-  @Override
-  public String toString() {
-    return "A_" + advert.getIdAdvert() +
-      "_L_" + location.getIdLocation() + "[" + location.getDescription() + ", lat = " + location.getLatitude() + ", lon = " + location.getLongitude() + "]";
-  }
 }
