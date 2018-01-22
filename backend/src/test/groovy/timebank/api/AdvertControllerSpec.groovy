@@ -113,6 +113,12 @@ class AdvertControllerSpec extends AbstractMvcSpec {
 
     then:
     result.status == HttpStatus.OK
+    result.json.type == 'SEEK'
+    result.json.title == 'Zabawa z chomikiem'
+    result.json.description == 'Szukam kogos kto pobawi sie chwile z moim chomikiem, uwielbia zabawe!'
+    result.json.idCategory == 1
+    result.json.value == 4
+    result.json.active == true
   }
 
   def "create advert with negative value"() {
