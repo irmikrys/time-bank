@@ -52,12 +52,4 @@ public class LocationDTO {
     return location;
   }
 
-  @Override
-  public String toString() {
-    return "LocationDTO{" +
-      "description='" + description + '\'' +
-      ", latitude=" + latitude +
-      ", longitude=" + longitude +
-      '}';
-  }
 }

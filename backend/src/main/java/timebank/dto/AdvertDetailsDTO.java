@@ -46,9 +46,4 @@ public class AdvertDetailsDTO {
     return userEmail;
   }
 
-  @Override
-  public String toString() {
-    return "A_" + advert.getIdAdvert() +
-      "_L_" + location.getIdLocation() + "[" + location.getDescription() + ", lat = " + location.getLatitude() + ", lon = " + location.getLongitude() + "]";
-  }
 }

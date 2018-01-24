@@ -14,7 +14,7 @@ class GeoSearchPage extends Component {
 
   render() {
     return (
-      <div className="main">
+      <div className="main geosearch">
         <h1>GeoSearch</h1>
         {
           this.props.updatingUser

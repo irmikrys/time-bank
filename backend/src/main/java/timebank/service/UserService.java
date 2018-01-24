@@ -37,16 +37,8 @@ public class UserService {
   @Autowired
   private JdbcTemplate jdbcTemplate;
 
-
   public Optional<User> findByUsername(String username) {
     return this.userRepository.findByUsername(username);
-  }
-
-  public UserDetailsDTO findByUsernameUserDetails(String username) {
-    User user = this.userRepository.findByUsername(username).get();
-    Location location = this.locationService.findByIdLocation(user.getIdLocation()).get();
-    Account account = this.accountService.findByOwner(username).get();
-    return new UserDetailsDTO(user, location, account);
   }
 
   public Optional<User> findByEmail(String email) {

@@ -92,10 +92,4 @@ public class LocalizedAdvertDTO {
     this.distance = distance;
   }
 
-  @Override
-  public String toString() {
-    return "A_" + advert.getIdAdvert() +
-      "-L_" + location.getIdLocation() + "[" + location.getDescription() + ", lat = " + location.getLatitude() + ", lon = " + location.getLongitude() + "], dist: "
-      + new BigDecimal(111.045 * distance).setScale(4, BigDecimal.ROUND_HALF_UP) + " km";
-  }
 }

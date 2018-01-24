@@ -14,16 +14,11 @@ public class AccountService {
   @Autowired
   @Qualifier("accountRepository")
   private AccountRepository accountRepository;
-  
-  
-  public Optional<Account> findByAccountNr(Long accountNr) {
-    return this.accountRepository.findByAccountNr(accountNr);
-  }
-  
+
   public Optional<Account> findByOwner(String username) {
     return this.accountRepository.findByOwner(username);
   }
-  
+
   public Account createAccount(String usermane) {
     Account account = new Account();
     account.setOwner(usermane);

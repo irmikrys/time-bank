@@ -3,6 +3,7 @@ import Select from "react-select";
 import Geosuggest from "react-geosuggest";
 import { browserHistory } from 'react-router';
 import * as _ from "underscore";
+import {ADVERT_TYPE_OFFER} from "../../constants/constants";
 
 export default class GeoSearch extends Component {
 
@@ -42,7 +43,8 @@ export default class GeoSearch extends Component {
         lat: lat,
         lng: lng
       },
-      zIndex: 1
+      zIndex: 1,
+      icon: require("my-location.png")
     });
     this.setState({map});
   }
@@ -58,17 +60,20 @@ export default class GeoSearch extends Component {
             lat: advert.location.latitude,
             lng: advert.location.longitude
           },
-          zIndex: 1
+          zIndex: 1,
+          icon: advert.advert.type === ADVERT_TYPE_OFFER ? require("advert-offer-location.png") : require("advert-seek-location.png")
         });
+        const content =
+          `<h3>${advert.advert.title}</h3>` +
+          `<p>${advert.advert.description}</p>`+
+          `<p><a href="/advert/${advert.advert.idAdvert}" target="_blank">Click for more details</a></p>`;
+
+        const infowindow = new window.google.maps.InfoWindow({content: content});
         markers.push(marker);
-        google.maps.event.addListener(marker, 'click', this.redirectToAdvert.bind(this, advert.advert.idAdvert));
+        marker.addListener('click', () => {infowindow.open(map, marker)});
       });
       this.setState({markers});
     }
-  }
-
-  redirectToAdvert(idAdvert) {
-    browserHistory.push(`/advert/${idAdvert}`);
   }
 
   clearMarkers() {
@@ -99,21 +104,27 @@ export default class GeoSearch extends Component {
 
   render() {
     return (
-      <div>
-        <Geosuggest placeholder="choose location"
-                    onSuggestSelect={this.handleLocationChange.bind(this)}
-        />
-        <Select simpleValue
-                placeholder="distance"
-                clearable={false}
-                value={this.state.locationCriteria.r}
-                onChange={this.handleDistanceChange.bind(this)}
-                options={_.range(5, 51, 5).map(item => { return {value: item, label: item} })}
-        />
+      <div className="geosearch-container">
+        <div className="search-select-group">
+          <div className="col-xs-6 select-group-item">
+            <Geosuggest placeholder="choose location"
+                        onSuggestSelect={this.handleLocationChange.bind(this)}
+            />
+          </div>
+          <div className="col-xs-6 select-group-item">
+            <Select simpleValue
+                    placeholder="distance"
+                    clearable={false}
+                    value={this.state.locationCriteria.r}
+                    onChange={this.handleDistanceChange.bind(this)}
+                    options={_.range(5, 51, 5).map(item => { return {value: item, label: item} })}
+            />
+          </div>
+        </div>
         {
           this.props.updatingAdverts ? <div className="loader position-fixed"/> : null
         }
-        <div id="map"/>
+        <div id="map" className={this.props.updatingAdverts ? "opacity" : ""}/>
       </div>
     )
   }

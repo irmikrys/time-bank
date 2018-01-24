@@ -14,22 +14,8 @@ public class CategoryService {
   @Qualifier("categoryRepository")
   private CategoryRepository categoryRepository;
 
-  
-  public Optional<Category> findByIdCategory(long idCategory) {
-    return this.categoryRepository.findByIdCategory(idCategory);
-  }
-
-  public Optional<Category> findByName(String name) {
-    return this.categoryRepository.findByName(name);
-  }
-
   public Iterable<Category> findAll() {
     return this.categoryRepository.findAll();
   }
 
-  public Category createCategory(String name) {
-    Category category = new Category();
-    category.setName(name);
-    return this.categoryRepository.save(category);
-  }
 }

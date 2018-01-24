@@ -16,11 +16,6 @@ public class ArchiveAdvertService {
   @Qualifier("archiveAdvertRepository")
   private ArchiveAdvertRepository archiveAdvertRepository;
 
-
-  public Optional<ArchiveAdvert> findByIdAdvert(long idAdvert) {
-    return this.archiveAdvertRepository.findByIdAdvert(idAdvert);
-  }
-
   public Iterable<ArchiveAdvert> findAllByOwnerOrContractor(String username) {
     return this.archiveAdvertRepository.findAllByOwnerOrContractor(username, username);
   }
