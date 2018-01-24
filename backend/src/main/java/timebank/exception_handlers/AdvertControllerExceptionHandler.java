@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import timebank.controller.AdvertController;
 import timebank.dto.ErrorMessage;
-import timebank.exceptions.AccessingPrivateResourcesException;
 import timebank.exceptions.AdvertException;
 import timebank.exceptions.ShowInterestException;
 
@@ -31,14 +30,6 @@ public class AdvertControllerExceptionHandler {
   @ResponseBody
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorMessage handleShowInterestException(ShowInterestException e) {
-    log.warn(e.getMessage());
-    return new ErrorMessage(e.getMessage());
-  }
-
-  @ExceptionHandler(AccessingPrivateResourcesException.class)
-  @ResponseBody
-  @ResponseStatus(HttpStatus.UNAUTHORIZED)
-  public ErrorMessage handleAccessingPrivateResourcesException(AccessingPrivateResourcesException e) {
     log.warn(e.getMessage());
     return new ErrorMessage(e.getMessage());
   }

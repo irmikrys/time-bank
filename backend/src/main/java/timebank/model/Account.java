@@ -25,10 +25,6 @@ public class Account implements Serializable {
     return accountNr;
   }
 
-  public void setAccountNr(long accountNr) {
-    this.accountNr = accountNr;
-  }
-
   @JsonIgnore
   public String getOwner() {
     return owner;
@@ -46,7 +42,4 @@ public class Account implements Serializable {
     this.balance = amount;
   }
 
-  public void changeAccountBalance(int amount) {
-    this.balance += amount;
-  }
 }

@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import timebank.controller.UserController;
-import timebank.exceptions.AccessingPrivateResourcesException;
-import timebank.exceptions.AdvertException;
 import timebank.exceptions.RegisterException;
 import timebank.dto.ErrorMessage;
 import timebank.exceptions.UserException;
@@ -34,14 +32,6 @@ public class UserControllerExceptionHandler {
   @ResponseBody
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   public ErrorMessage handleUserException(UserException e) {
-    log.warn(e.getMessage());
-    return new ErrorMessage(e.getMessage());
-  }
-
-  @ExceptionHandler(AccessingPrivateResourcesException.class)
-  @ResponseBody
-  @ResponseStatus(HttpStatus.UNAUTHORIZED)
-  public ErrorMessage handleAccessingPrivateResourcesException(AccessingPrivateResourcesException e) {
     log.warn(e.getMessage());
     return new ErrorMessage(e.getMessage());
   }

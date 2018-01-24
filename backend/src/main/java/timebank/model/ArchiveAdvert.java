@@ -119,7 +119,4 @@ public class ArchiveAdvert implements Serializable {
     return closeDate;
   }
 
-  public void setCloseDate(Date closeDate) {
-    this.closeDate = closeDate;
-  }
 }
