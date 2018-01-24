@@ -1,3 +1,7 @@
+DROP SCHEMA IF EXISTS timebankTest;
+CREATE SCHEMA timebankTest;
+USE timebankTest;
+
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   username      VARCHAR(30)     NOT NULL,
