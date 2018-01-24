@@ -7,8 +7,6 @@ import timebank.model.Advert;
 import timebank.model.ArchiveAdvert;
 import timebank.repository.ArchiveAdvertRepository;
 
-import java.util.Optional;
-
 @Service("archiveAdvertService")
 public class ArchiveAdvertService {
 

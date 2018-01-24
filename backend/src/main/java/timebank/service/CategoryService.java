@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import timebank.model.Category;
 import timebank.repository.CategoryRepository;
-import java.util.Optional;
 
 @Service("categoryService")
 public class CategoryService {
@@ -18,4 +17,9 @@ public class CategoryService {
     return this.categoryRepository.findAll();
   }
 
+  public Category createCategory(String name) {
+    Category category = new Category();
+    category.setName(name);
+    return this.categoryRepository.save(category);
+  }
 }

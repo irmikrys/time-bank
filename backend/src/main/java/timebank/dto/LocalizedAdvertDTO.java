@@ -3,7 +3,6 @@ package timebank.dto;
 import timebank.model.Advert;
 import timebank.model.Location;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class LocalizedAdvertDTO {
