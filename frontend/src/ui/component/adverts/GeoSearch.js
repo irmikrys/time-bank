@@ -66,11 +66,17 @@ export default class GeoSearch extends Component {
         const content =
           `<h3>${advert.advert.title}</h3>` +
           `<p>${advert.advert.description}</p>`+
-          `<p><a href="/advert/${advert.advert.idAdvert}" target="_blank">Click for more details</a></p>`;
-
+          `<p class="map-popup-paragraph" id=advert${advert.advert.idAdvert}>Click for more details</p>`;
         const infowindow = new window.google.maps.InfoWindow({content: content});
         markers.push(marker);
-        marker.addListener('click', () => {infowindow.open(map, marker)});
+        marker.addListener('click', () => {
+          infowindow.open(map, marker);
+          document
+            .getElementById(`advert${advert.advert.idAdvert}`)
+            .addEventListener("click", () => {
+              browserHistory.push(`/advert/${advert.advert.idAdvert}`);
+            });
+        });
       });
       this.setState({markers});
     }

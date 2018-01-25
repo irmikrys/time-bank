@@ -82,7 +82,7 @@ public class AdvertController {
   }
 
   @RequestMapping(method=GET, path="/api/advert/{id}")
-  public @ResponseBody ResponseEntity<AdvertDetailsDTO> getAdvert(@PathVariable("id") long idAdvert, HttpSession session) {
+  public @ResponseBody ResponseEntity<AdvertDetailsDTO> getAdvert(@PathVariable("id") long idAdvert) {
     long start = System.nanoTime();
     Advert advert = this.advertService.findByIdAdvert(idAdvert).orElseThrow(
       () -> new AdvertException("getAdvert.error.advertNotFound"));

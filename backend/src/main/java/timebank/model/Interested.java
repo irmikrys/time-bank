@@ -27,6 +27,10 @@ public class Interested implements Serializable {
     this.idAdvert = idAdvert;
   }
 
+  public String getUsername() {
+    return interested;
+  }
+
   public void setUsername(String interested) {
     this.interested = interested;
   }
@@ -47,9 +51,18 @@ public class Interested implements Serializable {
       return idAdvert;
     }
 
+    public void setIdAdvert(long idAdvert) {
+      this.idAdvert = idAdvert;
+    }
+
     public String getInterested() {
       return interested;
     }
+
+    public void setInterested(String interested) {
+      this.interested = interested;
+    }
+
 
     @Override
     public boolean equals(Object o) {
